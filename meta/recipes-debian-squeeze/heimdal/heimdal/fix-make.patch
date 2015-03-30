@@ -1,0 +1,27 @@
+--- heimdal-1.4.0~git20100726.dfsg.1.orig/lib/asn1/Makefile.am	2012-09-10 15:39:39.000000000 +0000
++++ heimdal-1.4.0~git20100726.dfsg.1/lib/asn1/Makefile.am	2012-09-10 15:43:52.000000000 +0000
+@@ -705,3 +705,24 @@
+ 
+ $(srcdir)/der-private.h:
+ 	cd $(srcdir) && perl ../../cf/make-proto.pl -q -P comment -p der-private.h $(dist_libasn1base_la_SOURCES) || rm -f der-private.h
++
++rfc2459_asn1-template.c: $(srcdir)/rfc2459.asn1
++
++cms_asn1-template.c: $(srcdir)/cms.asn1 $(srcdir)/cms.opt
++
++krb5_asn1-template.c: $(srcdir)/krb5.asn1 $(srcdir)/krb5.opt
++
++pkinit_asn1-template.c: $(srcdir)/pkinit.asn1
++
++pkcs8_asn1-template.c: $(srcdir)/pkcs8.asn1
++
++pkcs9_asn1-template.c: $(srcdir)/pkcs9.asn1
++
++pkcs12_asn1-template.c: $(srcdir)/pkcs12.asn1
++
++digest_asn1-template.c: $(srcdir)/digest.asn1
++
++kx509_asn1-template.c: $(srcdir)/kx509.asn1
++
++test_asn1-template.c: $(srcdir)/test.asn1
++

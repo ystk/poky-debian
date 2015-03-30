@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Mount according to fstab
+echo "Mounting filesystem..."
+mkdir -p /dev/shm
+mount -a

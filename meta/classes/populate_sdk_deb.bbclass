@@ -1,3 +1,6 @@
+# debian-squeeze: for gen_summary
+inherit summary
+
 do_populate_sdk[depends] += "dpkg-native:do_populate_sysroot apt-native:do_populate_sysroot bzip2-native:do_populate_sysroot"
 do_populate_sdk[recrdeptask] += "do_package_write_deb"
 
@@ -38,6 +41,9 @@ fakeroot populate_sdk_deb () {
 
 	populate_sdk_log_check populate_sdk
 
+        # debian-squeeze: output target summary
+        gen_summary ${WORKDIR}/sdk-target-summary ${INSTALL_ROOTFS_DEB}/var/lib/dpkg/available
+
 	## install nativesdk ##
 	echo "Installing NATIVESDK packages"
 	export INSTALL_ROOTFS_DEB="${SDK_OUTPUT}"
@@ -57,5 +63,8 @@ fakeroot populate_sdk_deb () {
 	rm -rf ${SDK_OUTPUT}/var
 
 	populate_sdk_log_check populate_sdk
+
+        # debian-squeeze: output nativesdk summary
+        gen_summary ${WORKDIR}/sdk-nativesdk-summary ${SDK_OUTPUT}/${SDKPATHNATIVE}/var/lib/dpkg/available
 }
 

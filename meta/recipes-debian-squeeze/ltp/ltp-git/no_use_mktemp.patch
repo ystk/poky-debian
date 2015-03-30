@@ -1,0 +1,13 @@
+--- a/runltp	2011-11-08 20:34:03.000000000 +0900
++++ b/runltp	2011-11-08 20:37:36.000000000 +0900
+@@ -495,8 +495,8 @@
+         exit 1
+     }
+     # use mktemp to create "safe" temporary directories
+-    export TMPTEMPLATE="${TMPBASE}/ltp-XXXXXXXXXX"
+-    TMP=`mktemp -d $TMPTEMPLATE` || \
++    export TMP="${TMPBASE}/ltp-`date +%Y%m%d%H%M%S`"
++    mkdir $TMP || \
+     {
+         echo "FATAL: Unable to make temporary directory: $TMP"
+         exit 1

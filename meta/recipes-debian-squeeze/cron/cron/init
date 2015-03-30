@@ -1,0 +1,64 @@
+#! /bin/sh 
+#
+# This is an init script for openembedded
+# Copy it to /etc/init.d/cron and type
+# > update-rc.d cron defaults 60
+#
+
+### BEGIN INIT INFO
+# Provides:          cron
+# Required-Start:    $remote_fs $syslog $time
+# Required-Stop:     $remote_fs $syslog $time
+# Should-Start:      $named 
+# Should-Stop:       $named 
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Regular background program processing daemon
+# Description:       cron is a standard UNIX program that runs user-specified 
+#                    programs at periodic scheduled times. vixie cron adds a 
+#                    number of features to the basic UNIX cron, including better
+#                    security and more powerful configuration options.
+### END INIT INFO
+
+cron=/usr/sbin/cron
+test -x "$cron" || exit 0
+
+case "$1" in
+  start)
+    echo -n "Starting Vixie-cron"
+    start-stop-daemon --start --quiet --exec $cron
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping Vixie-cron"
+    start-stop-daemon --stop --quiet --pidfile /var/run/crond.pid
+    echo "."
+    ;;
+  reload|force-reload)
+    start-stop-daemon --stop --quiet --signal 1 --exec $cron
+    ;;
+  restart)
+    echo -n "Stopping Vixie-cron"
+    start-stop-daemon --stop --quiet --pidfile /var/run/crond.pid
+    echo "."
+    sleep 1
+    echo -n "Starting Vixie-cron"
+    start-stop-daemon --start --quiet --exec $cron
+    echo "."
+    ;;
+  status)
+    echo -n "Checking Vixie-cron..."
+    if ps ax | grep \[/\]usr/sbin/cron > /dev/null; then
+        echo "done (running)."
+        exit 0
+    else
+        echo "done (not running)."
+        exit 3
+    fi
+    ;;
+  *)
+    echo "Usage: /etc/init.d/cron {start|stop|status|reload|restart|force-reload}"
+    exit 1
+esac
+
+exit 0

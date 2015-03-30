@@ -1,0 +1,12 @@
+diff -Naur diffutils-3.0-1.org/m4/po_gl.m4 diffutils-3.0-1/m4/po_gl.m4
+--- diffutils-3.0-1.org/m4/po_gl.m4	2012-05-24 12:01:20.000000000 +0000
++++ diffutils-3.0-1/m4/po_gl.m4	2012-05-24 12:01:42.000000000 +0000
+@@ -29,7 +29,7 @@
+ 
+   dnl Release version of the gettext macros. This is used to ensure that
+   dnl the gettext macros and po/Makefile.in.in are in sync.
+-  AC_SUBST([GETTEXT_MACRO_VERSION], [0.17])
++  AC_SUBST([GETTEXT_MACRO_VERSION], [0.18])
+ 
+   dnl Perform the following tests also if --disable-nls has been given,
+   dnl because they are needed for "make dist" to work.

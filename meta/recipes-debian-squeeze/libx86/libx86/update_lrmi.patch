@@ -1,0 +1,455 @@
+diff -Nuar libx86-git.orig//Makefile libx86-git//Makefile
+--- libx86-git.orig//Makefile	2013-01-29 15:52:29.000000000 +0000
++++ libx86-git//Makefile	2013-01-29 17:04:26.000000000 +0000
+@@ -1,4 +1,5 @@
+-OBJECTS = x86-common.o
++#OBJECTS = x86-common.o
++OBJECTS =
+ CFLAGS ?= -O2 -Wall -DDEBUG -g
+ LIBDIR ?= /usr/lib
+ 
+diff -Nuar libx86-git.orig//lrmi.c libx86-git//lrmi.c
+--- libx86-git.orig//lrmi.c	2013-01-29 15:52:29.000000000 +0000
++++ libx86-git//lrmi.c	2013-01-29 16:54:17.000000000 +0000
+@@ -22,19 +22,36 @@
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+ */
+-
++#if defined(__i386__) && (defined(__linux__) || defined(__NetBSD__) \
++             || defined(__FreeBSD__) || defined(__OpenBSD__))
+ #include <stdio.h>
+ #include <string.h>
+ 
+-#if defined(__linux__) && defined(__i386__)
++#if defined(__linux__)
++#ifndef TF_MASK
++#define TF_MASK X86_EFLAGS_TF
++#endif
++
++#ifndef IF_MASK
++#define IF_MASK X86_EFLAGS_IF
++#endif
++
++#ifndef IOPL_MASK
++#define IOPL_MASK X86_EFLAGS_IOPL
++#endif
++
++#ifndef VIF_MASK
++#define VIF_MASK X86_EFLAGS_VIF
++#endif
+ 
+ #include <asm/vm86.h>
++#include <signal.h>
+ 
+ #ifdef USE_LIBC_VM86
+ #include <sys/vm86.h>
+ #endif
+ 
+-#elif defined(__NetBSD__) || defined(__FreeBSD__)
++#elif defined(__NetBSD__) || defined(__FreeBSD__) || defined(__OpenBSD__)
+ 
+ #include <sys/param.h>
+ #include <signal.h>
+@@ -43,7 +60,10 @@
+ #include <machine/vm86.h>
+ #include <machine/sysarch.h>
+ 
+-#endif /* __NetBSD__ || __FreeBSD__ */
++#endif /* __NetBSD__ || __FreeBSD__ || __OpenBSD__ */
++#if defined(__FreeBSD__)
++#include <sys/ucontext.h>
++#endif
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -52,23 +72,156 @@
+ #include <fcntl.h>
+ 
+ #include "lrmi.h"
+-#include "x86-common.h"
++#define REAL_MEM_BASE  ((void *)0x10000)
++#define REAL_MEM_SIZE  0x40000
++#define REAL_MEM_BLOCKS        0x100
++
++struct mem_block {
++   unsigned int size : 20;
++   unsigned int free : 1;
++};
++
++static struct {
++   int ready;
++   int count;
++   struct mem_block blocks[REAL_MEM_BLOCKS];
++} mem_info = { 0 };
++
++static int
++read_file(char *name, void *p, size_t n)
++{
++   int fd;
++   fd = open(name, O_RDONLY);
++   if (fd == -1) {
++      perror("open");
++      return 0;
++   }
++   if (read(fd, p, n) != n) {
++      perror("read");
++      close(fd);
++      return 0;
++   }
++   close(fd);
++   return 1;
++}
++
++static int
++map_file(void *start, size_t length, int prot, int flags, char *name, long offset)
++{
++   void *m;
++   int fd;
++   fd = open(name, (flags & MAP_SHARED) ? O_RDWR : O_RDONLY);
++   if (fd == -1) {
++      perror("open");
++      return 0;
++   }
++   m = mmap(start, length, prot, flags, fd, offset);
++   if (m == (void *)-1) {
++      perror("mmap");
++      close(fd);
++      return 0;
++   }
++   close(fd);
++   return 1;
++}
++
++static int
++real_mem_init(void)
++{
++   if (mem_info.ready)
++      return 1;
++   if (!map_file((void *)REAL_MEM_BASE, REAL_MEM_SIZE,
++	    PROT_READ | PROT_WRITE | PROT_EXEC,
++	    MAP_FIXED | MAP_PRIVATE, "/dev/zero", 0))
++      return 0;
++   mem_info.ready = 1;
++   mem_info.count = 1;
++   mem_info.blocks[0].size = REAL_MEM_SIZE;
++   mem_info.blocks[0].free = 1;
++   return 1;
++}
++
++static void
++real_mem_deinit(void)
++{
++   if (mem_info.ready) {
++      munmap((void *)REAL_MEM_BASE, REAL_MEM_SIZE);
++      mem_info.ready = 0;
++   }
++}
++
++static void
++insert_block(int i)
++{
++   memmove(
++	 mem_info.blocks + i + 1,
++	 mem_info.blocks + i,
++	 (mem_info.count - i) * sizeof(struct mem_block));
++   mem_info.count++;
++}
++
++static void
++delete_block(int i)
++{
++   mem_info.count--;
++   memmove(
++	 mem_info.blocks + i,
++	 mem_info.blocks + i + 1,
++	 (mem_info.count - i) * sizeof(struct mem_block));
++}
++
++void *
++LRMI_alloc_real(int size)
++   int i;
++   char *r = (char *)REAL_MEM_BASE;
++   if (!mem_info.ready)
++      return NULL;
++   if (mem_info.count == REAL_MEM_BLOCKS)
++      return NULL;
++   size = (size + 15) & ~15;
++   for (i = 0; i < mem_info.count; i++) {
++      if (mem_info.blocks[i].free && size < mem_info.blocks[i].size) {
++	 insert_block(i);
++	 mem_info.blocks[i].size = size;
++	 mem_info.blocks[i].free = 0;
++	 mem_info.blocks[i + 1].size -= size;
++	 return (void *)r;
++      }
++      r += mem_info.blocks[i].size;
++   }
++   return NULL;
++}
++
++void
++LRMI_free_real(void *m)
++   int i;
++   char *r = (char *)REAL_MEM_BASE;
++   if (!mem_info.ready)
++      return;
++   i = 0;
++   while (m != (void *)r) {
++      r += mem_info.blocks[i].size;
++      i++;
++      if (i == mem_info.count)
++	 return;
++   }
++   mem_info.blocks[i].free = 1;
++   if (i + 1 < mem_info.count && mem_info.blocks[i + 1].free) {
++      mem_info.blocks[i].size += mem_info.blocks[i + 1].size;
++      delete_block(i + 1);
++   }
++   if (i - 1 >= 0 && mem_info.blocks[i - 1].free) {
++      mem_info.blocks[i - 1].size += mem_info.blocks[i].size;
++      delete_block(i);
++   }
++}
++
++
+ 
+ #if defined(__linux__)
+-#ifndef TF_MASK
+-#define TF_MASK X86_EFLAGS_TF
+-#endif
+-#ifndef IF_MASK
+-#define IF_MASK X86_EFLAGS_IF
+-#endif
+-#ifndef IOPL_MASK
+-#define IOPL_MASK X86_EFLAGS_IOPL
+-#endif
+-#ifndef VIF_MASK
+-#define VIF_MASK X86_EFLAGS_VIF
+-#endif
+ #define DEFAULT_VM86_FLAGS 	(IF_MASK | IOPL_MASK)
+-#elif defined(__NetBSD__) || defined(__FreeBSD__)
++#elif defined(__NetBSD__) || defined(__FreeBSD__) || defined(__OpenBSD__)
++
+ #define DEFAULT_VM86_FLAGS  (PSL_I | PSL_IOPL)
+ #define TF_MASK         PSL_T
+ #define VIF_MASK        PSL_VIF
+@@ -79,7 +232,7 @@
+ #if defined(__linux__)
+ #define CONTEXT_REGS	context.vm.regs
+ #define REG(x)			x
+-#elif defined(__NetBSD__)
++#elif defined(__NetBSD__) || defined(__OpenBSD__)
+ #define CONTEXT_REGS	context.vm.substr.regs
+ #define REG(x)			vmsc.sc_ ## x
+ #elif defined(__FreeBSD__)
+@@ -91,7 +244,7 @@
+ 	int ready;
+ 	unsigned short ret_seg, ret_off;
+ 	unsigned short stack_seg, stack_off;
+-#if defined(__linux__) || defined(__NetBSD__)
++#if defined(__linux__) || defined(__NetBSD__) || defined(__OpenBSD__)
+ 	struct vm86_struct vm;
+ #elif defined(__FreeBSD__)
+ 	struct {
+@@ -99,7 +252,7 @@
+ 		ucontext_t uc;
+ 	} vm;
+ #endif
+-#if defined(__NetBSD__) || defined(__FreeBSD__)
++#if defined(__NetBSD__) || defined(__FreeBSD__) || defined(__OpenBSD__)
+ 	int success;
+ 	jmp_buf env;
+ 	void *old_sighandler;
+@@ -148,10 +301,33 @@
+ 	if (context.ready)
+ 		return 1;
+ 
+-	if (!LRMI_common_init())
++	if (!real_mem_init())
+ 		return 0;
+ 
+ 	/*
++	 Map the Interrupt Vectors (0x0 - 0x400) + BIOS data (0x400 - 0x502)
++	 and the ROM (0xa0000 - 0x100000)
++	 */
++	if (!map_file((void *)0, 0x502,
++		 PROT_READ | PROT_WRITE | PROT_EXEC,
++		 MAP_FIXED | MAP_PRIVATE, "/dev/zero", 0)) {
++	   real_mem_deinit();
++	   return 0;
++	}
++	if (!read_file("/dev/mem", (void *)0, 0x502)) {
++	   munmap((void *)0, 0x502);
++	   real_mem_deinit();
++	   return 0;
++	}
++	if (!map_file((void *)0xa0000, 0x100000 - 0xa0000,
++		 PROT_READ | PROT_WRITE,
++		 MAP_FIXED | MAP_SHARED, "/dev/mem", 0xa0000)) {
++	   munmap((void *)0, 0x502);
++	   real_mem_deinit();
++	   return 0;
++	}
++
++	/*
+ 	 Allocate a stack
+ 	*/
+ 	m = LRMI_alloc_real(DEFAULT_STACK_SIZE);
+@@ -178,7 +354,7 @@
+ #if defined(__linux__)
+ 	memset(&context.vm.int_revectored, 0, sizeof(context.vm.int_revectored));
+ 	set_bit(RETURN_TO_32_INT, &context.vm.int_revectored);
+-#elif defined(__NetBSD__)
++#elif defined(__NetBSD__) || defined(__OpenBSD__)
+ 	set_bit(RETURN_TO_32_INT, &context.vm.int_byuser);
+ #elif defined(__FreeBSD__)
+ 	set_bit(RETURN_TO_32_INT, &context.vm.init.int_map);
+@@ -229,7 +405,7 @@
+ 
+ enum {
+ 	CSEG = 0x2e, SSEG = 0x36, DSEG = 0x3e,
+-	ESEG = 0x26, FSEG = 0x64, GSEG = 0x65
++	ESEG = 0x26, FSEG = 0x64, GSEG = 0x65,
+ };
+ 
+ static void
+@@ -599,9 +775,19 @@
+ run_vm86(void)
+ {
+ 	unsigned int vret;
++        sigset_t all_sigs, old_sigs;
++	unsigned long old_gs, old_fs;
+ 
+ 	while (1) {
++	        // FIXME: may apply this to BSD equivalents?
++		sigfillset(&all_sigs);
++		sigprocmask(SIG_SETMASK, &all_sigs, &old_sigs);
++		asm volatile ("mov %%gs, %0" : "=rm" (old_gs));
++		asm volatile ("mov %%fs, %0" : "=rm" (old_fs));
+ 		vret = lrmi_vm86(&context.vm);
++		asm volatile ("mov %0, %%gs" :: "rm" (old_gs));
++		asm volatile ("mov %0, %%fs" :: "rm" (old_fs));
++		sigprocmask(SIG_SETMASK, &old_sigs, NULL);
+ 
+ 		if (VM86_TYPE(vret) == VM86_INTx) {
+ 			unsigned int v = VM86_ARG(vret);
+@@ -609,13 +795,6 @@
+ 			if (v == RETURN_TO_32_INT)
+ 				return 1;
+ 
+-			/*		fprintf(stderr, "Calling INT 0x%X (%04X:%04X)\n",
+-					v,
+-					get_int_seg(v),
+-					get_int_off(v));
+-			fprintf(stderr, " EAX is 0x%lX\n",
+-					CONTEXT_REGS.REG(eax));
+-			*/
+ 			pushw(CONTEXT_REGS.REG(eflags));
+ 			pushw(CONTEXT_REGS.REG(cs));
+ 			pushw(CONTEXT_REGS.REG(eip));
+@@ -638,8 +817,8 @@
+ 
+ 	return 0;
+ }
+-#elif defined(__NetBSD__) || defined(__FreeBSD__)
+-#if defined(__NetBSD__)
++#elif defined(__NetBSD__) || defined(__FreeBSD__) || defined(__OpenBSD__)
++#if defined(__NetBSD__) || defined(__OpenBSD__)
+ static void
+ vm86_callback(int sig, int code, struct sigcontext *sc)
+ {
+@@ -739,7 +918,7 @@
+ 		return (0);
+ 	}
+ 
+-#if defined(__NetBSD__)
++#if defined(__NetBSD__) || defined(__OpenBSD__)
+ 	context.old_sighandler = signal(SIGURG, (void (*)(int))vm86_callback);
+ #elif defined(__FreeBSD__)
+ 	context.old_sighandler = signal(SIGBUS, (void (*)(int))vm86_callback);
+@@ -754,7 +933,7 @@
+ 	}
+ 
+ 	if (setjmp(context.env)) {
+-#if defined(__NetBSD__)
++#if defined(__NetBSD__) || defined(__OpenBSD__)
+ 		(void) signal(SIGURG, context.old_sighandler);
+ #elif defined(__FreeBSD__)
+ 		(void) signal(SIGBUS, context.old_sighandler);
+@@ -767,7 +946,7 @@
+ 		return (0);
+ 	}
+ 
+-#if defined(__NetBSD__)
++#if defined(__NetBSD__) || defined(__OpenBSD__)
+ 	if (i386_vm86(&context.vm) == -1)
+ 		return (0);
+ #elif defined(__FreeBSD__)
+@@ -781,7 +960,7 @@
+ 	/* NOTREACHED */
+ 	return (0);
+ }
+-#endif	/* __NetBSD__ || __FreeBSD__ */
++#endif /* __NetBSD__ || __FreeBSD__ || __OpenBSD__ */
+ 
+ int
+ LRMI_call(struct LRMI_regs *r)
+@@ -860,8 +1039,6 @@
+ 	return vret;
+ }
+ 
+-size_t
+-LRMI_base_addr(void)
+-{
+-	return 0;
+-}
++#else /* (__linux__ || __NetBSD__ || __FreeBSD__ || __OpenBSD__) && __i386__ */
++#warning "LRMI is not supported on your system!"
++#endif
+diff -Nuar libx86-git.orig//lrmi.h libx86-git//lrmi.h
+--- libx86-git.orig//lrmi.h	2013-01-29 15:52:29.000000000 +0000
++++ libx86-git//lrmi.h	2013-01-29 17:03:30.000000000 +0000
+@@ -26,7 +26,9 @@
+ #ifndef LRMI_H
+ #define LRMI_H
+ 
+-#define LRMI_PREFIX LRMI_
++#if defined(__i386__) && (defined(__linux__) || defined(__NetBSD__) \
++      || defined(__FreeBSD__) || defined(__OpenBSD__))
++
+ 
+ struct LRMI_regs {
+ 	unsigned int edi;
+@@ -48,11 +50,20 @@
+ 	unsigned short int ss;
+ };
+ 
++#ifndef LRMI_PREFIX
++#define LRMI_PREFIX LRMI_
++#endif
++
++
+ #define LRMI_CONCAT2(a, b) 	a ## b
+ #define LRMI_CONCAT(a, b) 	LRMI_CONCAT2(a, b)
+ #define LRMI_MAKENAME(a) 	LRMI_CONCAT(LRMI_PREFIX, a)
+ 
+ /*
++ * Package version (high 16bit = major, low 16bit minor)
++*/
++#define LRMI_version 0x0009 /* 0.9 */
++/*
+  Initialize
+  returns 1 if sucessful, 0 for failure
+ */
+@@ -94,7 +105,8 @@
+ /*
+  * Get the base address of the real memory address space block.
+  */
+-size_t
+-LRMI_base_addr(void);
++#else /* (__linux__ || __NetBSD__ || __FreeBSD__) && __i386__ */
++#warning "LRMI is not supported on your system!"
++#endif
+ 
+ #endif

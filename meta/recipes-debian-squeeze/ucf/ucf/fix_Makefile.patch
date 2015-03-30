@@ -1,0 +1,12 @@
+diff -Naur ucf-3.0025+nmu1.org//Makefile ucf-3.0025+nmu1//Makefile
+--- ucf-3.0025+nmu1.org//Makefile	2012-08-03 15:42:56.000000000 +0000
++++ ucf-3.0025+nmu1//Makefile	2012-08-03 15:48:52.000000000 +0000
+@@ -12,7 +12,7 @@
+ ## Description      : 
+ ## 
+ ###############################################################################
+-prefix    =
++prefix    = ../image
+ package   = ucf
+ 
+ ETCDIR    = $(prefix)/etc

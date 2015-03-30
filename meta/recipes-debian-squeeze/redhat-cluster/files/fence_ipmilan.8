@@ -1,0 +1,161 @@
+
+.TH FENCE_AGENT 8 2009-10-20 "fence_ipmilan (Fence Agent)"
+.SH NAME
+fence_ipmilan - Fence agent for IPMI over LAN
+.SH DESCRIPTION
+.P
+
+fence_ipmilan is an I/O Fencing agent which can be used with machines controlled by IPMI. This agent calls support software using ipmitool (http://ipmitool.sf.net/).
+.P
+fence_ipmilan accepts options on the command line as well
+as from stdin. Fenced sends parameters through stdin when it execs the
+agent. fence_ipmilan can be run by itself with command
+line options.  This is useful for testing and for turning outlets on or off
+from scripts.
+
+.SH PARAMETERS
+
+	
+.TP
+.B -A
+. 
+IPMI Lan Auth type (md5, password, or none)
+	
+.TP
+.B -a
+. 
+IPMI Lan IP to talk to
+	
+.TP
+.B -p
+. 
+Password (if required) to control power on IPMI device
+	
+.TP
+.B -S
+. 
+Script to retrieve password (if required)
+	
+.TP
+.B -P
+. 
+Use Lanplus
+	
+.TP
+.B -l
+. 
+Username/Login (if required) to control power on IPMI device
+	
+.TP
+.B -o
+. 
+Operation to perform. Valid operations: on, off, reboot, status, list, monitor or metadata (Default Value: reboot)
+	
+.TP
+.B -t
+. 
+Timeout (sec) for IPMI operation
+	
+.TP
+.B -C
+. 
+Ciphersuite to use (same as ipmitool -C parameter)
+	
+.TP
+.B -M
+. 
+Method to fence (onoff or cycle) (Default Value: onoff)
+	
+.TP
+.B -v
+. 
+Verbose mode
+
+.SH ACTIONS
+
+	
+.TP
+\fBon \fP
+Power on machine.
+	
+.TP
+\fBoff \fP
+Power off machine.
+	
+.TP
+\fBreboot \fP
+Reboot machine.
+	
+.TP
+\fBstatus \fP
+This returns the status of the plug/virtual machine.
+	
+.TP
+\fBlist \fP
+List available plugs with aliases/virtual machines if there is support for more then one device. Returns N/A otherwise.
+	
+.TP
+\fBmonitor \fP
+Check if fencing device is running. List available plugs/virtual machines or get status of machine (if it does not support more).
+	
+.TP
+\fBmetadata \fP
+ The operational behavior of this is not known.
+
+.SH STDIN PARAMETERS
+
+	
+.TP
+.B auth
+. 
+IPMI Lan Auth type (md5, password, or none)
+	
+.TP
+.B ipaddr
+. 
+IPMI Lan IP to talk to
+	
+.TP
+.B passwd
+. 
+Password (if required) to control power on IPMI device
+	
+.TP
+.B passwd_script
+. 
+Script to retrieve password (if required)
+	
+.TP
+.B lanplus
+. 
+Use Lanplus
+	
+.TP
+.B login
+. 
+Username/Login (if required) to control power on IPMI device
+	
+.TP
+.B action
+. 
+Operation to perform. Valid operations: on, off, reboot, status, list, monitor or metadata (Default Value: reboot)
+	
+.TP
+.B timeout
+. 
+Timeout (sec) for IPMI operation
+	
+.TP
+.B cipher
+. 
+Ciphersuite to use (same as ipmitool -C parameter)
+	
+.TP
+.B method
+. 
+Method to fence (onoff or cycle) (Default Value: onoff)
+	
+.TP
+.B verbose
+. 
+Verbose mode

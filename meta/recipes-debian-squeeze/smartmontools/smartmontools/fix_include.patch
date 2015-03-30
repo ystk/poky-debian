@@ -1,0 +1,11 @@
+diff -Naur a/os_linux.cpp smartmontools-git//os_linux.cpp
+--- a/os_linux.cpp	2013-05-24 17:12:26.000000000 +0700
++++ smartmontools-git//os_linux.cpp	2013-05-24 17:15:05.000000000 +0700
+@@ -62,6 +62,7 @@
+ #include <sys/stat.h>
+ #include <sys/file.h>
+ #include <unistd.h>
++#include <stddef.h>
+ #include <sys/uio.h>
+ #include <sys/types.h>
+ #ifndef makedev // old versions of types.h do not include sysmacros.h

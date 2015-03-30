@@ -1,0 +1,19 @@
+diff -Naur oprofile-0.9.6-1.1.org//m4/binutils.m4 oprofile-0.9.6-1.1//m4/binutils.m4
+--- oprofile-0.9.6-1.1.org//m4/binutils.m4	2012-08-27 12:43:28.000000000 +0000
++++ oprofile-0.9.6-1.1//m4/binutils.m4	2012-08-27 12:43:49.000000000 +0000
+@@ -16,15 +16,6 @@
+ lib=/usr/lib/libbfd-single.a
+ ORIG_SAVE_LIBS="$LIBS"
+ LIBS="$lib $LIBS"
+-AC_CHECK_FUNCS(bfd_openr, BFD_LIB="$lib",
+-	[LIBS="$ORIG_SAVE_LIBS"
+-	lib=/usr/lib/libbfd.a
+-	ORIG_SAVE_LIBS="$LIBS"
+-	LIBS="$lib $LIBS"
+-	AC_CHECK_FUNCS(bfd_close, BFD_LIB="$lib",
+-		[AC_MSG_ERROR([libfd library not found])])
+-	])
+-
+ AC_LANG_PUSH(C)
+ # Determine if bfd_get_synthetic_symtab macro is available
+ OS="`uname`"

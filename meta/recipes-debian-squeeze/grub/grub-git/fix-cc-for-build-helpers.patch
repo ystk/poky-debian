@@ -1,0 +1,28 @@
+#
+# bin2h and grubinst are scripts which are run
+# only on native machine; used only for build
+# $(CC) for them must be replaced by $(BUILD_CC)
+#
+
+diff --git a/debian/grub-extras/ntldr-img/conf/i386-pc.mk b/debian/grub-extras/ntldr-img/conf/i386-pc.mk
+index 9873492..c18a3a6 100644
+--- a/debian/grub-extras/ntldr-img/conf/i386-pc.mk
++++ b/debian/grub-extras/ntldr-img/conf/i386-pc.mk
+@@ -88,7 +88,7 @@ grldr.mbr: grldr.img
+ DISTCLEANFILES += grldr.mbr
+ 
+ bin2h: $(GRUB_CONTRIB)/ntldr-img/bin2h.c
+-	$(CC) $^ -o $@
++	$(BUILD_CC) $^ -o $@
+ DISTCLEANFILES += bin2h
+ 
+ grub_mbr.h: grldr.mbr bin2h
+@@ -96,7 +96,7 @@ grub_mbr.h: grldr.mbr bin2h
+ DISTCLEANFILES += grub_mbr.h
+ 
+ grubinst: $(GRUB_CONTRIB)/ntldr-img/grubinst.c $(GRUB_CONTRIB)/ntldr-img/utils.c grub_mbr.h
+-	$(CC) -I. -I$(GRUB_CONTRIB)/ntldr-img -DLINUX -o $@ $(GRUB_CONTRIB)/ntldr-img/grubinst.c $(GRUB_CONTRIB)/ntldr-img/utils.c
++	$(BUILD_CC) -I. -I$(GRUB_CONTRIB)/ntldr-img -DLINUX -o $@ $(GRUB_CONTRIB)/ntldr-img/grubinst.c $(GRUB_CONTRIB)/ntldr-img/utils.c
+ DISTCLEANFILES += grubinst
+ 
+ g2ldr.mbr: grubinst

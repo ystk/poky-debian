@@ -1,0 +1,10 @@
+diff -Naur audit-1.7.13-1.org//swig/Makefile.am audit-1.7.13-1/swig/Makefile.am
+--- audit-1.7.13-1.org//swig/Makefile.am	2012-08-29 13:47:26.000000000 +0000
++++ audit-1.7.13-1/swig/Makefile.am	2012-08-29 13:52:27.000000000 +0000
+@@ -34,5 +34,6 @@
+ nodist__audit_la_SOURCES  = audit_wrap.c
+ audit.py audit_wrap.c: ${srcdir}/auditswig.i 
+ 	swig -o audit_wrap.c -python ${INCLUDES} ${srcdir}/auditswig.i 
++	sed -i 's/#include\ <Python.h>/#include\ <python2\.6\/Python.h>/' audit_wrap.c
+ 
+ CLEANFILES = audit.py* audit_wrap.c *~

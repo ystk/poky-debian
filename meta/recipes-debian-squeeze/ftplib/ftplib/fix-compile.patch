@@ -1,0 +1,12 @@
+--- ftplib-3.1-1-8.org/Makefile	2012-08-13 14:01:45.000000000 +0000
++++ ftplib-3.1-1-8/Makefile	2012-08-13 14:03:07.000000000 +0000
+@@ -61,7 +61,8 @@
+ 	ln -sf $< $@
+ 
+ qftp : qftp.o libftp.so ftplib.h
+-	$(CC) $(LDFLAGS) -o $@ $< -lftp
++#	$(CC) $(LDFLAGS) -o $@ $< -lftp
++	$(CC) $(LDFLAGS) -o $@ $< -L. -lftp
+ 
+ ifeq (.depend,$(wildcard .depend))
+ include .depend

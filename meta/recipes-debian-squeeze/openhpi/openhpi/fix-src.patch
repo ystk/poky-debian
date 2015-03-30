@@ -1,0 +1,12 @@
+diff -Naur openhpi-git.orig//plugins/ipmidirect/ipmi_mc_vendor.cpp openhpi-git/plugins/ipmidirect/ipmi_mc_vendor.cpp
+--- openhpi-git.orig//plugins/ipmidirect/ipmi_mc_vendor.cpp	2013-05-24 17:26:58.000000000 +0000
++++ openhpi-git/plugins/ipmidirect/ipmi_mc_vendor.cpp	2013-05-24 17:27:48.000000000 +0000
+@@ -931,7 +931,7 @@
+           /* Everything is valid, create the Watchdog RDR */
+           stdlog << "CreateWatchdogs Resource type " << res->EntityPath().GetEntryType(0) << " instance " << res->EntityPath().GetEntryInstance(0) << "\n";
+         
+-          cIpmiRdr *wd = new cIpmiWatchdog::cIpmiWatchdog( mc, SAHPI_DEFAULT_WATCHDOG_NUM, 0 );
++          cIpmiRdr *wd = new cIpmiWatchdog( mc, SAHPI_DEFAULT_WATCHDOG_NUM, 0 );
+         
+           wd->EntityPath() = res->EntityPath();
+         

@@ -1,0 +1,25 @@
+diff -Naur acpid-2.0.7-1.org//libnetlink.c acpid-2.0.7-1/libnetlink.c
+--- acpid-2.0.7-1.org//libnetlink.c	2012-07-24 11:18:33.000000000 +0000
++++ acpid-2.0.7-1/libnetlink.c	2012-07-24 11:20:27.000000000 +0000
+@@ -518,7 +518,8 @@
+ 
+ int addraw_l(struct nlmsghdr *n, int maxlen, const void *data, int len)
+ {
+-	if ((int)NLMSG_ALIGN(n->nlmsg_len) + NLMSG_ALIGN(len) > maxlen) {
++/*	if ((int)NLMSG_ALIGN(n->nlmsg_len) + NLMSG_ALIGN(len) > maxlen) {*/
++	if ((int)NLMSG_ALIGN(n->nlmsg_len) + (int) NLMSG_ALIGN(len) > maxlen) {
+ 		fprintf(stderr, "addraw_l ERROR: message exceeded bound of %d\n",maxlen);
+ 		return -1;
+ 	}
+diff -Naur acpid-2.0.7-1.org//Makefile acpid-2.0.7-1/Makefile
+--- acpid-2.0.7-1.org//Makefile	2012-07-24 11:18:33.000000000 +0000
++++ acpid-2.0.7-1/Makefile	2012-07-24 11:18:59.000000000 +0000
+@@ -5,7 +5,7 @@
+ 
+ OPT = -O2
+ 
+-DESTDIR =
++DESTDIR = ../image
+ PREFIX = /usr
+ 
+ BINDIR = $(PREFIX)/bin

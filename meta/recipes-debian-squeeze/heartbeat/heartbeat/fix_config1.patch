@@ -1,0 +1,24 @@
+diff -Naur heartbeat-3.0.3-2.org//configure.in heartbeat-3.0.3-2/configure.in
+--- heartbeat-3.0.3-2.org//configure.in	2012-09-05 09:07:28.000000000 +0000
++++ heartbeat-3.0.3-2/configure.in	2012-09-05 09:24:03.000000000 +0000
+@@ -2123,13 +2123,13 @@
+ dnl	Note: reduce LIBS; in particular, ltdl can cause confusion.
+ dnl	Possibly better:  move 'LIBS="$LIBS -lltdl"' from above to beyond here.
+ dnl
+-AC_MSG_CHECKING(for getpid() consistency in multi-process/threads program)
+-ac_save_LIBS=$LIBS
+-LIBS="-lpthread"
+-AC_TRY_RUN(`cat $srcdir/config/pidtest.c`, 
+-AC_MSG_RESULT(ok), 
+-[AC_MSG_RESULT(fail); AC_DEFINE(GETPID_INCONSISTENT, 1 , [pid inconsistent])],)
+-LIBS=$ac_save_LIBS
++#AC_MSG_CHECKING(for getpid() consistency in multi-process/threads program)
++#ac_save_LIBS=$LIBS
++#LIBS="-lpthread"
++#AC_TRY_RUN(`cat $srcdir/config/pidtest.c`, 
++#AC_MSG_RESULT(ok), 
++#[AC_MSG_RESULT(fail); AC_DEFINE(GETPID_INCONSISTENT, 1 , [pid inconsistent])],)
++#LIBS=$ac_save_LIBS
+ 
+ dnl check byte order
+ AC_MSG_CHECKING(for byteorder)

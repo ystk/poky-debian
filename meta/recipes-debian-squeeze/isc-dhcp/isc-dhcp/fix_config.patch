@@ -1,0 +1,30 @@
+diff -Naur isc-dhcp-4.1.1-P1-15+squeeze1.org//configure isc-dhcp-4.1.1-P1-15+squeeze1//configure
+--- isc-dhcp-4.1.1-P1-15+squeeze1.org//configure	2012-08-10 17:13:22.000000000 +0000
++++ isc-dhcp-4.1.1-P1-15+squeeze1//configure	2012-08-10 17:13:58.000000000 +0000
+@@ -7385,18 +7385,18 @@
+ # check for /dev/random (declares HAVE_DEV_RANDOM)
+ { echo "$as_me:$LINENO: checking for /dev/random" >&5
+ echo $ECHO_N "checking for /dev/random... $ECHO_C" >&6; }
+-if test "${ac_cv_file__dev_random+set}" = set; then
+-  echo $ECHO_N "(cached) $ECHO_C" >&6
+-else
+-  test "$cross_compiling" = yes &&
+-  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
+-echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
+-   { (exit 1); exit 1; }; }
++#if test "${ac_cv_file__dev_random+set}" = set; then
++#  echo $ECHO_N "(cached) $ECHO_C" >&6
++#else
++#  test "$cross_compiling" = yes &&
++#  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
++#echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
++#   { (exit 1); exit 1; }; }
+ if test -r "/dev/random"; then
+   ac_cv_file__dev_random=yes
+ else
+   ac_cv_file__dev_random=no
+-fi
++#fi
+ fi
+ { echo "$as_me:$LINENO: result: $ac_cv_file__dev_random" >&5
+ echo "${ECHO_T}$ac_cv_file__dev_random" >&6; }

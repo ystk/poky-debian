@@ -1,0 +1,12 @@
+diff -Naur scim-1.4.9-6.orig/configure.ac scim-1.4.9-6/configure.ac
+--- scim-1.4.9-6.orig/configure.ac	2012-08-30 10:38:24.000000000 +0000
++++ scim-1.4.9-6/configure.ac	2012-08-30 10:38:39.000000000 +0000
+@@ -120,7 +120,7 @@
+ AM_CONDITIONAL(BUILD_MANUAL, test x$XSLTPROC != xno -a x$DOCBOOK_XSL != xno)
+ 
+ # Check intltool
+-IT_PROG_INTLTOOL([0.33], [no-xml])
++#IT_PROG_INTLTOOL([0.33], [no-xml])
+ 
+ # Checks for libraries.
+ AC_HEADER_STDC

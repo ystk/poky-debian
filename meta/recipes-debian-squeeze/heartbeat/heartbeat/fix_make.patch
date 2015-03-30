@@ -1,0 +1,12 @@
+diff -Naur heartbeat-3.0.3-2.org//Makefile.am heartbeat-3.0.3-2/Makefile.am
+--- heartbeat-3.0.3-2.org//Makefile.am	2012-09-05 10:22:59.000000000 +0000
++++ heartbeat-3.0.3-2/Makefile.am	2012-09-05 10:23:19.000000000 +0000
+@@ -54,7 +54,7 @@
+ 
+ # 'buildtools' must be first in the list: tools to aid building of remainder.
+ SUBDIRS	= buildtools $(LIBLTDL_DIR) pkg port replace include lib	\
+-          heartbeat membership telecom resources tools doc cts  \
++          heartbeat membership telecom resources tools cts  \
+           config contrib
+ 
+ HANDY_DOCS = doc/ChangeLog doc/GettingStarted.html doc/DirectoryMap.txt

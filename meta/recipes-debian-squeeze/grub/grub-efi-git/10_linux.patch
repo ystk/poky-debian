@@ -1,0 +1,13 @@
+--- a/util/grub.d/10_linux.in	2014-10-08 18:58:52.000000000 +0700
++++ b/util/grub.d/10_linux.in	2014-10-08 18:58:54.000000000 +0700
+@@ -71,8 +71,9 @@
+ 	  cat << EOF
+ 	set gfxpayload=$GRUB_GFXPAYLOAD_LINUX
+ EOF
++  else
++	echo "	load_video"
+   fi
+-
+   if [ -z "${prepare_boot_cache}" ]; then
+     prepare_boot_cache="$(prepare_grub_to_access_device ${GRUB_DEVICE_BOOT} | sed -e "s/^/\t/")"
+   fi

@@ -1,0 +1,25 @@
+diff -Naur rdist-6.1.5-16.org//Makefile.local rdist-6.1.5-16//Makefile.local
+--- rdist-6.1.5-16.org//Makefile.local	2012-08-20 16:01:52.000000000 +0000
++++ rdist-6.1.5-16//Makefile.local	2012-08-21 08:57:10.000000000 +0000
+@@ -56,7 +56,7 @@
+ #MAN_OWNER	= bin
+ #MAN_GROUP	= bin
+ #MAN_MODE	= 644
+-
++BASEDIR=../../image
+ BIN_DIR = ${BASEDIR}/usr/bin
+ MAN_1_DIR = ${BASEDIR}/usr/share/man/man1
+ MAN_8_DIR = ${BASEDIR}/usr/share/man/man8
+diff -Naur rdist-6.1.5-16.org//src/Makefile.real rdist-6.1.5-16//src/Makefile.real
+--- rdist-6.1.5-16.org//src/Makefile.real	2012-08-20 16:01:52.000000000 +0000
++++ rdist-6.1.5-16//src/Makefile.real	2012-08-21 08:56:56.000000000 +0000
+@@ -52,6 +52,9 @@
+ 		$(COMMONOBJS) $(MISSINGOBJS)
+ 
+ install:
++	echo $(BIN_DIR) 
++	echo "_--------------------------"
++	mkdir -p $(BIN_DIR)
+ 	$(INSTALL) ${IN_ARGS} -o $(BIN_OWNER) -m ${RDIST_MODE} \
+ 		$(CLIENT_BIN) $(BIN_DIR)/$(CLIENT)
+ 	$(INSTALL) ${IN_ARGS} -o ${BIN_OWNER} -m ${RDISTD_MODE} \

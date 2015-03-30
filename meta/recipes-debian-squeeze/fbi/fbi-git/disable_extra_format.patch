@@ -1,0 +1,18 @@
+--- a/Make.config	2011-11-05 08:02:09.314339710 +0000
++++ b/Make.config	2011-11-05 08:02:40.778436387 +0000
+@@ -6,11 +6,11 @@
+ HAVE_GLIBC	:= yes
+ HAVE_STRCASESTR	:= yes
+ HAVE_LIBPCD	:= no
+-HAVE_LIBUNGIF	:= yes
+-HAVE_LIBPNG	:= yes
+-HAVE_LIBTIFF	:= yes
++HAVE_LIBUNGIF	:= no
++HAVE_LIBPNG	:= no
++HAVE_LIBTIFF	:= no
+ #HAVE_LIBMAGICK	:= no
+ HAVE_LIBSANE	:= no
+-HAVE_LIBCURL	:= yes
++HAVE_LIBCURL	:= no
+ HAVE_LIBLIRC	:= no
+ HAVE_MOTIF	:= no

@@ -4,8 +4,10 @@
 # encoded RISC sub-set. Thumb code is smaller (maybe 70% of the ARM size)
 # but requires more instructions (140% for 70% smaller code) so may be
 # slower.
+ARM_THUMB_M_OPT_TMP = "${@['-mno-thumb', '-marm'][bb.utils.vercmp(('', bb.data.getVar('GCCVERSION', d), ''), ('', '4.7', '')) >= 0]}"
+
 TUNEVALID[thumb] = "Use thumb instructions instead of ARM"
-ARM_THUMB_M_OPT = "${@['-mno-thumb', '-mthumb'][bb.data.getVar('ARM_INSTRUCTION_SET', d, 1) == 'thumb']}"
+ARM_THUMB_M_OPT = "${@['${ARM_THUMB_M_OPT_TMP}', '-mthumb'][bb.data.getVar('ARM_INSTRUCTION_SET', d, 1) == 'thumb']}"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "thumb", "${ARM_THUMB_M_OPT}", "", d)}"
 OVERRIDES .= "${@bb.utils.contains("TUNE_FEATURES", "thumb", ":thumb", "", d)}"
 
@@ -23,4 +25,4 @@ TUNEVALID[no-thumb-interwork] = "Disable mixing of thumb and ARM functions"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "no-thumb-interwork", "-mno-thumb-interwork", "-mthumb-interwork", d)}"
 OVERRIDES .= "${@bb.utils.contains("TUNE_FEATURES", "no-thumb-interwork", ":thumb-interwork", "", d)}"
 
-TARGET_CC_KERNEL_ARCH += "-mno-thumb-interwork -mno-thumb"
+TARGET_CC_KERNEL_ARCH += "-mno-thumb-interwork ${ARM_THUMB_M_OPT_TMP}"

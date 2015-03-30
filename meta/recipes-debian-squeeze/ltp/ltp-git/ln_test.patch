@@ -1,0 +1,21 @@
+diff -Nuar a/testcases/commands/fileutils/ln/ln_tests.sh b/testcases/commands/fileutils/ln/ln_tests.sh
+--- a/testcases/commands/fileutils/ln/ln_tests.sh	2011-11-01 19:53:26.000000000 +0900
++++ b/testcases/commands/fileutils/ln/ln_tests.sh	2012-02-14 21:55:16.000000000 +0900
+@@ -149,7 +149,7 @@
+     fcnt=0      # index into files created in loop
+ 	RC=0        # return code from commands 
+ 	
+-	echo "$dirname:"  1>>$LTPTMP/tst_ln.exp
++	echo "$dirname/:"  1>>$LTPTMP/tst_ln.exp
+ 	echo "d.$dircnt"  1>>$LTPTMP/tst_ln.exp
+ 	while [ $dircnt -lt $numdirs ]
+ 	do
+@@ -211,7 +211,7 @@
+ 	fi
+ 
+ 	tst_resm TINFO "Test #1: creating output file"
+-	ls -R $LTPTMP/tst_ln.tmp1 > $LTPTMP/tst_ln.out 2>&1
++	ls -R $LTPTMP/tst_ln.tmp1/ > $LTPTMP/tst_ln.out 2>&1
+ 
+ 	tst_resm TINFO "Test #1: creating expected output file"
+ 	creat_expout $numdirs $numfiles $LTPTMP/tst_ln.tmp1

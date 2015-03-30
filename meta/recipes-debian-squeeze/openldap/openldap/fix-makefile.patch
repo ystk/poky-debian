@@ -1,0 +1,36 @@
+diff -Naur openldap-2.4.23-7.orig/libraries/liblber/Makefile.in openldap-2.4.23-7/libraries/liblber/Makefile.in
+--- openldap-2.4.23-7.orig/libraries/liblber/Makefile.in	2012-08-27 14:03:36.000000000 +0000
++++ openldap-2.4.23-7/libraries/liblber/Makefile.in	2012-08-27 14:04:03.000000000 +0000
+@@ -39,7 +39,7 @@
+ NT_LINK_LIBS = $(AC_LIBS)
+ UNIX_LINK_LIBS = $(AC_LIBS)
+ ifneq (,$(VERSION_OPTION))
+-  VERSION_FLAGS = "$(VERSION_OPTION)$(srcdir)/liblber.map"
++  VERSION_FLAGS = "$(srcdir)/liblber.map"
+ endif
+ 
+ dtest:    $(XLIBS) dtest.o
+diff -Naur openldap-2.4.23-7.orig/libraries/libldap/Makefile.in openldap-2.4.23-7/libraries/libldap/Makefile.in
+--- openldap-2.4.23-7.orig/libraries/libldap/Makefile.in	2012-08-27 14:03:36.000000000 +0000
++++ openldap-2.4.23-7/libraries/libldap/Makefile.in	2012-08-27 14:04:23.000000000 +0000
+@@ -53,7 +53,7 @@
+ NT_LINK_LIBS = $(LDAP_LIBLBER_LA) $(AC_LIBS) $(SECURITY_LIBS)
+ UNIX_LINK_LIBS = $(LDAP_LIBLBER_LA) $(AC_LIBS) $(SECURITY_LIBS)
+ ifneq (,$(VERSION_OPTION))
+-  VERSION_FLAGS = $(VERSION_OPTION)$(srcdir)/libldap.map
++  VERSION_FLAGS = $(srcdir)/libldap.map
+ endif
+ 
+ apitest:	$(XLIBS) apitest.o
+diff -Naur openldap-2.4.23-7.orig/libraries/libldap_r/Makefile.in openldap-2.4.23-7/libraries/libldap_r/Makefile.in
+--- openldap-2.4.23-7.orig/libraries/libldap_r/Makefile.in	2012-08-27 14:03:36.000000000 +0000
++++ openldap-2.4.23-7/libraries/libldap_r/Makefile.in	2012-08-27 14:04:42.000000000 +0000
+@@ -62,7 +62,7 @@
+ NT_LINK_LIBS = $(LDAP_LIBLBER_LA) $(AC_LIBS) $(SECURITY_LIBS)
+ UNIX_LINK_LIBS = $(LDAP_LIBLBER_LA) $(AC_LIBS) $(SECURITY_LIBS) $(LTHREAD_LIBS)
+ ifneq (,$(VERSION_OPTION))
+-  VERSION_FLAGS = "$(VERSION_OPTION)$(XXDIR)/libldap.map"
++  VERSION_FLAGS = "$(XXDIR)/libldap.map"
+ endif
+ 
+ .links : Makefile

@@ -1,0 +1,55 @@
+diff -Naur git.orig/examples/Makefile git/examples/Makefile
+--- git.orig/examples/Makefile	2012-09-04 10:29:16.000000000 +0000
++++ git/examples/Makefile	2012-09-04 10:30:02.000000000 +0000
+@@ -86,16 +86,16 @@
+ #---------------------------------
+ CIMG_VERSION = 1.3.9
+ X11PATH      = /usr/X11R6
+-CC           = g++
++CC           = $(CXX) 
+ CCVER        = `$(CC) -v 2>&1 | tail -n 1`
+ EXEPFX       =
+ 
+ ifeq ($(CC),icc)
+-CFLAGS       = -I..
+-LDFLAGS      =
++CFLAGS       = -I..
++LDFLAGS      =
+ else
+-CFLAGS       = -I.. -Wall -W
+-LDFLAGS      = -lm
++CFLAGS       = -I.. -Wall -W
++LDFLAGS      = -lm
+ endif
+ 
+ #--------------------------------------------------
+diff -Naur git.orig/examples/Makefile git/examples/Makefile
+--- git.orig/examples/Makefile	2012-09-04 10:55:34.000000000 +0000
++++ git/examples/Makefile	2012-09-04 10:56:41.000000000 +0000
+@@ -327,7 +327,8 @@
+ 	$(CC) -o $(EXEPFX)gmic gmic.cpp -I.. -Dcimg_build -Dgmic_minimal -Dgmic_main -Dcimg_use_fftw3 -Dcimg_use_png -Dcimg_display=1 -I/usr/X11R6/include -g -W -Wall -ansi -pedantic -L/usr/X11R6/lib -lX11 -lpthread -lfftw3 -lpng -lz
+ 
+ ifeq ($(STRIP_EXE),true)
+-	strip $(EXEPFX)gmic
++#	strip $(EXEPFX)gmic
++	$(STRIP) $(EXEPFX)gmic
+ endif
+ 
+ # Linux/BSD/Mac OSX targets, with X11 display.
+diff -Naur git.orig/examples/Makefile git/examples/Makefile
+--- git.orig/examples/Makefile	2012-09-04 11:01:46.000000000 +0000
++++ git/examples/Makefile	2012-09-04 11:02:22.000000000 +0000
+@@ -226,9 +226,11 @@
+ 	$(CC) -o $(EXEPFX)$* $< $(CFLAGS) $(LDFLAGS) $(CONF_CFLAGS) $(CONF_LDFLAGS)
+ ifeq ($(STRIP_EXE),true)
+ ifeq ($(MSYSTEM),MINGW32)
+-	strip $(EXEPFX)$*.exe
++#	strip $(EXEPFX)$*.exe
++	$(STRIP) $(EXEPFX)$*.exe
+ else
+-	strip $(EXEPFX)$*
++#	strip $(EXEPFX)$*
++	$(STRIP) $(EXEPFX)$*
+ endif
+ endif
+ menu:

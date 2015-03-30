@@ -1,0 +1,27 @@
+meta-oss includes recipes for sources not included in Debian.
+All sources included in this layer must be open source software and
+free for commercial and non-commercial use.
+
+[recipes-oss/webmin]
+BSD-like license
+http://www.webmin.com/intro.html
+
+[recipes-oss/flashrom]
+License: GPLv2
+Homepage: http://flashrom.org/Flashrom
+Main SVN: svn://flashrom.org/flashrom/trunk
+Mirror git: http://git.ipxe.org/mirror/flashrom/.git
+
+[recipes-oss/checksec]
+License: BSD
+Homepage: http://www.trapkit.de/tools/checksec.html
+GIT: https://github.com/slimm609/checksec.sh
+
+[recipes-oss/ripe]
+License: MIT
+GIT: https://github.com/johnwilander/RIPE
+
+[recipes-oss/unixbench]
+License: GNU GPLv2 (not sure)
+Homepage: https://code.google.com/p/byte-unixbench/
+SVN: http://byte-unixbench.googlecode.com/svn/trunk/

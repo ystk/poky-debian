@@ -1,0 +1,41 @@
+--- a/Makefile.am	2012-06-04 10:48:40.992868044 +0000
++++ b/Makefile.am	2012-06-04 10:49:54.876841851 +0000
+@@ -167,22 +167,6 @@
+ udev_udevadm_LDADD = libudev/libudev-private.la
+ 
+ # ------------------------------------------------------------------------------
+-# udev man pages
+-# ------------------------------------------------------------------------------
+-dist_man_MANS = \
+-	udev/udev.7 \
+-	udev/udevadm.8 \
+-	udev/udevd.8
+-
+-EXTRA_DIST += \
+-	udev/udev.xml \
+-	udev/udevadm.xml \
+-	udev/udevd.xml
+-
+-%.7 %.8 : %.xml
+-	$(AM_V_GEN)$(XSLTPROC) -o $@ -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
+-
+-# ------------------------------------------------------------------------------
+ # udev tests
+ # ------------------------------------------------------------------------------
+ TESTS = test/udev-test.pl test/rules-test.sh
+@@ -285,7 +269,6 @@
+ 	extras/scsi_id/scsi_id.h
+ extras_scsi_id_scsi_id_LDADD = libudev/libudev-private.la
+ libexec_PROGRAMS += extras/scsi_id/scsi_id
+-dist_man_MANS += extras/scsi_id/scsi_id.8
+ 
+ # ------------------------------------------------------------------------------
+ # usb_id - USB device property import
+@@ -308,7 +291,6 @@
+ extras_vio_type_vio_type_SOURCES = extras/vio_type/vio_type.c
+ extras_vio_type_vio_type_LDADD = libudev/libudev-private.la
+ libexec_PROGRAMS += extras/vio_type/vio_type
+-dist_man_MANS += extras/vio_type/vio_type.8
+ 
+ if ENABLE_EXTRAS
+ # ------------------------------------------------------------------------------

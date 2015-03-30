@@ -1,0 +1,17 @@
+To be applied after use_embedded_timezonedb.patch
+
+===================================================================
+--- a/ext/date/lib/parse_tz.c	2011-12-19 15:02:57.294991861 +1300
++++ b/ext/date/lib/parse_tz.c	2011-12-19 15:06:42.284970128 +1300
+@@ -866,9 +866,9 @@
+ 
+ 			/* Now done with the mmap segment - discard it. */
+ 			munmap(memmap, maplen);
++		} else
+ #endif
+-		}
+-		else {
++		{
+ 			/* PHP-style - use the embedded info. */
+ 			read_location(&tzf, tmp);
+ 		}

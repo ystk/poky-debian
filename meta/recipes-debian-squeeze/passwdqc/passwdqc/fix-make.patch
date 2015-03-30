@@ -1,0 +1,44 @@
+diff -Naur passwdqc-1.2.0-1.org//passwdqc/Makefile passwdqc-1.2.0-1//passwdqc/Makefile
+--- passwdqc-1.2.0-1.org//passwdqc/Makefile	2012-08-25 13:14:39.000000000 +0000
++++ passwdqc-1.2.0-1//passwdqc/Makefile	2012-08-25 13:19:22.000000000 +0000
+@@ -37,7 +37,7 @@
+ LN_s = ln -s -f
+ MKDIR = umask 022 && mkdir -p
+ INSTALL = install -c
+-CFLAGS = -Wall -O2
++CFLAGS = -Wall -O2 -I$(syspath)
+ CFLAGS_lib = $(CFLAGS) -fPIC
+ CFLAGS_bin = $(CFLAGS) -fomit-frame-pointer
+ 
+diff -Naur passwdqc-1.2.0-1.org//passwdqc/Makefile passwdqc-1.2.0-1/passwdqc/Makefile
+--- passwdqc-1.2.0-1.org//passwdqc/Makefile	2012-08-25 13:32:23.000000000 +0000
++++ passwdqc-1.2.0-1/passwdqc/Makefile	2012-08-25 13:38:05.000000000 +0000
+@@ -62,7 +62,7 @@
+ LDLIBS_pam_LINUX = -lpam -lcrypt
+ LDLIBS_pam_SUN = -lpam -lcrypt
+ LDLIBS_pam_HP = -lpam -lsec
+-
++LIBNEW = -L$(libpath) -lpam -lcrypt
+ # Uncomment this to use cc instead of gcc
+ #CC = cc
+ # Uncomment this to use Sun's C compiler flags
+@@ -89,7 +89,7 @@
+ 	Linux)	$(MAKE) CFLAGS_lib="$(CFLAGS_lib) -DHAVE_SHADOW" \
+ 			LDFLAGS_lib="$(LDFLAGS_lib_LINUX)" \
+ 			LDFLAGS_pam="$(LDFLAGS_pam_LINUX)" \
+-			LDLIBS_pam="$(LDLIBS_pam_LINUX)" \
++			LDLIBS_pam="$(LIBNEW)" \
+ 			$@_wrapped;; \
+ 	SunOS)	$(MAKE) CFLAGS_lib="$(CFLAGS_lib) -DHAVE_SHADOW" \
+ 			LD_lib=ld \
+diff -Naur passwdqc-1.2.0-1.org//passwdqc/Makefile passwdqc-1.2.0-1/passwdqc/Makefile
+--- passwdqc-1.2.0-1.org//passwdqc/Makefile	2012-08-30 14:46:42.000000000 +0000
++++ passwdqc-1.2.0-1/passwdqc/Makefile	2012-08-30 14:48:00.000000000 +0000
+@@ -30,7 +30,6 @@
+ MANDIR = /usr/share/man
+ DESTDIR =
+ 
+-CC = gcc
+ LD = $(CC)
+ LD_lib = $(LD)
+ RM = rm -f

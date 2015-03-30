@@ -1,0 +1,49 @@
+diff -Naur iproute-20100519-3.org//include/linux/netdevice.h iproute-20100519-3/include/linux/netdevice.h
+--- iproute-20100519-3.org//include/linux/netdevice.h	2012-08-31 13:33:36.000000000 +0000
++++ iproute-20100519-3/include/linux/netdevice.h	2012-08-31 13:34:06.000000000 +0000
+@@ -27,7 +27,7 @@
+ 
+ #include <linux/if.h>
+ #include <linux/if_ether.h>
+-#include <linux/if_packet.h>
++#include "if_packet.h"
+ #include <linux/if_link.h>
+ 
+ 
+diff -Naur iproute-20100519-3.org//ip/iplink.c iproute-20100519-3/ip/iplink.c
+--- iproute-20100519-3.org//ip/iplink.c	2012-08-31 13:33:36.000000000 +0000
++++ iproute-20100519-3/ip/iplink.c	2012-08-31 13:35:06.000000000 +0000
+@@ -19,7 +19,7 @@
+ #include <errno.h>
+ #include <sys/socket.h>
+ #include <linux/if.h>
+-#include <linux/if_packet.h>
++#include "if_packet.h"
+ #include <linux/if_ether.h>
+ #include <linux/sockios.h>
+ #include <netinet/in.h>
+diff -Naur iproute-20100519-3.org//misc/arpd.c iproute-20100519-3/misc/arpd.c
+--- iproute-20100519-3.org//misc/arpd.c	2012-08-31 13:33:36.000000000 +0000
++++ iproute-20100519-3/misc/arpd.c	2012-08-31 13:34:41.000000000 +0000
+@@ -31,7 +31,7 @@
+ #include <linux/if_arp.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+-#include <linux/if_packet.h>
++#include "if_packet.h"
+ #include <linux/filter.h>
+ 
+ #include "libnetlink.h"
+diff -Naur iproute-20100519-3.org//misc/arpd.c iproute-20100519-3/misc/arpd.c
+--- iproute-20100519-3.org//misc/arpd.c	2012-09-05 15:26:30.000000000 +0000
++++ iproute-20100519-3/misc/arpd.c	2012-09-05 15:27:02.000000000 +0000
+@@ -16,7 +16,7 @@
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <netdb.h>
+-#include <db_185.h>
++#include "db_185.h"
+ #include <sys/ioctl.h>
+ #include <sys/poll.h>
+ #include <errno.h>
+ 

@@ -1,0 +1,11 @@
+--- a/config.layout	2013-01-21 19:22:06.458513900 +0900
++++ b/config.layout	2013-01-21 19:24:27.362529143 +0900
+@@ -19,7 +19,7 @@
+     libexecdir:    ${exec_prefix}/modules
+     mandir:        ${prefix}/man
+     sysconfdir:    ${prefix}/conf
+-    datadir:       ${prefix}
++    datadir:       ${exec_prefix}/share/apache2
+     installbuilddir: ${datadir}/build
+     errordir:      ${datadir}/error
+     iconsdir:      ${datadir}/icons

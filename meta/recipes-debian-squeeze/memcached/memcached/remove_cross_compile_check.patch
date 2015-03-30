@@ -1,0 +1,203 @@
+diff -Naur memcached-git.orig//configure.ac memcached-git/configure.ac
+--- memcached-git.orig//configure.ac	2014-08-04 18:32:09.000000000 +0700
++++ memcached-git/configure.ac	2014-08-04 18:36:12.000000000 +0700
+@@ -41,29 +41,6 @@
+ dnl check if this is the Sun Studio compiler, and if so run the ACTION-IF-YES
+ dnl sets the $SUNCC variable to "yes" or "no"
+ dnl **********************************************************************
+-AC_DEFUN([DETECT_SUNCC],
+-[
+-    SUNCC="no"
+-    AC_MSG_CHECKING([for Sun cc in use])
+-    AC_RUN_IFELSE(
+-      [AC_LANG_PROGRAM([], [dnl
+-#ifdef __SUNPRO_C
+-   return 0;
+-#else
+-   return 1;
+-#endif
+-      ])
+-    ],[
+-       AC_MSG_RESULT([yes])
+-       [$1]
+-       SUNCC="yes"
+-    ], [
+-       AC_MSG_RESULT([no])
+-       [$2]
+-    ])
+-])
+-
+-DETECT_SUNCC([CFLAGS="-mt $CFLAGS"], [])
+ 
+ if test "$ICC" = "no"; then
+    AC_PROG_CC_C99
+@@ -217,56 +194,6 @@
+ 
+ LIBEVENT_URL=http://www.monkey.org/~provos/libevent/
+ 
+-AC_CACHE_CHECK([for libevent directory], ac_cv_libevent_dir, [
+-  saved_LIBS="$LIBS"
+-  saved_LDFLAGS="$LDFLAGS"
+-  saved_CPPFLAGS="$CPPFLAGS"
+-  le_found=no
+-  for ledir in $trylibeventdir "" $prefix /usr/local ; do
+-    LDFLAGS="$saved_LDFLAGS"
+-    LIBS="$saved_LIBS -levent"
+-
+-    # Skip the directory if it isn't there.
+-    if test ! -z "$ledir" -a ! -d "$ledir" ; then
+-       continue;
+-    fi
+-    if test ! -z "$ledir" ; then
+-      if test -d "$ledir/lib" ; then
+-        LDFLAGS="-L$ledir/lib $LDFLAGS"
+-      else
+-        LDFLAGS="-L$ledir $LDFLAGS"
+-      fi
+-      if test -d "$ledir/include" ; then
+-        CPPFLAGS="-I$ledir/include $CPPFLAGS"
+-      else
+-        CPPFLAGS="-I$ledir $CPPFLAGS"
+-      fi
+-    fi
+-    # Can I compile and link it?
+-    AC_TRY_LINK([#include <sys/time.h>
+-#include <sys/types.h>
+-#include <event.h>], [ event_init(); ],
+-       [ libevent_linked=yes ], [ libevent_linked=no ])
+-    if test $libevent_linked = yes; then
+-       if test ! -z "$ledir" ; then
+-         ac_cv_libevent_dir=$ledir
+-       else
+-         ac_cv_libevent_dir="(system)"
+-       fi
+-       le_found=yes
+-       break
+-    fi
+-  done
+-  LIBS="$saved_LIBS"
+-  LDFLAGS="$saved_LDFLAGS"
+-  CPPFLAGS="$saved_CPPFLAGS"
+-  if test $le_found = no ; then
+-    AC_MSG_ERROR([libevent is required.  You can get it from $LIBEVENT_URL
+-
+-      If it's already installed, specify its path using --with-libevent=/dir/
+-])
+-  fi
+-])
+ LIBS="$LIBS -levent"
+ if test $ac_cv_libevent_dir != "(system)"; then
+   if test -d "$ac_cv_libevent_dir/lib" ; then
+@@ -363,97 +290,15 @@
+ AC_C_SOCKLEN_T
+ 
+ dnl Check if we're a little-endian or a big-endian system, needed by hash code
+-AC_DEFUN([AC_C_ENDIAN],
+-[AC_CACHE_CHECK(for endianness, ac_cv_c_endian,
+-[
+-  AC_RUN_IFELSE(
+-    [AC_LANG_PROGRAM([], [dnl
+-        long val = 1;
+-        char *c = (char *) &val;
+-        exit(*c == 1);
+-    ])
+-  ],[
+-    ac_cv_c_endian=big
+-  ],[
+-    ac_cv_c_endian=little
+-  ])
+-])
+-if test $ac_cv_c_endian = big; then
+-  AC_DEFINE(ENDIAN_BIG, 1, [machine is bigendian])
+-fi
+-if test $ac_cv_c_endian = little; then
+-  AC_DEFINE(ENDIAN_LITTLE, 1, [machine is littleendian])
+-fi
+-])
+-
+-AC_C_ENDIAN
+-
+-AC_DEFUN([AC_C_HTONLL],
+-[
+-    AC_MSG_CHECKING([for htonll])
+-    have_htoll="no"
+-    AC_RUN_IFELSE([
+-       AC_LANG_PROGRAM([
+-#include <sys/types.h>
+-#include <netinet/in.h>
+-#ifdef HAVE_INTTYPES_H
+-#include <inttypes.h> */
+-#endif
+-       ], [
+-          return htonll(0);
+-       ])
+-    ], [
+-      have_htoll="yes"
+-      AC_DEFINE([HAVE_HTONLL], [1], [Have ntohll])
+-    ])
+-
+-    AC_MSG_RESULT([$have_htoll])
+-])
+-
+-AC_C_HTONLL
+ 
+ dnl Check whether the user's system supports pthread
+ AC_SEARCH_LIBS(pthread_create, pthread)
+-if test "x$ac_cv_search_pthread_create" = "xno"; then
+-  AC_MSG_ERROR([Can't enable threads without the POSIX thread library.])
+-fi
+ 
+ AC_CHECK_FUNCS(mlockall)
+ AC_CHECK_FUNCS(getpagesizes)
+ AC_CHECK_FUNCS(memcntl)
+ AC_CHECK_FUNCS(sigignore)
+ 
+-AC_DEFUN([AC_C_ALIGNMENT],
+-[AC_CACHE_CHECK(for alignment, ac_cv_c_alignment,
+-[
+-  AC_RUN_IFELSE(
+-    [AC_LANG_PROGRAM([
+-#include <stdlib.h>
+-#include <inttypes.h>
+-    ], [
+-       char *buf = malloc(32);
+-
+-       uint64_t *ptr = (uint64_t*)(buf+2);
+-       // catch sigbus, etc.
+-       *ptr = 0x1;
+-
+-       // catch unaligned word access (ARM cpus)
+-       *buf =  1; *(buf +1) = 2; *(buf + 2) = 2; *(buf + 3) = 3; *(buf + 4) = 4;
+-       int* i = (int*)(buf+1);
+-       return (84148994 == i) ? 0 : 1;
+-    ])
+-  ],[
+-    ac_cv_c_alignment=none
+-  ],[
+-    ac_cv_c_alignment=need
+-  ])
+-])
+-if test $ac_cv_c_alignment = need; then
+-  AC_DEFINE(NEED_ALIGN, 1, [Machine need alignment])
+-fi
+-])
+-
+-AC_C_ALIGNMENT
+ 
+ dnl Check for the requirements for running memcached with less privileges
+ dnl than the default privilege set. On Solaris we need setppriv and priv.h
+@@ -496,12 +341,12 @@
+ if test "$ICC" = "yes"
+ then
+    dnl ICC trying to be gcc.
+-   CFLAGS="$CFLAGS -diag-disable 187 -Wall -Werror"
++   CFLAGS="$CFLAGS -diag-disable 187 -Wall " 
+    AC_DEFINE([_GNU_SOURCE],[1],[find sigignore on Linux])
+ elif test "$GCC" = "yes"
+ then
+   GCC_VERSION=`$CC -dumpversion`
+-  CFLAGS="$CFLAGS -Wall -Werror -pedantic -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls"
++  CFLAGS="$CFLAGS -Wall -pedantic -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls"
+   case $GCC_VERSION in
+     4.4.*)
+     CFLAGS="$CFLAGS -fno-strict-aliasing"

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Unmount according to fstab
+echo "Unmounting filesystem..."
+sync; sync; sync
+umount -a -f -r 2> /dev/null || true
+sync; sync; sync

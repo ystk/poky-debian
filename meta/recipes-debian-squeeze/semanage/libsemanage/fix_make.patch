@@ -1,0 +1,12 @@
+diff -Naur libsemanage_2.0.45-1.org/src/Makefile libsemanage_2.0.45-1/src/Makefile
+--- libsemanage_2.0.45-1.org/src/Makefile	2012-08-31 14:18:55.000000000 +0000
++++ libsemanage_2.0.45-1/src/Makefile	2012-08-31 14:19:49.000000000 +0000
+@@ -79,7 +79,7 @@
+ 	ranlib $@
+ 
+ $(LIBSO): $(LOBJS)
+-	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -lsepol -lselinux -lbz2 -lustr -L$(LIBDIR) -Wl,-soname,$(LIBSO),--version-script=libsemanage.map
++	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -L$(setlib) -lsepol -lselinux -lbz2 -lustr -L$(LIBDIR) -Wl,-soname,$(LIBSO),--version-script=libsemanage.map,-z,defs
+ 	ln -sf $@ $(TARGET)
+ 
+ $(LIBPC): $(LIBPC).in

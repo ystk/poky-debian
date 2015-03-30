@@ -1,0 +1,44 @@
+#
+# tempfile is included in debianutils
+# mktemp is included in coreutils/busybox, which are core packages
+#
+# Skerlet <skerlet@swc.toshiba.co.jp>
+#
+--- a/debian/update-grub	2014-04-10 20:21:38.430062877 +0900
++++ b/debian/update-grub	2014-04-10 20:22:00.566063862 +0900
+@@ -475,7 +475,7 @@
+ # Default options to use in a new config file. This will only be used if $menu_file
+ # doesn't already exist. Only edit the lines between the two "EOF"s. The others are
+ # part of the script.
+-newtemplate=$(tempfile)
++newtemplate=$(mktemp)
+ cat >> "$newtemplate" <<EOF
+ # $menu_file_basename - See: grub(8), info grub, update-grub(8)
+ #            grub-install(8), grub-floppy(8),
+@@ -1124,7 +1124,7 @@
+ savedefault=$(GetMenuOpt "savedefault" "$savedefault")
+ 
+ # Generate the menu options we want to insert
+-buffer=$(tempfile)
++buffer=$(mktemp)
+ echo $start >> $buffer
+ echo "## lines between the AUTOMAGIC KERNELS LIST markers will be modified" >> $buffer
+ echo "## by the debian update-grub script except for the default options below" >> $buffer
+@@ -1400,7 +1400,7 @@
+ 
+ output_kernel_list
+ 
+-otherbuffer=$(tempfile)
++otherbuffer=$(mktemp)
+ cat $buffer > $otherbuffer
+ 
+ echo -n "Updating $menu ... " >&2
+@@ -1425,7 +1425,7 @@
+ 	grub-set-default $1
+     else
+ 	value="$1"
+-	newmenu=$(tempfile)
++	newmenu=$(mktemp)
+ 	sed -e "s/^[[:blank:]]*default[[:blank:]]*[[:digit:]]*\(.*\)/default         ${value}\1/;b" $menu > $newmenu
+ 	cat $newmenu > $menu
+ 	rm -f $newmenu

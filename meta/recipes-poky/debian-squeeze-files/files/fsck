@@ -1,0 +1,50 @@
+#!/bin/sh
+
+if [ -f /etc/default/rcS ]; then
+	. /etc/default/rcS
+fi
+
+#
+# Ensure that the rootfs is quiescent and read-only
+#
+
+mount -n -o remount,ro / || \
+echo "WARNING: rootfs \"$ROOTFS_DEV\" is NOT read-only mounted"
+
+#
+# Do fsck
+#
+
+fsck -A -p
+RET=$?
+
+# Return codes
+#   RET=0: clean
+#   RET=1: reqaired
+#   RET=2: reqaired (need to reboot)
+#   RET=3: 1+2
+#   RET>3: error
+# Maintenance login (sulogin) is called to repaire file system when fsck fails
+case "$RET" in
+"0")
+	;;
+"1"|"2"|"3")
+	echo "fsck: Repaired ($RET)"
+	;;
+*)
+	echo "fsck: failed ($RET)"
+	echo "A manual fsck must be performed in maintenance shell with"
+	echo "the root filesystem mounted in read-only mode."
+
+	if [ "$FSCK_IGNORE_ERROR" = "yes" ]; then
+		echo "FSCK_IGNORE_ERROR is set. Skipping a manual fsck..."
+		sleep 1
+	elif ! sulogin /dev/console
+	then
+		echo "FATAL: Failed to start maintenance shell."
+		echo "System will restart in 3 seconds..."
+		sleep 3
+		reboot -f
+	fi
+	;;
+esac

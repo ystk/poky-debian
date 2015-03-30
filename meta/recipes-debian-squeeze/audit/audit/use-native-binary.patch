@@ -1,0 +1,178 @@
+diff -Naur audit-1.7.13-1.org//lib/Makefile.am audit-1.7.13-1/lib/Makefile.am
+--- audit-1.7.13-1.org//lib/Makefile.am	2012-08-29 14:52:42.000000000 +0000
++++ audit-1.7.13-1/lib/Makefile.am	2012-08-29 14:53:33.000000000 +0000
+@@ -49,76 +49,76 @@
+ gen_actiontabs_h_SOURCES = gen_tables.c gen_tables.h actiontab.h
+ gen_actiontabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="actiontab.h"'
+ actiontabs.h: gen_actiontabs_h Makefile
+-	./gen_actiontabs_h --lowercase --i2s --s2i action > $@
++	gen_actiontabs_h --lowercase --i2s --s2i action > $@
+ 
+ gen_alpha_tables_h_SOURCES = gen_tables.c gen_tables.h alpha_table.h
+ gen_alpha_tables_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="alpha_table.h"'
+ alpha_tables.h: gen_alpha_tables_h Makefile
+-	./gen_alpha_tables_h --lowercase --i2s --s2i alpha_syscall > $@
++	gen_alpha_tables_h --lowercase --i2s --s2i alpha_syscall > $@
+ 
+ gen_errtabs_h_SOURCES = gen_tables.c gen_tables.h errtab.h
+ gen_errtabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="errtab.h"'
+ errtabs.h: gen_errtabs_h Makefile
+-	./gen_errtabs_h --duplicate-ints --uppercase --i2s --s2i err > $@
++	gen_errtabs_h --duplicate-ints --uppercase --i2s --s2i err > $@
+ 
+ gen_fieldtabs_h_SOURCES = gen_tables.c gen_tables.h fieldtab.h
+ gen_fieldtabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="fieldtab.h"'
+ fieldtabs.h: gen_fieldtabs_h Makefile
+-	./gen_fieldtabs_h --duplicate-ints --lowercase --i2s --s2i field > $@
++	gen_fieldtabs_h --duplicate-ints --lowercase --i2s --s2i field > $@
+ 
+ gen_flagtabs_h_SOURCES = gen_tables.c gen_tables.h flagtab.h
+ gen_flagtabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="flagtab.h"'
+ flagtabs.h: gen_flagtabs_h Makefile
+-	./gen_flagtabs_h --lowercase --i2s --s2i flag > $@
++	gen_flagtabs_h --lowercase --i2s --s2i flag > $@
+ 
+ gen_ftypetabs_h_SOURCES = gen_tables.c gen_tables.h ftypetab.h
+ gen_ftypetabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="ftypetab.h"'
+ ftypetabs.h: gen_ftypetabs_h Makefile
+-	./gen_ftypetabs_h --lowercase --i2s --s2i ftype > $@
++	gen_ftypetabs_h --lowercase --i2s --s2i ftype > $@
+ 
+ gen_i386_tables_h_SOURCES = gen_tables.c gen_tables.h i386_table.h
+ gen_i386_tables_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="i386_table.h"'
+ i386_tables.h: gen_i386_tables_h Makefile
+-	./gen_i386_tables_h --duplicate-ints --lowercase --i2s --s2i \
++	gen_i386_tables_h --duplicate-ints --lowercase --i2s --s2i \
+ 		i386_syscall > $@
+ 
+ gen_ia64_tables_h_SOURCES = gen_tables.c gen_tables.h ia64_table.h
+ gen_ia64_tables_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="ia64_table.h"'
+ ia64_tables.h: gen_ia64_tables_h Makefile
+-	./gen_ia64_tables_h --lowercase --i2s --s2i ia64_syscall > $@
++	gen_ia64_tables_h --lowercase --i2s --s2i ia64_syscall > $@
+ 
+ gen_machinetabs_h_SOURCES = gen_tables.c gen_tables.h machinetab.h
+ gen_machinetabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="machinetab.h"'
+ machinetabs.h: gen_machinetabs_h Makefile
+-	./gen_machinetabs_h --duplicate-ints --lowercase --i2s --s2i machine \
++	gen_machinetabs_h --duplicate-ints --lowercase --i2s --s2i machine \
+ 		> $@
+ 
+ gen_msg_typetabs_h_SOURCES = gen_tables.c gen_tables.h msg_typetab.h
+ gen_msg_typetabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="msg_typetab.h"'
+ msg_typetabs.h: gen_msg_typetabs_h Makefile
+-	./gen_msg_typetabs_h --uppercase --i2s --s2i msg_type > $@
++	gen_msg_typetabs_h --uppercase --i2s --s2i msg_type > $@
+ 
+ gen_optabs_h_SOURCES = gen_tables.c gen_tables.h optab.h
+ gen_optabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="optab.h"'
+ optabs.h: gen_optabs_h Makefile
+-	./gen_optabs_h --i2s op > $@
++	gen_optabs_h --i2s op > $@
+ 
+ gen_ppc_tables_h_SOURCES = gen_tables.c gen_tables.h ppc_table.h
+ gen_ppc_tables_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="ppc_table.h"'
+ ppc_tables.h: gen_ppc_tables_h Makefile
+-	./gen_ppc_tables_h --lowercase --i2s --s2i ppc_syscall > $@
++	gen_ppc_tables_h --lowercase --i2s --s2i ppc_syscall > $@
+ 
+ gen_s390_tables_h_SOURCES = gen_tables.c gen_tables.h s390_table.h
+ gen_s390_tables_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="s390_table.h"'
+ s390_tables.h: gen_s390_tables_h Makefile
+-	./gen_s390_tables_h --lowercase --i2s --s2i s390_syscall > $@
++	gen_s390_tables_h --lowercase --i2s --s2i s390_syscall > $@
+ 
+ gen_s390x_tables_h_SOURCES = gen_tables.c gen_tables.h s390x_table.h
+ gen_s390x_tables_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="s390x_table.h"'
+ s390x_tables.h: gen_s390x_tables_h Makefile
+-	./gen_s390x_tables_h --lowercase --i2s --s2i s390x_syscall > $@
++	gen_s390x_tables_h --lowercase --i2s --s2i s390x_syscall > $@
+ 
+ gen_x86_64_tables_h_SOURCES = gen_tables.c gen_tables.h x86_64_table.h
+ gen_x86_64_tables_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="x86_64_table.h"'
+ x86_64_tables.h: gen_x86_64_tables_h Makefile
+-	./gen_x86_64_tables_h --lowercase --i2s --s2i x86_64_syscall > $@
++	gen_x86_64_tables_h --lowercase --i2s --s2i x86_64_syscall > $@
+--- audit-1.7.13-1.org//auparse/Makefile.am	2012-08-29 15:12:17.000000000 +0000
++++ audit-1.7.13-1/auparse/Makefile.am	2012-08-29 15:12:59.000000000 +0000
+@@ -53,58 +53,58 @@
+ gen_captabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h captab.h
+ gen_captabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="captab.h"'
+ captabs.h: gen_captabs_h Makefile
+-	./gen_captabs_h --i2s cap > $@
++	gen_captabs_h --i2s cap > $@
+ 
+ gen_clone_flagtabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h \
+ 	clone-flagtab.h
+ gen_clone_flagtabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="clone-flagtab.h"'
+ clone-flagtabs.h: gen_clone-flagtabs_h Makefile
+-	./gen_clone-flagtabs_h --i2s-transtab clone_flag > $@
++	gen_clone-flagtabs_h --i2s-transtab clone_flag > $@
+ 
+ gen_epoll_ctls_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h epoll_ctl.h
+ gen_epoll_ctls_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="epoll_ctl.h"'
+ epoll_ctls.h: gen_epoll_ctls_h Makefile
+-	./gen_epoll_ctls_h --i2s epoll_ctl > $@
++	gen_epoll_ctls_h --i2s epoll_ctl > $@
+ 
+ gen_famtabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h famtab.h
+ gen_famtabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="famtab.h"'
+ famtabs.h: gen_famtabs_h Makefile
+-	./gen_famtabs_h --i2s fam > $@
++	gen_famtabs_h --i2s fam > $@
+ 
+ gen_flagtabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h flagtab.h
+ # ../auparse/ is used to avoid using ../lib/flagtab.h
+ gen_flagtabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="../auparse/flagtab.h"'
+ flagtabs.h: gen_flagtabs_h Makefile
+-	./gen_flagtabs_h --i2s-transtab flag > $@
++	gen_flagtabs_h --i2s-transtab flag > $@
+ 
+ gen_fcntl_cmdtabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h \
+ 	fcntl-cmdtab.h
+ gen_fcntl_cmdtabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="fcntl-cmdtab.h"'
+ fcntl-cmdtabs.h: gen_fcntl-cmdtabs_h Makefile
+-	./gen_fcntl-cmdtabs_h --i2s fcntl > $@
++	gen_fcntl-cmdtabs_h --i2s fcntl > $@
+ 
+ gen_ipctabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h ipctab.h
+ gen_ipctabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="ipctab.h"'
+ ipctabs.h: gen_ipctabs_h Makefile
+-	./gen_ipctabs_h --i2s ipc > $@
++	gen_ipctabs_h --i2s ipc > $@
+ 
+ gen_open_flagtabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h \
+ 	open-flagtab.h
+ gen_open_flagtabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="open-flagtab.h"'
+ open-flagtabs.h: gen_open-flagtabs_h Makefile
+-	./gen_open-flagtabs_h --i2s-transtab open_flag > $@
++	gen_open-flagtabs_h --i2s-transtab open_flag > $@
+ 
+ gen_seeks_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h seek.h
+ gen_seeks_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="seek.h"'
+ seeks.h: gen_seeks_h Makefile
+-	./gen_seeks_h --i2s seek > $@
++	gen_seeks_h --i2s seek > $@
+ 
+ gen_socktabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h socktab.h
+ gen_socktabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="socktab.h"'
+ socktabs.h: gen_socktabs_h Makefile
+-	./gen_socktabs_h --i2s sock > $@
++	gen_socktabs_h --i2s sock > $@
+ 
+ gen_typetabs_h_SOURCES = ../lib/gen_tables.c ../lib/gen_tables.h typetab.h
+ gen_typetabs_h_CFLAGS = $(AM_CFLAGS) '-DTABLE_H="typetab.h"'
+ typetabs.h: gen_typetabs_h Makefile
+-	./gen_typetabs_h --s2i type > $@
++	gen_typetabs_h --s2i type > $@
+--- audit-1.7.13-1.org//src/Makefile.am	2012-08-29 15:59:36.000000000 +0000
++++ audit-1.7.13-1/src/Makefile.am	2012-08-29 16:05:15.000000000 +0000
+@@ -25,7 +25,7 @@
+ SUBDIRS = test
+ INCLUDES = -I${top_srcdir} -I${top_srcdir}/lib -I${top_srcdir}/src/libev
+ sbin_PROGRAMS = auditd auditctl aureport ausearch autrace
+-LIBS = -Lmt -lauditmt
++LIBS = -Lmt -L$(setlib) -lauditmt -lpthread
+ LDADD = -lpthread
+ AM_CFLAGS = -D_REENTRANT -D_GNU_SOURCE
+ noinst_HEADERS = auditd-config.h auditd-event.h auditd-listen.h ausearch-llist.h ausearch-options.h auditctl-llist.h aureport-options.h ausearch-parse.h aureport-scan.h ausearch-lookup.h ausearch-int.h auditd-dispatch.h ausearch-string.h ausearch-nvpair.h ausearch-common.h ausearch-avc.h ausearch-time.h ausearch-lol.h

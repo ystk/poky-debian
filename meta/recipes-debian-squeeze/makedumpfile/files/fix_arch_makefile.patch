@@ -1,0 +1,16 @@
+diff -Naur a/Makefile makedumpfile//Makefile
+--- a/Makefile	2014-09-16 03:21:52.000000000 +0000
++++ makedumpfile//Makefile	2014-09-16 03:22:22.000000000 +0000
+@@ -10,10 +10,8 @@
+ CFLAGS_ARCH	= -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+ 		    -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+ 
+-ARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
+-			       -e s/arm.*/arm/ -e s/sa110/arm/ \
+-			       -e s/s390x/s390/ -e s/parisc64/parisc/ \
+-			       -e s/ppc64/powerpc/ )
++ARCH := $(host_arch)
++
+ CFLAGS += -D__$(ARCH)__
+ CFLAGS_ARCH += -D__$(ARCH)__
+ 

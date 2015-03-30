@@ -1,0 +1,61 @@
+--- a/Makefile.in	2012-12-19 19:11:37.518002719 +0900
++++ b/Makefile.in	2012-12-19 19:14:05.566537118 +0900
+@@ -1,10 +1,10 @@
+ LIBS = -lslang
+-LIBTCL = -ltcl8.5
++#LIBTCL = -ltcl8.5
+ 
+ CC = @CC@
+ CPP = @CPP@
+ CFLAGS = @CFLAGS@
+-CPPFLAGS = -D_GNU_SOURCE -I/usr/include/slang -I/usr/include/tcl8.5@CPPFLAGS@ 
++CPPFLAGS = -D_GNU_SOURCE @CPPFLAGS@ 
+ 
+ SHLIBFLAGS= -Wl,--version-script,newt.0.52.ver
+ VERSION = @VERSION@
+@@ -50,7 +50,7 @@
+ TARGET=depend $(PROGS)
+ endif
+ 
+-all:	$(TARGET) _snackmodule.so whiptcl.so
++all:	$(TARGET)
+ 
+ test:	test.o $(LIBNEWT)
+ 	$(CC) -g -o test test.o $(LIBNEWT) $(LIBS)
+@@ -67,16 +67,6 @@
+ showkey:	showkey.o $(LIBNEWT)
+ 	$(CC) -g -o showkey showkey.o $(LIBNEWT) $(LIBS)
+ 
+-_snackmodule.so:   snackmodule.c $(LIBNEWTSH)
+-	for ver in $(PYTHONVERS) ; do \
+-	    	mkdir -p $$ver ;\
+-	        $(CC) $(CFLAGS) -I/usr/include/$$ver $(SHCFLAGS) -c -o $$ver/snackmodule.o snackmodule.c ;\
+-		$(CC) --shared $(SHCFLAGS) -o $$ver/_snackmodule.so $$ver/snackmodule.o -L .  -lnewt ;\
+-	        $(CC) $(subst -O2,-O0,$(CFLAGS)) -I/usr/include/$${ver}_d -fPIC -c -o $$ver/snackmodule_d.o snackmodule.c ;\
+-		$(CC) --shared $(SHCFLAGS) -o $$ver/_snackmodule_d.so $$ver/snackmodule_d.o -L .  -lnewt  ;\
+-	done
+-	touch $@
+-
+ whiptail: $(NDIALOGOBJS) $(LIBNEWTSH)
+ 	$(CC) -g -o whiptail $(NDIALOGOBJS) -L . -lnewt $(LIBS) -lpopt
+ 
+@@ -123,18 +113,12 @@
+ 	make -C po datadir=$(instroot)/$(datadir) install
+ 	install -m 644 -D libnewt.pc $(instroot)/$(pkgconfigdir)/libnewt.pc
+ 
+-install-sh: sharedlib $(WHIPTCLSO) _snackmodule.so
++install-sh: sharedlib $(WHIPTCLSO)
+ 	[ -d $(instroot)/$(libdir) ] || install -m 755 -d $(instroot)/$(libdir)
+ 	install -m 755 $(LIBNEWTSH) $(instroot)/$(libdir)
+ 	ln -sf $(LIBNEWTSONAME) $(instroot)/$(libdir)/libnewt.so
+ 	ln -sf $(LIBNEWTSH) $(instroot)/$(libdir)/$(LIBNEWTSONAME)
+ 	[ -n "$(WHIPTCLSO)" ] && install -m 755 whiptcl.so $(instroot)/$(libdir) || :
+-	for ver in $(PYTHONVERS) ; do \
+-	   [ -d $(instroot)/$(libdir)/$$ver/site-packages ] || install -m 755 -d $(instroot)/$(libdir)/$$ver/site-packages ;\
+-	   install -m 755 $$ver/_snackmodule.so $(instroot)/$(libdir)/$$ver/site-packages ;\
+-+	   install -m 755 $$ver/_snackmodule_d.so $(instroot)/$(libdir)/$$ver/site-packages ;\
+-	   install -m 644 snack.py $(instroot)/$(libdir)/$$ver/site-packages ;\
+-	done
+ 
+ Makefile: newt.spec
+ 	echo "You need to rerun ./configure before continuing"

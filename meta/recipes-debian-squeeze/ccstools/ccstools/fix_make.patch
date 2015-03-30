@@ -1,0 +1,35 @@
+diff -Naur git.org//Makefile git/Makefile
+--- git.org//Makefile	2012-09-05 16:00:04.000000000 +0000
++++ git/Makefile	2012-09-05 16:03:11.000000000 +0000
+@@ -1,4 +1,4 @@
+-INSTALLDIR = /
++INSTALLDIR = ../image
+ 
+ MAIN_FILES = ccstools init_policy ccs-init
+ 
+@@ -26,8 +26,8 @@
+ 	chmod 4711 $(INSTALLDIR)/usr/lib/ccs/force-logout
+ 	chmod 700 ccs-init
+ 	cp -af --remove-destination ccs-init $(INSTALLDIR)/sbin/
+-	mkdir -p $(INSTALLDIR)/usr/share/man/man8/
+-	cp -af --remove-destination man/man8/* $(INSTALLDIR)/usr/share/man/man8/
++	mkdir -p $(INSTALLDIR)/usr/share/man/man8/
++	cp -af --remove-destination man/* $(INSTALLDIR)/usr/share/man/man8/
+ 
+ 
+ 
+@@ -36,12 +36,12 @@
+ /usr/include/curses.h:
+ 	@echo "/usr/include/curses.h is missing."
+ 	@echo "Run 'yum install ncurses-devel' or 'apt-get install libncurses5-dev'"
+-	sleep 10
++#	sleep 10
+ 
+ /usr/include/readline/readline.h:
+ 	@echo "/usr/include/readline/readline.h is missing."
+ 	@echo "Run 'yum install readline-devel' or 'apt-get install libreadline5-dev'"
+-	sleep 10
++#	sleep 10
+ 
+ ccstools: ccstools.src/*.c ccstools.src/*.h /usr/include/curses.h
+ 	$(CC) $(CFLAGS) -o ccstools ccstools.src/*.c -lncurses -DCOLOR_ON

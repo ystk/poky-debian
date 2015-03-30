@@ -1,0 +1,12 @@
+diff -rNu makedumpfile-git.orig//debian/kdump-config makedumpfile-git/debian/kdump-config
+--- makedumpfile-git.orig//debian/kdump-config	2014-09-17 04:51:10.205894257 +0000
++++ makedumpfile-git/debian/kdump-config	2014-09-17 04:51:46.821903837 +0000
+@@ -35,7 +35,7 @@
+ KDUMP_DEFAULTS=/etc/default/kdump-tools
+ [ -r $KDUMP_DEFAULTS ] && . $KDUMP_DEFAULTS
+ 
+-KEXEC=/sbin/kexec
++KEXEC=/usr/sbin/kexec
+ [ -e $KEXEC ] || exit 1;
+ 
+ KVER=`uname -r`

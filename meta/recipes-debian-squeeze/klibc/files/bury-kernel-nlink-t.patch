@@ -1,0 +1,26 @@
+From 1ec8e824a0b0ee10e93b257ccac08f07cd90f4d8 Mon Sep 17 00:00:00 2001
+From: maximilian attems <max@stro.at>
+Date: Fri, 29 Jun 2012 07:46:08 +0200
+Subject: [klibc] include: [sys/types.h] bury __kernel_nlink_t
+
+We don't use it anywhere and it is gone on linux side
+with bb8ac181a5cf50458a0d83b4460790badc9fdc16 for 3.5-rc1.
+Fixes compiling against latest linux.
+
+Signed-off-by: maximilian attems <max@stro.at>
+
+diff --git a/usr/include/sys/types.h b/usr/include/sys/types.h
+index 229f7d6..b8cdb8c 100644
+--- a/usr/include/sys/types.h
++++ b/usr/include/sys/types.h
+@@ -25,7 +25,6 @@ typedef __kernel_fd_set fd_set;
+ typedef uint32_t dev_t;
+ typedef __kernel_ino_t ino_t;
+ typedef __kernel_mode_t mode_t;
+-typedef __kernel_nlink_t nlink_t;
+ typedef __kernel_loff_t off_t;
+ typedef __kernel_loff_t loff_t;
+ typedef __kernel_pid_t pid_t;
+-- 
+cgit v0.10.1
+

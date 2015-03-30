@@ -1,0 +1,19 @@
+#!/bin/sh
+
+run() {
+	LV=$1
+	HEAD=$2
+	ACT=$3
+	for rc in $(ls /etc/rc$LV.d/$HEAD* 2> /dev/null); do
+		if [ -x $rc ]; then
+			$rc $ACT
+		else
+			echo "WARNING: Failed to $ACT $rc"
+		fi
+	done
+}
+
+run $1 K stop
+run $1 S start
+
+exit 0

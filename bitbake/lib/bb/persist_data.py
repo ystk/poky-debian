@@ -26,6 +26,7 @@ import logging
 import os.path
 import sys
 import warnings
+import time
 from bb.compat import total_ordering
 from collections import Mapping
 
@@ -56,12 +57,13 @@ class SQLTable(collections.MutableMapping):
 
     def _execute(self, *query):
         """Execute a query, waiting to acquire a lock if necessary"""
-        count = 0
+        start = time.time()
+        end = start + 20
         while True:
             try:
                 return self.cursor.execute(*query)
             except sqlite3.OperationalError as exc:
-                if 'database is locked' in str(exc) and count < 500:
+                if 'database is locked' in str(exc) and end > time.time():
                     count = count + 1
                     continue
                 raise

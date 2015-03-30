@@ -1,4 +1,8 @@
 #
+# rootfs_ipk.bbclass
+#
+
+#
 # Creates a root filesystem out of IPKs
 #
 # This rootfs can be mounted via root-nfs or it can be put into an cramfs/jffs etc.
@@ -7,7 +11,7 @@
 
 EXTRAOPKGCONFIG ?= ""
 ROOTFS_PKGMANAGE = "opkg opkg-collateral ${EXTRAOPKGCONFIG}"
-ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
+#ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
 do_rootfs[depends] += "opkg-native:do_populate_sysroot opkg-utils-native:do_populate_sysroot"
 do_rootfs[recrdeptask] += "do_package_write_ipk"
@@ -132,11 +136,11 @@ rootfs_ipk_write_manifest() {
 	sed '/Conflicts/d' -i $manifest
 }
 
-remove_packaging_data_files() {
-	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
-        # We need the directory for the package manager lock
-        mkdir ${IMAGE_ROOTFS}${opkglibdir}
-}
+#remove_packaging_data_files() {
+#	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
+#        # We need the directory for the package manager lock
+#        mkdir ${IMAGE_ROOTFS}${opkglibdir}
+#}
 
 install_all_locales() {
 
@@ -190,3 +194,19 @@ python () {
         bb.data.setVar('OPKG_POSTPROCESS_COMMANDS', '', d)
 }
 
+#
+# debian-squeeze
+#
+
+# don't install "run-postinst" pacakge if IMAGE_FEATURES doesn't contain
+# "package-management" (see core-image.bbclass) because we remove
+# all postinst data by "remove_packaging_data_files" if so
+ROOTFS_PKGMANAGE_BOOTSTRAP = ""
+
+remove_packaging_data_files() {
+	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
+        # We need the directory for the package manager lock
+        mkdir ${IMAGE_ROOTFS}${opkglibdir}
+
+	rm -f ${IMAGE_ROOTFS}/${sysconfdir}/version
+}

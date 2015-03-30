@@ -1,0 +1,13 @@
+diff -Naur cpio-2.11-4.org//src/filetypes.h cpio-2.11-4/src/filetypes.h
+--- cpio-2.11-4.org//src/filetypes.h	2012-05-23 17:17:51.000000000 +0000
++++ cpio-2.11-4/src/filetypes.h	2012-05-23 17:20:43.000000000 +0000
+@@ -81,8 +81,7 @@
+ #ifndef S_ISLNK
+ #define lstat stat
+ #endif
+-
+-#ifndef __WIN32__
+ int lstat ();
++#ifndef stat
+ int stat ();
+ #endif

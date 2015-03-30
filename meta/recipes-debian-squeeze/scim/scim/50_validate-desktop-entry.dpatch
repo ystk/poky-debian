@@ -1,0 +1,17 @@
+--- scim-1.4.7~/extras/setup/scim-setup.desktop.in	2007-06-26 09:31:50.000000000 -0500
++++ scim-1.4.7/extras/setup/scim-setup.desktop.in	2008-01-28 09:33:48.000000000 -0600
+@@ -1,10 +1,9 @@
+ [Desktop Entry]
+-Encoding=UTF-8
+ _Name=SCIM Input Method Setup
+ _Comment=Setup utility for Smart Common Input Method platform
+ Exec=scim-setup
+-Icon=scim-setup.png
++Icon=scim-setup
+ Terminal=false
+ Type=Application
+ StartupNotify=true
+-Categories=Applications;Settings;
++Categories=Settings;
++NotShowIn=KDE;
++X-Ubuntu-Gettext-Domain=scim

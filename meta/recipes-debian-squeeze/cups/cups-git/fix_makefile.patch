@@ -1,0 +1,18 @@
+--- cups-1.4.4-7.org/ppdc/Makefile	2012-08-24 09:50:56.000000000 +0000
++++ cups-1.4.4-7/ppdc/Makefile	2012-08-24 09:52:25.000000000 +0000
+@@ -343,6 +343,15 @@
+ 
+ 
+ #
++# libcupsppdc.so
++#
++
++libcupsppdc.so:		libcupsppdc.so.1
++	echo xxx
++	$(LN) libcupsppdc.so.1 $@
++
++
++#
+ # libcupsppdc.1.dylib
+ #
+ 

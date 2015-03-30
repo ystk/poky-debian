@@ -1,0 +1,10 @@
+# Description: Watchdog device
+#
+#type can be one of: 
+#    f	A regular file
+#    d	Directory
+#    c	Character special device file
+#    b	Block special device file
+#    p	Fifo (named pipe)
+#<path>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
+/dev/watchdog	c	600	0	0	10	130	-	-	-

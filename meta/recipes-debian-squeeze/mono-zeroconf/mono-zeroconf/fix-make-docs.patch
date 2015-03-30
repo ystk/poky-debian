@@ -1,0 +1,30 @@
+diff -Naur mono-zeroconf-0.9.0-2.orig/docs/Makefile.am mono-zeroconf-0.9.0-2/docs/Makefile.am
+--- mono-zeroconf-0.9.0-2.orig/docs/Makefile.am	2012-09-07 13:41:38.000000000 +0000
++++ mono-zeroconf-0.9.0-2/docs/Makefile.am	2012-09-07 13:44:07.000000000 +0000
+@@ -14,7 +14,10 @@
+ 	mono-zeroconf-docs.tree \
+ 	mono-zeroconf-docs.source
+ 
+-mono-zeroconf-docs.zip mono-zeroconf-docs.tree: $(srcdir)/en/*/*.xml $(srcdir)/en/*.xml
++#mono-zeroconf-docs.zip mono-zeroconf-docs.tree: $(srcdir)/en/*/*.xml $(srcdir)/en/*.xml
++mono-zeroconf-docs.tree: mono-zeroconf-docs.zip
++
++mono-zeroconf-docs.zip: $(srcdir)/en/*/*.xml $(srcdir)/en/*.xml
+ 	$(DOC_ASSEMBLER) $(srcdir)/en
+ 
+ update-docs: $(ASSEMBLIES)
+diff -Naur mono-zeroconf-0.9.0-2.orig/docs/Makefile.in mono-zeroconf-0.9.0-2/docs/Makefile.in
+--- mono-zeroconf-0.9.0-2.orig/docs/Makefile.in	2012-09-07 13:41:38.000000000 +0000
++++ mono-zeroconf-0.9.0-2/docs/Makefile.in	2012-09-07 13:47:55.000000000 +0000
+@@ -363,7 +363,10 @@
+ 	uninstall-am uninstall-monodocDATA
+ 
+ 
+-@BUILD_DOCS_TRUE@mono-zeroconf-docs.zip mono-zeroconf-docs.tree: $(srcdir)/en/*/*.xml $(srcdir)/en/*.xml
++#@BUILD_DOCS_TRUE@mono-zeroconf-docs.zip mono-zeroconf-docs.tree: $(srcdir)/en/*/*.xml $(srcdir)/en/*.xml
++@BUILD_DOCS_TRUE@mono-zeroconf-docs.tree: mono-zeroconf-docs.zip
++
++@BUILD_DOCS_TRUE@mono-zeroconf-docs.zip: $(srcdir)/en/*/*.xml $(srcdir)/en/*.xml
+ @BUILD_DOCS_TRUE@	$(DOC_ASSEMBLER) $(srcdir)/en
+ 
+ @BUILD_DOCS_TRUE@update-docs: $(ASSEMBLIES)

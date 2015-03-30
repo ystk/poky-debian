@@ -1,0 +1,450 @@
+diff -rNu crash/defs.h crash.new/defs.h
+--- crash/defs.h	2014-09-24 18:34:08.391154571 +0900
++++ crash.new/defs.h	2014-09-24 18:35:55.931909610 +0900
+@@ -1515,6 +1515,11 @@
+ 	long module_init_text_size;
+ 	long timekeeper_xtime;
+ 	long timekeeper_xtime_sec;
++	long log_ts_nsec;
++	long log_len;
++	long log_text_len;
++	long log_dict_len;
++	long log_level;
+ };
+ 
+ struct size_table {         /* stash of commonly-used sizes */
+@@ -1627,6 +1632,7 @@
+ 	long module_sect_attr;
+ 	long task_struct_utime;
+ 	long task_struct_stime;
++	long log;
+ };
+ 
+ struct array_table {
+@@ -3741,6 +3747,9 @@
+ void dump_kernel_table(int);
+ void dump_bt_info(struct bt_info *, char *where);
+ void dump_log(int);
++#define SHOW_LOG_LEVEL (0x1)
++#define SHOW_LOG_DICT  (0x2)
++#define SHOW_LOG_TEXT  (0x4)
+ void set_cpu(int);
+ void clear_machdep_cache(void);
+ struct stack_hook *gather_text_list(struct bt_info *);
+diff -rNu crash/help.c crash.new/help.c
+--- crash/help.c	2014-09-24 18:33:28.510835082 +0900
++++ crash.new/help.c	2014-09-25 09:05:08.195909623 +0900
+@@ -2350,10 +2350,18 @@
+ char *help_log[] = {
+ "log",
+ "dump system message buffer",
+-"[-m]",
+-"  This command dumps the kernel log_buf contents in chronological order.",
++"[-tdm]",
++"  This command dumps the kernel log_buf contents in chronological order.  The",
++"  command supports the older log_buf formats, which may or may not contain a",
++"  timestamp inserted prior to each message, as well as the newer variable-length", 
++"  record format, where the timestamp is contained in each log entry's header.",
+ "  ",
+-"    -m  Display the message log level preceding each message.",
++"    -t  Display the message text without the timestamp; only applicable to the",
++"        variable-length record format.",
++"    -d  Display the dictionary of key/value pair properties that are optionally",
++"        appended to a message by the kernel's dev_printk() function; only",
++"        applicable to the variable-length record format.",
++"    -m  Display the message log level in brackets preceding each message.",
+ "\nEXAMPLES",
+ "  Dump the kernel message buffer:\n",
+ "    %s> log",
+@@ -2402,6 +2410,49 @@
+ "    <6>Installing knfsd (copyright (C) 1996 okir@monad.swb.de).",
+ "    <7>nfsd_init: initialized fhcache, entries=256",
+ "    ... ",
++" ",
++"  On a system with the variable-length record format, and whose log_buf has been",
++"  filled and wrapped around, display the log with timestamp data:\n",
++"    %s> log",
++"    [    0.467730] pci 0000:ff:02.0: [8086:2c10] type 00 class 0x060000",
++"    [    0.467749] pci 0000:ff:02.1: [8086:2c11] type 00 class 0x060000",
++"    [    0.467769] pci 0000:ff:02.4: [8086:2c14] type 00 class 0x060000",
++"    [    0.467788] pci 0000:ff:02.5: [8086:2c15] type 00 class 0x060000",
++"    [    0.467809] pci 0000:ff:03.0: [8086:2c18] type 00 class 0x060000",
++"    [    0.467828] pci 0000:ff:03.1: [8086:2c19] type 00 class 0x060000",
++"    ...",
++" ",
++"  Display the same message text as above, without the timestamp data:\n",
++"    %s> log -t",
++"    pci 0000:ff:02.0: [8086:2c10] type 00 class 0x060000",
++"    pci 0000:ff:02.1: [8086:2c11] type 00 class 0x060000",
++"    pci 0000:ff:02.4: [8086:2c14] type 00 class 0x060000",
++"    pci 0000:ff:02.5: [8086:2c15] type 00 class 0x060000",
++"    pci 0000:ff:03.0: [8086:2c18] type 00 class 0x060000",
++"    pci 0000:ff:03.1: [8086:2c19] type 00 class 0x060000",
++"    ...",
++" ",
++"  Display the same message text as above, with appended dictionary data:\n",
++"    %s> log -td",
++"    pci 0000:ff:02.0: [8086:2c10] type 00 class 0x060000",
++"    SUBSYSTEM=pci",
++"    DEVICE=+pci:0000:ff:02.0",
++"    pci 0000:ff:02.1: [8086:2c11] type 00 class 0x060000",
++"    SUBSYSTEM=pci",
++"    DEVICE=+pci:0000:ff:02.1",
++"    pci 0000:ff:02.4: [8086:2c14] type 00 class 0x060000",
++"    SUBSYSTEM=pci",
++"    DEVICE=+pci:0000:ff:02.4",
++"    pci 0000:ff:02.5: [8086:2c15] type 00 class 0x060000",
++"    SUBSYSTEM=pci",
++"    DEVICE=+pci:0000:ff:02.5",
++"    pci 0000:ff:03.0: [8086:2c18] type 00 class 0x060000",
++"    SUBSYSTEM=pci",
++"    DEVICE=+pci:0000:ff:03.0",
++"    pci 0000:ff:03.1: [8086:2c19] type 00 class 0x060000",
++"    SUBSYSTEM=pci",
++"    DEVICE=+pci:0000:ff:03.1",
++"    ...",
+ NULL               
+ };
+ 
+diff -rNu crash/kernel.c crash.new/kernel.c
+--- crash/kernel.c	2014-09-24 18:34:13.303016890 +0900
++++ crash.new/kernel.c	2014-09-25 09:11:19.999914274 +0900
+@@ -18,6 +18,7 @@
+ #include "defs.h"
+ #include "xen_hyper_defs.h"
+ #include <elf.h>
++#include <ctype.h>
+ 
+ static void do_module_cmd(ulong, char *, ulong, char *, char *);
+ static char *find_module_objfile(char *, char *, char *);
+@@ -51,6 +52,10 @@
+ static int BUG_x86_64(void);
+ static void cpu_maps_init(void);
+ static void get_xtime(struct timespec *);
++static char *log_from_idx(uint32_t, char *);
++static uint32_t log_next(uint32_t, char *);
++static void dump_log_entry(char *, int);
++static void dump_variable_length_record_log(int);
+ 
+ /*
+  *  Gather a few kernel basics.
+@@ -3645,15 +3650,21 @@
+ cmd_log(void)
+ {
+ 	int c;
+-	int msg_level;
++	int msg_flags;
+ 
+-	msg_level = FALSE;
++	msg_flags = 0;
+ 
+-        while ((c = getopt(argcnt, args, "m")) != EOF) {
++        while ((c = getopt(argcnt, args, "tdm")) != EOF) {
+                 switch(c)
+                 {
++		case 't':
++			msg_flags |= SHOW_LOG_TEXT;
++			break;
++		case 'd': 
++			msg_flags |= SHOW_LOG_DICT;
++			break;
+                 case 'm':
+-                        msg_level = TRUE;
++                        msg_flags |= SHOW_LOG_LEVEL;
+                         break;
+                 default:
+                         argerrs++;
+@@ -3664,14 +3675,14 @@
+         if (argerrs)
+                 cmd_usage(pc->curcmd, SYNOPSIS);
+ 
+-	dump_log(msg_level);
++	dump_log(msg_flags);
+ }
+ 
+ 
+ void 
+-dump_log(int msg_level)
++dump_log(int msg_flags)
+ {
+-	int i;
++	int i, show_level;
+ 	ulong log_buf, log_end;
+ 	char *buf;
+ 	char last;
+@@ -3679,6 +3690,19 @@
+ 	struct syment *nsp;
+ 	int log_wrap, loglevel, log_buf_len;
+ 
++	if (kernel_symbol_exists("log_first_idx") && 
++	    kernel_symbol_exists("log_next_idx")) {
++		dump_variable_length_record_log(msg_flags);
++		return;
++	}
++
++	if (msg_flags & SHOW_LOG_DICT)
++		option_not_supported('d');
++	if ((msg_flags & SHOW_LOG_TEXT) && STREQ(pc->curcmd, "log"))
++		option_not_supported('t');
++
++	show_level = msg_flags & SHOW_LOG_LEVEL ? TRUE : FALSE;
++
+ 	if (symbol_exists("log_buf_len")) {
+ 		get_symbol_data("log_buf_len", sizeof(int), &log_buf_len);
+ 		get_symbol_data("log_buf", sizeof(ulong), &log_buf);
+@@ -3720,7 +3744,7 @@
+ wrap_around:
+ 
+ 	for (i = index; i < log_buf_len; i++) {
+-                if (loglevel && !msg_level) {
++                if (loglevel && !show_level) {
+                         switch (buf[i])
+                         {
+                         case '>':
+@@ -3764,6 +3788,205 @@
+ }
+ 
+ 
++/* 
++ * get log record by index; idx must point to valid message.
++ */
++static char *
++log_from_idx(uint32_t idx, char *logbuf)
++{
++	char *logptr;
++	uint16_t msglen;
++
++	logptr = logbuf + idx;
++
++	/*
++	 * A length == 0 record is the end of buffer marker. 
++	 * Wrap around and return the message at the start of 
++	 * the buffer.
++	 */
++
++	msglen = USHORT(logptr + OFFSET(log_len));
++	if (!msglen)
++		logptr = logbuf;
++
++	return logptr;
++}
++
++/* 
++ * get next record index; idx must point to valid message. 
++ */
++static uint32_t 
++log_next(uint32_t idx, char *logbuf)
++{
++	char *logptr;
++	uint16_t msglen;
++
++	logptr = logbuf + idx;
++
++	/*
++	 * A length == 0 record is the end of buffer marker. Wrap around and
++	 * read the message at the start of the buffer as *this* one, and
++	 * return the one after that.
++	 */
++
++	msglen = USHORT(logptr + OFFSET(log_len));
++	if (!msglen) {
++		msglen = USHORT(logbuf + OFFSET(log_len));
++		return msglen;
++	}
++
++        return idx + msglen;
++}
++
++static void
++dump_log_entry(char *logptr, int msg_flags)
++{
++	int indent;
++	char *msg, *p;
++	uint16_t i, text_len, dict_len, level;
++	uint64_t ts_nsec;
++	ulonglong nanos; 
++	ulong rem;
++	char buf[BUFSIZE];
++	int ilen;
++
++	ilen = 0;
++	text_len = USHORT(logptr + OFFSET(log_text_len));
++	dict_len = USHORT(logptr + OFFSET(log_dict_len));
++	level = USHORT(logptr + OFFSET(log_level));
++	ts_nsec = ULONGLONG(logptr + OFFSET(log_ts_nsec));
++
++	msg = logptr + SIZE(log);
++
++	if (CRASHDEBUG(1))
++		fprintf(fp, 
++		    "\nlog %lx -> msg: %lx ts_nsec: %lld level: %d"
++		    " text_len: %d dict_len: %d\n", 
++			(ulong)logptr, (ulong)msg, (ulonglong)ts_nsec, 
++			level, text_len, dict_len);
++
++	if ((msg_flags & SHOW_LOG_TEXT) == 0) {
++		nanos = (ulonglong)ts_nsec / (ulonglong)1000000000;
++		rem = (ulonglong)ts_nsec % (ulonglong)1000000000;
++		sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
++		ilen = strlen(buf);
++		fprintf(fp, buf);
++	}
++
++	if (msg_flags & SHOW_LOG_LEVEL) {
++		fprintf(fp, "<%d>", level);
++		ilen += 3;
++	}
++
++	for (i = 0, p = msg; i < text_len; i++, p++)
++		fputc(isprint(*p) ? *p : '.', fp);
++	
++	if (dict_len & (msg_flags & SHOW_LOG_DICT)) {
++		fprintf(fp, "\n");
++		indent = TRUE;
++
++		for (i = 0; i < dict_len; i++, p++) {
++			if (indent) {
++				fprintf(fp, "%s", space(ilen));
++				indent = FALSE;
++			}
++			if (isprint(*p))
++				fputc(*p, fp);
++			else if (*p == NULLCHAR) {
++				fputc('\n', fp);
++				indent = TRUE;
++			} else
++				fputc('.', fp);
++		}
++	}
++	fprintf(fp, "\n");
++}
++
++/* 
++ *  Handle the new variable-length-record log_buf.
++ */
++static void
++dump_variable_length_record_log(int msg_flags)
++{
++	uint32_t idx, log_first_idx, log_next_idx, log_buf_len;
++	ulong log_buf;
++	char *logptr, *logbuf;
++
++	if (INVALID_SIZE(log)) {
++		STRUCT_SIZE_INIT(log, "log");
++		MEMBER_OFFSET_INIT(log_ts_nsec, "log", "ts_nsec");
++		MEMBER_OFFSET_INIT(log_len, "log", "len");
++		MEMBER_OFFSET_INIT(log_text_len, "log", "text_len");
++		MEMBER_OFFSET_INIT(log_dict_len, "log", "dict_len");
++		MEMBER_OFFSET_INIT(log_level, "log", "level");
++		/*
++		 * If things change, don't kill a dumpfile session 
++		 * searching for a panic message.
++		 */
++		if (INVALID_SIZE(log) ||
++		    INVALID_MEMBER(log_ts_nsec) ||
++		    INVALID_MEMBER(log_len) ||
++		    INVALID_MEMBER(log_text_len) ||
++		    INVALID_MEMBER(log_dict_len) ||
++		    INVALID_MEMBER(log_level) ||
++		    !kernel_symbol_exists("log_buf_len") ||
++		    !kernel_symbol_exists("log_buf")) {
++			error(WARNING, "\nlog buf data structure(s) have changed\n");
++			return;
++		}
++	}
++
++	get_symbol_data("log_first_idx", sizeof(uint32_t), &log_first_idx);
++	get_symbol_data("log_next_idx", sizeof(uint32_t), &log_next_idx);
++	get_symbol_data("log_buf_len", sizeof(uint32_t), &log_buf_len);
++	get_symbol_data("log_buf", sizeof(char *), &log_buf);
++
++	if (CRASHDEBUG(1)) {
++		fprintf(fp, "log_buf: %lx\n", (ulong)log_buf);
++		fprintf(fp, "log_buf_len: %d\n", log_buf_len);
++		fprintf(fp, "log_first_idx: %d\n", log_first_idx);
++		fprintf(fp, "log_next_idx: %d\n", log_next_idx);
++	}
++
++	logbuf = GETBUF(log_buf_len);
++
++	if (!readmem(log_buf, KVADDR, logbuf,
++	    log_buf_len, "log_buf contents", RETURN_ON_ERROR|QUIET)) {
++		error(WARNING, "\ncannot read log_buf contents\n");
++		FREEBUF(logbuf);
++		return;
++	}
++
++	hq_open();
++
++	idx = log_first_idx;
++	while (idx != log_next_idx) {
++		logptr = log_from_idx(idx, logbuf);
++
++		dump_log_entry(logptr, msg_flags);
++
++		if (!hq_enter((ulong)logptr)) {
++			error(INFO, "\nduplicate log_buf message pointer\n");
++			break;
++		}
++
++		idx = log_next(idx, logbuf);
++
++		if (idx >= log_buf_len) {
++			error(INFO, "\ninvalid log_buf entry encountered\n");
++			break;
++		}
++
++		if (CRASHDEBUG(1) && (idx == log_next_idx))
++			fprintf(fp, "\nfound log_next_idx OK\n");
++	}
++
++	hq_close();
++
++	FREEBUF(logbuf);
++}
++
++
+ /*
+  *  Display general system info.
+  */
+diff -rNu crash/symbols.c crash.new/symbols.c
+--- crash/symbols.c	2014-09-24 18:34:08.395334375 +0900
++++ crash.new/symbols.c	2014-09-24 18:21:33.459906827 +0900
+@@ -7418,6 +7418,16 @@
+ 		OFFSET(vcpu_struct_rq));
+ 	fprintf(fp, "    s390_lowcore_psw_save_area: %ld\n",
+ 		OFFSET(s390_lowcore_psw_save_area));
++	fprintf(fp, "                   log_ts_nsec: %ld\n",
++		OFFSET(log_ts_nsec));
++	fprintf(fp, "                       log_len: %ld\n",
++		OFFSET(log_len));
++	fprintf(fp, "                  log_text_len: %ld\n",
++		OFFSET(log_text_len));
++	fprintf(fp, "                  log_dict_len: %ld\n",
++		OFFSET(log_dict_len));
++	fprintf(fp, "                     log_level: %ld\n",
++		OFFSET(log_level));
+ 
+ 	fprintf(fp, "\n                    size_table:\n");
+ 	fprintf(fp, "                          page: %ld\n", SIZE(page));
+@@ -7590,6 +7600,8 @@
+ 		SIZE(probe));
+ 	fprintf(fp, "                      kobj_map: %ld\n", 
+ 		SIZE(kobj_map));
++	fprintf(fp, "                           log: %ld\n",
++		SIZE(log));
+ 
+         fprintf(fp, "\n                   array_table:\n");
+ 	/*
+diff -rNu crash/task.c crash.new/task.c
+--- crash/task.c	2014-09-24 18:33:28.522835577 +0900
++++ crash.new/task.c	2014-09-24 18:21:58.835910202 +0900
+@@ -4757,7 +4757,7 @@
+                 return(buf);
+ 
+ 	open_tmpfile();
+-	dump_log(FALSE);
++	dump_log(SHOW_LOG_TEXT);
+ 
+ 	/*
+ 	 *  First check for a SYSRQ-generated crash, and set the

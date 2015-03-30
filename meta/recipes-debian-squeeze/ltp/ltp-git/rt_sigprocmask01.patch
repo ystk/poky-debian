@@ -1,0 +1,11 @@
+--- a/testcases/kernel/syscalls/rt_sigprocmask/rt_sigprocmask01.c	2012-01-26 20:56:13.000000000 +0900
++++ b/testcases/kernel/syscalls/rt_sigprocmask/rt_sigprocmask01.c	2012-01-26 20:57:16.000000000 +0900
+@@ -131,6 +131,8 @@
+ 
+ int main(int ac, char **av) {
+ 	struct sigaction act, oact;
++	memset(&act, 0, sizeof(act));
++	memset(&oact, 0, sizeof(oact));
+ 	sigset_t set, oset;
+ 	int lc;		 /* loop counter */
+ 	char *msg;	      /* message returned from parse_opts */

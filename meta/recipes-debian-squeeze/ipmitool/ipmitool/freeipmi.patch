@@ -1,0 +1,21 @@
+diff -rNu ipmitool-git.orig//config.h.in ipmitool-git/config.h.in
+--- ipmitool-git.orig//config.h.in	2014-09-17 00:35:25.441891982 +0000
++++ ipmitool-git/config.h.in	2014-09-17 01:26:58.075108420 +0000
+@@ -135,7 +135,7 @@
+ #undef IPMI_INTF_BMC
+ 
+ /* Define to 1 to enable FreeIPMI interface. */
+-#undef IPMI_INTF_FREE
++#define IPMI_INTF_FREE 1
+ 
+ /* Define to 1 for FreeIPMI 0.3.0. */
+ #undef IPMI_INTF_FREE_0_3_0
+@@ -147,7 +147,7 @@
+ #undef IPMI_INTF_FREE_0_5_0
+ 
+ /* Define to 1 for FreeIPMI 0.6.0. */
+-#undef IPMI_INTF_FREE_0_6_0
++#define IPMI_INTF_FREE_0_6_0 1
+ 
+ /* Define to 1 to enable Intel IMB interface. */
+ #undef IPMI_INTF_IMB

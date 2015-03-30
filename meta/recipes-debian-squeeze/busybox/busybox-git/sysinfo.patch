@@ -1,0 +1,116 @@
+diff -Nru busybox-1.17.1-8/include/libbb.h busybox-1.17.1-8.new/include/libbb.h
+--- busybox-1.17.1-8/include/libbb.h	2011-05-30 11:16:23.000000000 +0000
++++ busybox-1.17.1-8.new/include/libbb.h	2011-10-24 11:55:38.858622632 +0000
+@@ -102,25 +102,9 @@
+ #if !defined __FreeBSD__
+ char *dirname(char *path);
+ #endif
+-/* Include our own copy of struct sysinfo to avoid binary compatibility
+- * problems with Linux 2.4, which changed things.  Grumble, grumble. */
+-struct sysinfo {
+-	long uptime;			/* Seconds since boot */
+-	unsigned long loads[3];		/* 1, 5, and 15 minute load averages */
+-	unsigned long totalram;		/* Total usable main memory size */
+-	unsigned long freeram;		/* Available memory size */
+-	unsigned long sharedram;	/* Amount of shared memory */
+-	unsigned long bufferram;	/* Memory used by buffers */
+-	unsigned long totalswap;	/* Total swap space size */
+-	unsigned long freeswap;		/* swap space still available */
+-	unsigned short procs;		/* Number of current processes */
+-	unsigned short pad;			/* Padding needed for m68k */
+-	unsigned long totalhigh;	/* Total high memory size */
+-	unsigned long freehigh;		/* Available high memory size */
+-	unsigned int mem_unit;		/* Memory unit size in bytes */
+-	char _f[20 - 2 * sizeof(long) - sizeof(int)]; /* Padding: libc5 uses this.. */
+-};
+-int sysinfo(struct sysinfo* info);
++
++/* "sysinfo" must not be defined here */
++
+ #ifndef PATH_MAX
+ # define PATH_MAX 256
+ #endif
+diff -Nru busybox-1.17.1-8/include/sysinfo.h busybox-1.17.1-8.new/include/sysinfo.h
+--- busybox-1.17.1-8/include/sysinfo.h	1970-01-01 00:00:00.000000000 +0000
++++ busybox-1.17.1-8.new/include/sysinfo.h	2011-10-24 11:55:38.861360935 +0000
+@@ -0,0 +1,24 @@
++/*
++ * "struct sysinfo" causes redefinition error with 3.0 kernel headers.
++ * It is used only by a few source files.
++ */
++
++/* Include our own copy of struct sysinfo to avoid binary compatibility
++ * problems with Linux 2.4, which changed things.  Grumble, grumble. */
++struct sysinfo {
++	long uptime;			/* Seconds since boot */
++	unsigned long loads[3];		/* 1, 5, and 15 minute load averages */
++	unsigned long totalram;		/* Total usable main memory size */
++	unsigned long freeram;		/* Available memory size */
++	unsigned long sharedram;	/* Amount of shared memory */
++	unsigned long bufferram;	/* Memory used by buffers */
++	unsigned long totalswap;	/* Total swap space size */
++	unsigned long freeswap;		/* swap space still available */
++	unsigned short procs;		/* Number of current processes */
++	unsigned short pad;			/* Padding needed for m68k */
++	unsigned long totalhigh;	/* Total high memory size */
++	unsigned long freehigh;		/* Available high memory size */
++	unsigned int mem_unit;		/* Memory unit size in bytes */
++	char _f[20 - 2 * sizeof(long) - sizeof(int)]; /* Padding: libc5 uses this.. */
++};
++int sysinfo(struct sysinfo* info);
+diff -Nru busybox-1.17.1-8/init/init.c busybox-1.17.1-8.new/init/init.c
+--- busybox-1.17.1-8/init/init.c	2011-05-30 11:16:23.000000000 +0000
++++ busybox-1.17.1-8.new/init/init.c	2011-10-24 11:56:12.418612912 +0000
+@@ -839,6 +839,10 @@
+ 	}
+ }
+ 
++#ifdef __linux__
++#include "sysinfo.h"
++#endif
++
+ int init_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int init_main(int argc UNUSED_PARAM, char **argv)
+ {
+diff -Nru busybox-1.17.1-8/procps/free.c busybox-1.17.1-8.new/procps/free.c
+--- busybox-1.17.1-8/procps/free.c	2011-05-30 11:16:23.000000000 +0000
++++ busybox-1.17.1-8.new/procps/free.c	2011-10-24 11:55:38.861360935 +0000
+@@ -11,6 +11,10 @@
+ 
+ #include "libbb.h"
+ 
++#ifdef __linux__
++#include "sysinfo.h"
++#endif
++
+ int free_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int free_main(int argc UNUSED_PARAM, char **argv IF_NOT_DESKTOP(UNUSED_PARAM))
+ {
+diff -Nru busybox-1.17.1-8/procps/ps.c busybox-1.17.1-8.new/procps/ps.c
+--- busybox-1.17.1-8/procps/ps.c	2011-05-30 11:16:23.000000000 +0000
++++ busybox-1.17.1-8.new/procps/ps.c	2011-10-24 11:55:38.861360935 +0000
+@@ -11,6 +11,10 @@
+ 
+ #include "libbb.h"
+ 
++#ifdef __linux__
++#include "sysinfo.h"
++#endif
++
+ /* Absolute maximum on output line length */
+ enum { MAX_WIDTH = 2*1024 };
+ 
+diff -Nru busybox-1.17.1-8/procps/uptime.c busybox-1.17.1-8.new/procps/uptime.c
+--- busybox-1.17.1-8/procps/uptime.c	2011-05-30 11:16:23.000000000 +0000
++++ busybox-1.17.1-8.new/procps/uptime.c	2011-10-24 11:55:38.861360935 +0000
+@@ -17,6 +17,10 @@
+ 
+ #include "libbb.h"
+ 
++#ifdef __linux__
++#include "sysinfo.h"
++#endif
++
+ #ifndef FSHIFT
+ # define FSHIFT 16              /* nr of bits of precision */
+ #endif

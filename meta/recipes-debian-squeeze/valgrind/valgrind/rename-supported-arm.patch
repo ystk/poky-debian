@@ -1,0 +1,12 @@
+diff -Naur git.orig/configure.in git/configure.in
+--- git.orig/configure.in	2012-09-04 08:26:18.000000000 +0000
++++ git/configure.in	2012-09-04 08:26:37.000000000 +0000
+@@ -175,7 +175,7 @@
+         ARCH_MAX="s390x"
+         ;;
+ 
+-     armv7*)
++     arm*)
+ 	AC_MSG_RESULT([ok (${host_cpu})])
+ 	ARCH_MAX="arm"
+ 	;;

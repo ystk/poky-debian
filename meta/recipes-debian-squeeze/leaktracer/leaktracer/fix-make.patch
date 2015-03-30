@@ -1,0 +1,23 @@
+diff -Naur leaktracer-2.4-5.org//Makefile leaktracer-2.4-5/Makefile
+--- leaktracer-2.4-5.org//Makefile	2012-08-30 10:36:33.000000000 +0000
++++ leaktracer-2.4-5/Makefile	2012-08-30 10:37:40.000000000 +0000
+@@ -1,4 +1,4 @@
+-CC = g++
++#CC = g++
+ 
+ # Source files
+ SRC := LeakTracer.cc
+diff -Naur leaktracer-2.4-5.org//Makefile leaktracer-2.4-5/Makefile
+--- leaktracer-2.4-5.org//Makefile	2012-08-30 10:29:43.000000000 +0000
++++ leaktracer-2.4-5/Makefile	2012-08-30 10:30:43.000000000 +0000
+@@ -46,7 +46,7 @@
+ 
+ test:
+ 	$(CC) $(C_FLAGS) test.cc -o test
+-	./test
+-	./LeakCheck ./test
+-	./leak-analyze ./test
++#	./test
++#	./LeakCheck ./test
++#	./leak-analyze ./test
+ #	./compare-test test.template test.result

@@ -1,0 +1,11 @@
+--- a/debian/update-grub	2014-04-08 18:20:35.009562283 +0900
++++ b/debian/update-grub	2014-04-08 18:20:43.993327551 +0900
+@@ -283,7 +283,7 @@
+ kopt="root=$root_device ro"
+ 
+ # Title
+-title=$(lsb_release --short --description 2>/dev/null) || title="Ubuntu"
++title="TOSHIBA Linux"
+ 
+ # should update-grub remember the default entry
+ updatedefaultentry="false"

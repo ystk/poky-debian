@@ -8,7 +8,6 @@ build*/sstate-cache
 build*/pyshtables.py
 pstage/
 scripts/oe-git-proxy-socks
-sources/
 meta-darwin
 meta-maemo
 meta-extras
@@ -18,5 +17,4 @@ meta-prvt*
 *.orig
 *.rej
 *~
-
-
+bitbake/lib/bb/pysh/pyshtables.py

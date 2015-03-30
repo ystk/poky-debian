@@ -1,0 +1,13 @@
+diff -Naur ipsec-tools-0.7.3-12.org//configure.ac ipsec-tools-0.7.3-12/configure.ac
+--- ipsec-tools-0.7.3-12.org//configure.ac	2012-08-31 08:38:26.000000000 +0000
++++ ipsec-tools-0.7.3-12/configure.ac	2012-08-31 08:38:55.000000000 +0000
+@@ -19,7 +19,8 @@
+ AC_SUBST(LEXLIB)
+ AC_PROG_EGREP
+ 
+-CFLAGS_ADD="$CFLAGS_ADD -Wall -Werror -Wno-unused"
++#CFLAGS_ADD="$CFLAGS_ADD -Wall -Werror -Wno-unused"
++#CFLAGS_ADD="$CFLAGS_ADD -Wall -Wno-unused"
+ 
+ case $host in
+ *netbsd*)

@@ -1,0 +1,27 @@
+diff --git a/lib/roken/roken.h.in b/lib/roken/roken.h.in
+index a6299ae..ddc3148 100644
+--- a/lib/roken/roken.h.in
++++ b/lib/roken/roken.h.in
+@@ -538,7 +538,7 @@ ROKEN_LIB_FUNCTION int ROKEN_LIB_CALL getdtablesize(void);
+ ROKEN_LIB_FUNCTION char * ROKEN_LIB_CALL strerror(int);
+ #endif
+
+-#if (!defined(HAVE_STRERROR_R) && !defined(strerror_r)) || (!defined(STRERROR_R_PROTO_COMPATIBLE) && defined(HAVE_STRERROR_R))
++#if (defined(HAVE_STRERROR_R) && !defined(strerror_r)) || (!defined(STRERROR_R_PROTO_COMPATIBLE) && defined(HAVE_STRERROR_R))
+ int ROKEN_LIB_FUNCTION rk_strerror_r(int, char *, size_t);
+ #else
+ #define rk_strerror_r strerror_r
+
+diff -Naur heimdal-1.4.0~git20100726.dfsg.1-1.orig/cf/roken-h-process.pl heimdal-1.4.0~git20100726.dfsg.1-1/cf/roken-h-process.pl
+--- heimdal-1.4.0~git20100726.dfsg.1-1.orig/cf/roken-h-process.pl	2012-09-10 12:04:27.000000000 +0000
++++ heimdal-1.4.0~git20100726.dfsg.1-1/cf/roken-h-process.pl	2012-09-10 12:05:56.000000000 +0000
+@@ -145,6 +145,9 @@
+     if (m/^\s*$/) {
+ 	print "end $_\n" if ($debug);
+ 	return 1;
++    } elsif (m/^\(([^&]+)\&\&(.*)$/) {
++	print "$1 and $2\n" if ($debug);
++	return parse_if($1) and parse_if($2);
+     } elsif (m/^([^&]+)\&\&(.*)$/) {
+ 	print "$1 and $2\n" if ($debug);
+ 	return parse_if($1) and parse_if($2);

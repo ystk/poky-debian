@@ -1,27 +1,47 @@
-# Support for device tree generation
-FILES_kernel-devicetree = "/boot/devicetree*"
-KERNEL_DEVICETREE_FLAGS = "-R 8 -p 0x3000"
+#
+# linux-dtb.inc
+#
+# Generate kernel-device tree automatically.
+# This recipe does nothing if KERNEL_DTS is null.
+#
 
-python __anonymous () {
-    import bb
+# set a path to dts in kernel source only if needed
+# ex) ${S}/arch/powerpc/boot/dts/mpc8308rdb.dts
+KERNEL_DTS ?= ""
 
-    devicetree = bb.data.getVar("KERNEL_DEVICETREE", d, 1) or ''
-    if devicetree:
-	depends = bb.data.getVar("DEPENDS", d, 1)
-	bb.data.setVar("DEPENDS", "%s dtc-native" % depends, d)
-	packages = bb.data.getVar("PACKAGES", d, 1)
-	bb.data.setVar("PACKAGES", "%s kernel-devicetree" % packages, d)
+KERNEL_DTB ?= "/boot/devicetree-${KERNEL_VERSION}.dtb"
+
+KERNEL_DTC ?= "${B}/scripts/dtc/dtc"
+KERNEL_DTC_FLAGS ?= ""
+
+PACKAGES =+ "${@base_conditional('KERNEL_DTS', '', '', 'kernel-devicetree', d)}"
+FILES_kernel-devicetree = "${KERNEL_DTB}"
+
+do_compile_append() {
+	if [ -n "${KERNEL_DTS}" ]; then
+		# dtc must be built after do_compile
+		if [ ! -x ${KERNEL_DTC} ]; then
+			echo "${KERNEL_DTC} not found, cannot build dtb"
+			exit 1
+		fi
+
+		${KERNEL_DTC} -I dts -O dtb ${KERNEL_DTC_FLAGS} -o ${B}/devicetree.dtb ${KERNEL_DTS}
+	fi
 }
 
 do_install_append() {
-    if test -n "${KERNEL_DEVICETREE}"; then
-	dtc -I dts -O dtb ${KERNEL_DEVICETREE_FLAGS} -o devicetree ${KERNEL_DEVICETREE}
-	install -m 0644 devicetree ${D}/boot/devicetree-${KERNEL_VERSION}
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 devicetree ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGE_BASE_NAME}.dtb
-	cd ${DEPLOY_DIR_IMAGE}
-	rm -f ${KERNEL_IMAGE_SYMLINK_NAME}.dtb
-	ln -sf ${KERNEL_IMAGE_BASE_NAME}.dtb ${KERNEL_IMAGE_SYMLINK_NAME}.dtb
-    fi
+	if [ -n "${KERNEL_DTS}" ]; then
+		install -m 0644 ${B}/devicetree.dtb ${D}/${KERNEL_DTB}
+	fi
 }
 
+KERNEL_DTB_BASE_NAME ?= "devicetree-${PV}-${PR}-${MACHINE}-${DATETIME}"
+
+do_deploy_append() {
+	if [ -n "${KERNEL_DTS}" ]; then
+		install -m 0644 ${B}/devicetree.dtb ${DEPLOYDIR}/${KERNEL_DTB_BASE_NAME}.dtb
+		KERNEL_DTB_SYMLINK_NAME=$(basename ${KERNEL_DTB})
+		rm -f ${DEPLOYDIR}/$KERNEL_DTB_SYMLINK_NAME
+		ln -sf ${KERNEL_DTB_BASE_NAME}.dtb ${DEPLOYDIR}/$KERNEL_DTB_SYMLINK_NAME
+	fi
+}

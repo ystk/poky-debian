@@ -1,0 +1,14 @@
+diff -Naur mingetty-1.07-3.org//Makefile mingetty-1.07-3/Makefile
+--- mingetty-1.07-3.org//Makefile	2012-06-22 16:53:26.000000000 +0000
++++ mingetty-1.07-3/Makefile	2012-06-22 16:54:12.000000000 +0000
+@@ -8,6 +8,10 @@
+ 
+ install:	all
+ 		install -m 0755 mingetty $(DESTDIR)$(SBINDIR)
++		mkdir $(DESTDIR)/usr
++		mkdir $(DESTDIR)/usr/share
++		mkdir $(DESTDIR)/usr/share/man
++		mkdir $(DESTDIR)/usr/share/man/man8
+ 		install -m 0644 mingetty.8 $(DESTDIR)$(MANDIR)
+ 
+ mingetty:	mingetty.o

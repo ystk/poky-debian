@@ -1,0 +1,11 @@
+# Description: MMC/SD card device (mmcblk0)
+#
+#type can be one of: 
+#    f	A regular file
+#    d	Directory
+#    c	Character special device file
+#    b	Block special device file
+#    p	Fifo (named pipe)
+#<path>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
+/dev/mmcblk0	b	660	0	6	179	0	-	-	-
+/dev/mmcblk0p	b	660	0	6	179	1	1	1	5

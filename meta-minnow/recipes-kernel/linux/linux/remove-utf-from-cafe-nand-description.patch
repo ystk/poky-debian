@@ -1,0 +1,8 @@
+--- a/drivers/mtd/nand/cafe_nand.c	2013-06-25 20:22:04.624612113 +0900
++++ b/drivers/mtd/nand/cafe_nand.c	2013-06-25 20:22:33.768362615 +0900
+@@ -917,4 +917,4 @@
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("David Woodhouse <dwmw2@infradead.org>");
+-MODULE_DESCRIPTION("NAND flash driver for OLPC CAFÉ chip");
++MODULE_DESCRIPTION("NAND flash driver for OLPC CAFE chip");

@@ -1,0 +1,78 @@
+diff -Naur a//e2fsprogs/Config.src busybox-git//e2fsprogs/Config.src
+--- a//e2fsprogs/Config.src	2013-08-13 11:49:37.000000000 +0700
++++ busybox-git//e2fsprogs/Config.src	2013-08-13 11:55:38.000000000 +0700
+@@ -44,6 +44,13 @@
+ ###	  mke2fs is used to create an ext2/ext3 filesystem. The normal compat
+ ###	  symlinks 'mkfs.ext2' and 'mkfs.ext3' are also provided.
+ 
++config MKFS_EXT2
++        bool "mkfs_ext2"
++        default y
++        select PLATFORM_LINUX
++        help
++	  Utility to create EXT2 filesystems
++
+ config TUNE2FS
+ 	bool "tune2fs"
+ 	default n  # off: it is too limited compared to upstream version
+diff -Naur a//e2fsprogs/Kbuild.src busybox-git//e2fsprogs/Kbuild.src
+--- a//e2fsprogs/Kbuild.src	2013-08-13 11:49:37.000000000 +0700
++++ busybox-git//e2fsprogs/Kbuild.src	2013-08-13 11:57:21.000000000 +0700
+@@ -12,4 +12,5 @@
+ lib-$(CONFIG_LSATTR) += lsattr.o e2fs_lib.o
+ 
+ lib-$(CONFIG_FSCK)    += fsck.o
++lib-$(CONFIG_MKFS_EXT2) += mkfs_ext2.o
+ lib-$(CONFIG_TUNE2FS) += tune2fs.o
+diff -Naur a//e2fsprogs/tune2fs.c busybox-git//e2fsprogs/tune2fs.c
+--- a//e2fsprogs/tune2fs.c	2013-08-13 11:49:37.000000000 +0700
++++ busybox-git//e2fsprogs/tune2fs.c	2013-08-13 11:51:44.000000000 +0700
+@@ -8,7 +8,7 @@
+  */
+ #include "libbb.h"
+ #include <linux/fs.h>
+-#include <linux/ext2_fs.h>
++#include "e2fs_defs.h"
+ 
+ // storage helpers
+ char BUG_wrong_field_size(void);
+diff -Naur a//util-linux/Config.src busybox-git//util-linux/Config.src
+--- a//util-linux/Config.src	2013-08-13 11:49:37.000000000 +0700
++++ busybox-git//util-linux/Config.src	2013-08-13 12:30:43.000000000 +0700
+@@ -230,13 +230,6 @@
+ 	  check for and attempt to repair any corruption that occurs to a minix
+ 	  filesystem.
+ 
+-config MKFS_EXT2
+-	bool "mkfs_ext2"
+-	default y
+-	depends on PLATFORM_LINUX
+-	help
+-	  Utility to create EXT2 filesystems.
+-
+ config MKFS_MINIX
+ 	bool "mkfs_minix"
+ 	default y
+diff -Naur a//util-linux/Kbuild.src busybox-git//util-linux/Kbuild.src
+--- a//util-linux/Kbuild.src	2013-08-13 11:49:38.000000000 +0700
++++ busybox-git//util-linux/Kbuild.src	2013-08-13 12:30:59.000000000 +0700
+@@ -27,7 +27,6 @@
+ lib-$(CONFIG_LSPCI)             += lspci.o
+ lib-$(CONFIG_LSUSB)             += lsusb.o
+ lib-$(CONFIG_MDEV)              += mdev.o
+-lib-$(CONFIG_MKFS_EXT2)         += mkfs_ext2.o
+ lib-$(CONFIG_MKFS_MINIX)        += mkfs_minix.o
+ lib-$(CONFIG_MKFS_REISER)       += mkfs_reiser.o
+ lib-$(CONFIG_MKFS_VFAT)         += mkfs_vfat.o
+diff -Naur a//util-linux/mkfs_ext2.c busybox-git//util-linux/mkfs_ext2.c
+--- a//util-linux/mkfs_ext2.c	2013-08-13 11:49:37.000000000 +0700
++++ busybox-git//util-linux/mkfs_ext2.c	2013-08-13 12:29:45.000000000 +0700
+@@ -9,7 +9,7 @@
+  */
+ #include "libbb.h"
+ #include <linux/fs.h>
+-#include <linux/ext2_fs.h>
++#include "e2fs_defs.h"
+ 
+ #define	ENABLE_FEATURE_MKFS_EXT2_RESERVED_GDT 0
+ #define	ENABLE_FEATURE_MKFS_EXT2_DIR_INDEX    1

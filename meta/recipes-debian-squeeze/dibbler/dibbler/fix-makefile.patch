@@ -1,0 +1,114 @@
+diff -Naur dibbler-0.7.3-1.3.orig/poslib/Makefile dibbler-0.7.3-1.3/poslib/Makefile
+--- dibbler-0.7.3-1.3.orig/poslib/Makefile	2012-08-27 17:47:55.000000000 +0000
++++ dibbler-0.7.3-1.3/poslib/Makefile	2012-08-27 17:50:02.000000000 +0000
+@@ -40,10 +40,10 @@
+ 
+ top_builddir = .
+ 
+-ACLOCAL = /home/thomson/devel/dibbler/poslib/missing aclocal-1.4
+-AUTOCONF = /home/thomson/devel/dibbler/poslib/missing autoconf
+-AUTOMAKE = /home/thomson/devel/dibbler/poslib/missing automake-1.4
+-AUTOHEADER = /home/thomson/devel/dibbler/poslib/missing autoheader
++ACLOCAL = ./missing aclocal-1.4
++AUTOCONF = ./missing autoconf
++AUTOMAKE = ./missing automake-1.4
++AUTOHEADER = ./missing autoheader
+ 
+ INSTALL = /usr/bin/install -c
+ INSTALL_PROGRAM = ${INSTALL} $(AM_INSTALL_PROGRAM_FLAGS)
+@@ -62,7 +62,7 @@
+ AR = ar
+ AS = @AS@
+ CC = gcc
+-CURDIR = /home/thomson/devel/dibbler/poslib
++CURDIR = . 
+ CXX = g++
+ CXXCPP = g++ -E
+ DLLTOOL = @DLLTOOL@
+@@ -81,7 +81,7 @@
+ LIB_LIBS = 
+ LN_S = ln -s
+ LTLIB = @LTLIB@
+-MAKEINFO = /home/thomson/devel/dibbler/poslib/missing makeinfo
++MAKEINFO = ./missing makeinfo
+ OBJDUMP = @OBJDUMP@
+ OBJEXT = o
+ PACKAGE = poslib
+diff -Naur dibbler-0.7.3-1.3.orig/poslib/poslib/Makefile dibbler-0.7.3-1.3/poslib/poslib/Makefile
+--- dibbler-0.7.3-1.3.orig/poslib/poslib/Makefile	2012-08-27 17:47:55.000000000 +0000
++++ dibbler-0.7.3-1.3/poslib/poslib/Makefile	2012-08-27 17:50:50.000000000 +0000
+@@ -40,10 +40,10 @@
+ 
+ top_builddir = ..
+ 
+-ACLOCAL = /home/thomson/devel/dibbler/poslib/missing aclocal-1.4
+-AUTOCONF = /home/thomson/devel/dibbler/poslib/missing autoconf
+-AUTOMAKE = /home/thomson/devel/dibbler/poslib/missing automake-1.4
+-AUTOHEADER = /home/thomson/devel/dibbler/poslib/missing autoheader
++ACLOCAL = ../missing aclocal-1.4
++AUTOCONF = ../missing autoconf
++AUTOMAKE = ../missing automake-1.4
++AUTOHEADER = ../missing autoheader
+ 
+ INSTALL = /usr/bin/install -c
+ INSTALL_PROGRAM = ${INSTALL} $(AM_INSTALL_PROGRAM_FLAGS)
+@@ -62,7 +62,7 @@
+ AR = ar
+ AS = @AS@
+ CC = gcc
+-CURDIR = /home/thomson/devel/dibbler/poslib
++CURDIR = ..
+ CXX = g++
+ CXXCPP = g++ -E
+ DLLTOOL = @DLLTOOL@
+@@ -81,7 +81,7 @@
+ LIB_LIBS = 
+ LN_S = ln -s
+ LTLIB = @LTLIB@
+-MAKEINFO = /home/thomson/devel/dibbler/poslib/missing makeinfo
++MAKEINFO = ../missing makeinfo
+ OBJDUMP = @OBJDUMP@
+ OBJEXT = o
+ PACKAGE = poslib
+diff -Naur dibbler-0.7.3-1.3.orig/poslib/Makefile dibbler-0.7.3-1.3/poslib/Makefile
+--- dibbler-0.7.3-1.3.orig/poslib/Makefile	2012-08-28 10:26:05.000000000 +0000
++++ dibbler-0.7.3-1.3/poslib/Makefile	2012-08-28 10:26:25.000000000 +0000
+@@ -59,12 +59,12 @@
+ POST_UNINSTALL = :
+ host_alias = 
+ host_triplet = i686-pc-linux-gnu
+-AR = ar
+-AS = @AS@
+-CC = gcc
++#AR = ar
++#AS = @AS@
++#CC = gcc
+ CURDIR = . 
+-CXX = g++
+-CXXCPP = g++ -E
++#CXX = g++
++#CXXCPP = g++ -E
+ DLLTOOL = @DLLTOOL@
+ ECHO = echo
+ EGREP = grep -E
+diff -Naur dibbler-0.7.3-1.3.orig/poslib/poslib/Makefile dibbler-0.7.3-1.3/poslib/poslib/Makefile
+--- dibbler-0.7.3-1.3.orig/poslib/poslib/Makefile	2012-08-28 10:26:05.000000000 +0000
++++ dibbler-0.7.3-1.3/poslib/poslib/Makefile	2012-08-28 10:26:45.000000000 +0000
+@@ -59,12 +59,12 @@
+ POST_UNINSTALL = :
+ host_alias = 
+ host_triplet = i686-pc-linux-gnu
+-AR = ar
+-AS = @AS@
+-CC = gcc
++#AR = ar
++#AS = @AS@
++#CC = gcc
+ CURDIR = ..
+-CXX = g++
+-CXXCPP = g++ -E
++#CXX = g++
++#CXXCPP = g++ -E
+ DLLTOOL = @DLLTOOL@
+ ECHO = echo
+ EGREP = grep -E

@@ -1,0 +1,12 @@
+--- a/tools/pkgdata/pkgdata.cpp
++++ b/tools/pkgdata/pkgdata.cpp
+@@ -94,7 +94,7 @@
+ #define PKGDATA_FILE_SEP_STRING U_FILE_SEP_STRING
+ #endif
+ 
+-#define LARGE_BUFFER_MAX_SIZE 2048
+-#define SMALL_BUFFER_MAX_SIZE 512
++#define LARGE_BUFFER_MAX_SIZE 20480
++#define SMALL_BUFFER_MAX_SIZE 5120
+ 
+ static void loadLists(UPKGOptions *o, UErrorCode *status);

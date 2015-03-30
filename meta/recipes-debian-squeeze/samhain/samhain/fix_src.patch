@@ -1,0 +1,12 @@
+diff -Naur samhain-2.6.2-1.org//src/sh_error.c samhain-2.6.2-1//src/sh_error.c
+--- samhain-2.6.2-1.org//src/sh_error.c	2012-08-27 09:45:43.000000000 +0000
++++ samhain-2.6.2-1//src/sh_error.c	2012-08-27 09:46:06.000000000 +0000
+@@ -1481,7 +1481,7 @@
+ #if defined(__GNUC__) && defined(__PPC__) && (defined(_CALL_SYSV) || defined(_WIN32))
+ #define VA_COPY(ap1, ap2)     (*(ap1) = *(ap2))
+ #elif defined(VA_COPY_AS_ARRAY)
+-#define VA_COPY(ap1, ap2)     memmove ((ap1), (ap2), sizeof (va_list))
++#define VA_COPY(ap1, ap2)     memmove (&(ap1), &(ap2), sizeof (va_list))
+ #else /* va_list is a pointer */
+ #define VA_COPY(ap1, ap2)     ((ap1) = (ap2))
+ #endif

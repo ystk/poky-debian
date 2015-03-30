@@ -1,0 +1,22 @@
+--- utf8script-1.0-1.org/Makefile.in	2012-08-10 16:58:32.000000000 +0000
++++ utf8script-1.0-1/Makefile.in	2012-08-10 17:04:19.000000000 +0000
+@@ -8,13 +8,16 @@
+ 	@true
+ 
+ install.utf8script:	utf8script
+-	install utf8script $(DESTDIR)/usr/lib
++#	install utf8script $(DESTDIR)/usr/lib
++	install -D utf8script $(DESTDIR)/usr/lib
+ 
+ install.rc:	install.utf8script
+-	install utf8script.rc $(DESTDIR)/etc/init.d/utf8script
++#	install utf8script.rc $(DESTDIR)/etc/init.d/utf8script
++	install -D utf8script.rc $(DESTDIR)/etc/init.d/utf8script
+ 
+ install.binfmts:	install.utf8script
+-	install -m 644 utf8script.binfmt $(DESTDIR)/usr/share/binfmts/utf8script
++#	install -m 644 utf8script.binfmt $(DESTDIR)/usr/share/binfmts/utf8script
++	install -m 644 -D utf8script.binfmt $(DESTDIR)/usr/share/binfmts/utf8script
+ 
+ Makefile:	Makefile.in configure
+ 	./configure

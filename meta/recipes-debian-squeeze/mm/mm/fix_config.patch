@@ -1,0 +1,12 @@
+diff -Naur mm-1.4.2-3.org//configure.ac mm-1.4.2-3/configure.ac
+--- mm-1.4.2-3.org//configure.ac	2012-09-06 09:37:34.000000000 +0000
++++ mm-1.4.2-3/configure.ac	2012-09-06 09:37:59.000000000 +0000
+@@ -225,7 +225,7 @@
+ AC_END_DECISION
+ AC_DEFINE_UNQUOTED($ac_decision)
+ 
+-AC_CHECK_MAXSEGSIZE($ac_decision)
++#AC_CHECK_MAXSEGSIZE($ac_decision)
+ 
+ dnl #
+ dnl #   Mutex

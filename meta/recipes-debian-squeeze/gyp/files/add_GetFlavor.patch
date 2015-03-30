@@ -1,0 +1,30 @@
+diff -Naur a/pylib/gyp/common.py gyp-git//pylib/gyp/common.py
+--- a/pylib/gyp/common.py	2010-05-14 07:24:40.000000000 +0000
++++ gyp-git//pylib/gyp/common.py	2014-11-12 10:11:30.000000000 +0000
+@@ -341,3 +341,26 @@
+         seen[marker] = 1
+         result.append(item)
+     return result
++
++def GetFlavor(params):
++    """Returns |params.flavor| if it's set, the system's default flavor else."""
++    flavors = {
++        'cygwin': 'win',
++        'win32': 'win',
++        'darwin': 'mac',
++    }
++
++    if 'flavor' in params:
++        return params['flavor']
++    if sys.platform in flavors:
++        return flavors[sys.platform]
++    if sys.platform.startswith('sunos'):
++        return 'solaris'
++    if sys.platform.startswith('freebsd'):
++        return 'freebsd'
++    if sys.platform.startswith('openbsd'):
++        return 'openbsd'
++    if sys.platform.startswith('aix'):
++        return 'aix'
++
++    return 'linux'

@@ -1,0 +1,10 @@
+# Description: Xilinx PS serial (ttyPS0)
+#
+#type can be one of: 
+#    f	A regular file
+#    d	Directory
+#    c	Character special device file
+#    b	Block special device file
+#    p	Fifo (named pipe)
+#<path>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
+/dev/ttyPS0	c	600	0	5	250	0	-	-	-

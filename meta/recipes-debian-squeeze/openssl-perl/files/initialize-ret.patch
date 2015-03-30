@@ -1,0 +1,32 @@
+#
+# initialize "ret" and "key" before used to avoid the following error
+#
+# X509.c: In function 'XS_Crypt__OpenSSL__X509__Extension_basicC':
+# X509.c:1305:13: error: 'ret' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+# X509.xs:824:7: note: 'ret' was declared here
+# X509.c: In function 'XS_Crypt__OpenSSL__X509_extensions':
+# X509.xs:203:11: error: 'key' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+# X509.xs:172:9: note: 'key' was declared here
+#
+# at least, 1.8.2-1 (wheezy) includes this modification
+#
+
+--- a/X509.xs	2014-06-30 11:27:32.517669643 +0900
++++ b/X509.xs	2014-06-30 11:28:03.953671246 +0900
+@@ -169,7 +169,7 @@
+   X509_EXTENSION *ext;
+   int i, c, r;
+   size_t len = 128;
+-  char* key;
++  char* key = NULL;
+   SV* rv;
+ 
+   HV* RETVAL = newHV();
+@@ -822,6 +822,6 @@
+   PREINIT:
+   BASIC_CONSTRAINTS *bs;
+-  int ret;
++  int ret = 0;
+ 
+   CODE:
+ 

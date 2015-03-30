@@ -1,0 +1,51 @@
+#
+# busybox blkid doesn't support any option, so
+# replace blkid command by a compatible function, get_uuid.
+# "blkid -s UUID" search UUID from /dev, get_uuid too.
+#
+# Skerlet <skerlet@swc.toshiba.co.jp>
+#
+--- a/debian/update-grub	2014-04-11 11:25:26.674528520 +0900
++++ b/debian/update-grub	2014-04-11 11:59:49.650061924 +0900
+@@ -269,6 +269,23 @@
+ 	echo ""
+ }
+ 
++# print UUID of given /dev/* only if found, otherwise print none
++get_uuid()
++{
++	local dev=$1
++
++	if [ ! -d /dev/disk/by-uuid ]; then
++		return 0
++	fi
++	for link in /dev/disk/by-uuid/*; do
++		if [ "$(readlink -f $link)" = "$dev" ]; then
++			echo $link | sed "s@/dev/disk/by-uuid/@@"
++			return 0
++		fi
++	done
++	return 0
++}
++
+ convert_to_uuid()
+ {
+ 	local dev; dev=$1
+@@ -294,7 +311,7 @@
+ 	esac
+ 	if $convert; then
+ 		if [ -b "$dev" ]; then
+-			uuid=$(blkid -o value -s UUID "$dev" || true)
++			uuid=$(get_uuid "$dev")
+ 		fi
+ 	fi
+ 
+@@ -330,7 +347,7 @@
+ 		then
+ 			:
+ 		elif [ -b "$root" ]; then
+-			uuid=$(blkid -o value -s UUID "$root" || true)
++			uuid=$(get_uuid "$root")
+ 			if [ -n "$uuid" ]; then
+ 				kopt=$(echo "$kopt" | sed "s/\(.*root=\)[^ ]*/\1UUID=$uuid/")
+ 			fi

@@ -1,0 +1,13 @@
+--- a/lib/gcrypt.c
++++ b/lib/gcrypt.c
+@@ -22,7 +22,7 @@ int init_crypto(void)
+  * cryptsetup always need at least cap_sys_admin privilege for dm-ioctl
+  * and it locks its memory space anyway.
+  */
+-#if 0
++#if 1
+ 		log_dbg("Initializing crypto backend (secure memory disabled).");
+ 		gcry_control (GCRYCTL_DISABLE_SECMEM);
+ #else
+--
+1.7.2.5

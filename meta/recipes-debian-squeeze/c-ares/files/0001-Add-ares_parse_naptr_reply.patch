@@ -1,0 +1,396 @@
+diff --git a/Makefile.in b/Makefile.in
+index 93a78be..a443673 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -84,7 +84,7 @@ am__objects_1 = ares__close_sockets.lo ares__get_hostent.lo \
+ 	ares_init.lo ares_library_init.lo ares_llist.lo \
+ 	ares_mkquery.lo ares_nowarn.lo ares_options.lo \
+ 	ares_parse_a_reply.lo ares_parse_aaaa_reply.lo \
+-	ares_parse_mx_reply.lo ares_parse_ns_reply.lo \
++	ares_parse_mx_reply.lo ares_parse_naptr_reply.lo ares_parse_ns_reply.lo \
+ 	ares_parse_ptr_reply.lo ares_parse_srv_reply.lo \
+ 	ares_parse_txt_reply.lo ares_process.lo ares_query.lo \
+ 	ares_search.lo ares_send.lo ares_strcasecmp.lo ares_strdup.lo \
+@@ -377,6 +377,7 @@ CSOURCES = ares__close_sockets.c	\
+   ares_parse_a_reply.c			\
+   ares_parse_aaaa_reply.c		\
+   ares_parse_mx_reply.c			\
++  ares_parse_naptr_reply.c		\
+   ares_parse_ns_reply.c			\
+   ares_parse_ptr_reply.c		\
+   ares_parse_srv_reply.c		\
+@@ -441,6 +442,7 @@ MANPAGES = ares_cancel.3		\
+   ares_parse_a_reply.3			\
+   ares_parse_aaaa_reply.3		\
+   ares_parse_mx_reply.3			\
++  ares_parse_naptr_reply.3		\
+   ares_parse_ns_reply.3			\
+   ares_parse_ptr_reply.3		\
+   ares_parse_srv_reply.3		\
+@@ -726,6 +728,7 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ares_parse_a_reply.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ares_parse_aaaa_reply.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ares_parse_mx_reply.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ares_parse_naptr_reply.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ares_parse_ns_reply.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ares_parse_ptr_reply.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ares_parse_srv_reply.Plo@am__quote@
+diff --git a/Makefile.inc b/Makefile.inc
+index bc211f8..b96bd00 100644
+--- a/Makefile.inc
++++ b/Makefile.inc
+@@ -24,6 +24,7 @@ CSOURCES = ares__close_sockets.c	\
+   ares_parse_a_reply.c			\
+   ares_parse_aaaa_reply.c		\
+   ares_parse_mx_reply.c			\
++  ares_parse_naptr_reply.c		\
+   ares_parse_ns_reply.c			\
+   ares_parse_ptr_reply.c		\
+   ares_parse_srv_reply.c		\
+@@ -88,6 +89,7 @@ MANPAGES = ares_cancel.3		\
+   ares_parse_a_reply.3			\
+   ares_parse_aaaa_reply.3		\
+   ares_parse_mx_reply.3			\
++  ares_parse_naptr_reply.3		\
+   ares_parse_ns_reply.3			\
+   ares_parse_ptr_reply.3		\
+   ares_parse_srv_reply.3		\
+diff --git a/ares.h b/ares.h
+index 368c73a..d3c8043 100644
+--- a/ares.h
++++ b/ares.h
+@@ -445,6 +445,16 @@ struct ares_txt_reply {
+   size_t                  length;  /* length excludes null termination */
+ };
+ 
++struct ares_naptr_reply {
++  struct ares_naptr_reply *next;
++  unsigned char           *flags;
++  unsigned char           *service;
++  unsigned char           *regexp;
++  char                    *replacement;
++  unsigned short           order;
++  unsigned short           preference;
++};
++
+ /*
+ ** Parse the buffer, starting at *abuf and of length alen bytes, previously
+ ** obtained from an ares_search call.  Put the results in *host, if nonnull.
+@@ -488,6 +498,11 @@ CARES_EXTERN int ares_parse_txt_reply(const unsigned char* abuf,
+                                       int alen,
+                                       struct ares_txt_reply** txt_out);
+ 
++CARES_EXTERN int ares_parse_naptr_reply(const unsigned char* abuf,
++                                        int alen,
++                                        struct ares_naptr_reply** naptr_out);
++
++
+ CARES_EXTERN void ares_free_string(void *str);
+ 
+ CARES_EXTERN void ares_free_hostent(struct hostent *host);
+diff --git a/ares_data.h b/ares_data.h
+index de1608b..23acfbe 100644
+--- a/ares_data.h
++++ b/ares_data.h
+@@ -20,6 +20,7 @@ typedef enum {
+   ARES_DATATYPE_TXT_REPLY,    /* struct ares_txt_reply - introduced in 1.7.0 */
+   ARES_DATATYPE_ADDR_NODE,    /* struct ares_addr_node - introduced in 1.7.1 */
+   ARES_DATATYPE_MX_REPLY,    /* struct ares_mx_reply   - introduced in 1.7.2 */
++  ARES_DATATYPE_NAPTR_REPLY,/* struct ares_naptr_reply - introduced in 1.7.6 */
+ #if 0
+   ARES_DATATYPE_ADDR6TTL,     /* struct ares_addrttl   */
+   ARES_DATATYPE_ADDRTTL,      /* struct ares_addr6ttl  */
+@@ -57,6 +58,7 @@ struct ares_data {
+     struct ares_srv_reply srv_reply;
+     struct ares_addr_node addr_node;
+     struct ares_mx_reply mx_reply;
++    struct ares_naptr_reply naptr_reply;
+   } data;
+ };
+ 
+diff --git a/ares_parse_naptr_reply.3 b/ares_parse_naptr_reply.3
+new file mode 100644
+index 0000000..2a5f1e5
+--- /dev/null
++++ b/ares_parse_naptr_reply.3
+@@ -0,0 +1,83 @@
++.\"
++.\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
++.TH ARES_PARSE_NAPTR_REPLY 3 "23 February 2012"
++.SH NAME
++ares_parse_naptr_reply \- Parse a reply to a DNS query of type NAPTR
++.SH SYNOPSIS
++.nf
++.B #include <ares.h>
++.PP
++.B int ares_parse_naptr_reply(const unsigned char* \fIabuf\fP, int \fIalen\fP,
++.B                          struct ares_naptr_reply** \fInaptr_out\fP);
++.fi
++.SH DESCRIPTION
++The
++.B ares_parse_naptr_reply
++function parses the response to a query of type NAPTR into a
++linked list of
++.I struct ares_naptr_reply 
++The parameters
++.I abuf
++and
++.I alen
++give the contents of the response.  The result is stored in allocated
++memory and a pointer to it stored into the variable pointed to by
++.IR naptr_out .
++It is the caller's responsibility to free the resulting
++.IR naptr_out
++structure when it is no longer needed using the function
++.B ares_free_data
++.PP
++The structure 
++.I ares_naptr_reply
++contains the following fields:
++.sp
++.in +4n
++.nf
++struct ares_naptr_reply {
++    struct ares_naptr_reply *next;
++    unsigned char *flags;
++    unsigned char *service;
++    unsigned char *regexp;
++    char *replacement;
++    unsigned short order;
++    unsigned short preference;
++};
++.fi
++.in
++.PP
++.SH RETURN VALUES
++.B ares_parse_naptr_reply
++can return any of the following values:
++.TP 15
++.B ARES_SUCCESS
++The response was successfully parsed.
++.TP 15
++.B ARES_EBADRESP
++The response was malformatted.
++.TP 15
++.B ARES_ENODATA
++The response did not contain an answer to the query.
++.TP 15
++.B ARES_ENOMEM
++Memory was exhausted.
++.SH AVAILABILITY
++This function was first introduced in c-ares version 1.7.6.
++.SH SEE ALSO
++.BR ares_query (3)
++.BR ares_free_data (3)
++.SH AUTHOR
++Written by Jakub Hrozek <jhrozek@redhat.com>, on behalf of Red Hat, Inc http://www.redhat.com
+diff --git a/ares_parse_naptr_reply.c b/ares_parse_naptr_reply.c
+new file mode 100644
+index 0000000..6a9d09e
+--- /dev/null
++++ b/ares_parse_naptr_reply.c
+@@ -0,0 +1,188 @@
++
++/* Copyright 1998 by the Massachusetts Institute of Technology.
++ * Copyright (C) 2009 by Jakub Hrozek <jhrozek@redhat.com>
++ *
++ * Permission to use, copy, modify, and distribute this
++ * software and its documentation for any purpose and without
++ * fee is hereby granted, provided that the above copyright
++ * notice appear in all copies and that both that copyright
++ * notice and this permission notice appear in supporting
++ * documentation, and that the name of M.I.T. not be used in
++ * advertising or publicity pertaining to distribution of the
++ * software without specific, written prior permission.
++ * M.I.T. makes no representations about the suitability of
++ * this software for any purpose.  It is provided "as is"
++ * without express or implied warranty.
++ */
++
++#include "ares_setup.h"
++
++#ifdef HAVE_SYS_SOCKET_H
++#  include <sys/socket.h>
++#endif
++#ifdef HAVE_NETINET_IN_H
++#  include <netinet/in.h>
++#endif
++#ifdef HAVE_NETDB_H
++#  include <netdb.h>
++#endif
++#ifdef HAVE_ARPA_INET_H
++#  include <arpa/inet.h>
++#endif
++#ifdef HAVE_ARPA_NAMESER_H
++#  include <arpa/nameser.h>
++#else
++#  include "nameser.h"
++#endif
++#ifdef HAVE_ARPA_NAMESER_COMPAT_H
++#  include <arpa/nameser_compat.h>
++#endif
++
++#include <stdlib.h>
++#include <string.h>
++#include "ares.h"
++#include "ares_dns.h"
++#include "ares_data.h"
++#include "ares_private.h"
++
++/* AIX portability check */
++#ifndef T_NAPTR
++	#define T_NAPTR 35 /* naming authority pointer */
++#endif
++
++int
++ares_parse_naptr_reply (const unsigned char *abuf, int alen,
++                        struct ares_naptr_reply **naptr_out)
++{
++  unsigned int qdcount, ancount, i;
++  const unsigned char *aptr, *vptr;
++  int status, rr_type, rr_class, rr_len;
++  long len;
++  char *hostname = NULL, *rr_name = NULL;
++  struct ares_naptr_reply *naptr_head = NULL;
++  struct ares_naptr_reply *naptr_last = NULL;
++  struct ares_naptr_reply *naptr_curr;
++
++  /* Set *naptr_out to NULL for all failure cases. */
++  *naptr_out = NULL;
++
++  /* Give up if abuf doesn't have room for a header. */
++  if (alen < HFIXEDSZ)
++    return ARES_EBADRESP;
++
++  /* Fetch the question and answer count from the header. */
++  qdcount = DNS_HEADER_QDCOUNT (abuf);
++  ancount = DNS_HEADER_ANCOUNT (abuf);
++  if (qdcount != 1)
++    return ARES_EBADRESP;
++  if (ancount == 0)
++    return ARES_ENODATA;
++
++  /* Expand the name from the question, and skip past the question. */
++  aptr = abuf + HFIXEDSZ;
++  status = ares_expand_name (aptr, abuf, alen, &hostname, &len);
++  if (status != ARES_SUCCESS)
++    return status;
++
++  if (aptr + len + QFIXEDSZ > abuf + alen)
++    {
++      free (hostname);
++      return ARES_EBADRESP;
++    }
++  aptr += len + QFIXEDSZ;
++
++  /* Examine each answer resource record (RR) in turn. */
++  for (i = 0; i < ancount; i++)
++    {
++      /* Decode the RR up to the data field. */
++      status = ares_expand_name (aptr, abuf, alen, &rr_name, &len);
++      if (status != ARES_SUCCESS)
++        {
++          break;
++        }
++      aptr += len;
++      if (aptr + RRFIXEDSZ > abuf + alen)
++        {
++          status = ARES_EBADRESP;
++          break;
++        }
++      rr_type = DNS_RR_TYPE (aptr);
++      rr_class = DNS_RR_CLASS (aptr);
++      rr_len = DNS_RR_LEN (aptr);
++      aptr += RRFIXEDSZ;
++
++      /* Check if we are really looking at a NAPTR record */
++      if (rr_class == C_IN && rr_type == T_NAPTR)
++        {
++          /* parse the NAPTR record itself */
++
++          /* Allocate storage for this NAPTR answer appending it to the list */
++          naptr_curr = ares_malloc_data(ARES_DATATYPE_NAPTR_REPLY);
++          if (!naptr_curr)
++            {
++              status = ARES_ENOMEM;
++              break;
++            }
++          if (naptr_last)
++            {
++              naptr_last->next = naptr_curr;
++            }
++          else
++            {
++              naptr_head = naptr_curr;
++            }
++          naptr_last = naptr_curr;
++
++          vptr = aptr;
++          naptr_curr->order = DNS__16BIT(vptr);
++          vptr += sizeof(unsigned short);
++          naptr_curr->preference = DNS__16BIT(vptr);
++          vptr += sizeof(unsigned short);
++
++          status = ares_expand_string(vptr, abuf, alen, &naptr_curr->flags, &len);
++          if (status != ARES_SUCCESS)
++            break;
++          vptr += len;
++
++          status = ares_expand_string(vptr, abuf, alen, &naptr_curr->service, &len);
++          if (status != ARES_SUCCESS)
++            break;
++          vptr += len;
++
++          status = ares_expand_string(vptr, abuf, alen, &naptr_curr->regexp, &len);
++          if (status != ARES_SUCCESS)
++            break;
++          vptr += len;
++
++          status = ares_expand_name(vptr, abuf, alen, &naptr_curr->replacement, &len);
++          if (status != ARES_SUCCESS)
++            break;
++        }
++
++      /* Don't lose memory in the next iteration */
++      free (rr_name);
++      rr_name = NULL;
++
++      /* Move on to the next record */
++      aptr += rr_len;
++    }
++
++  if (hostname)
++    free (hostname);
++  if (rr_name)
++    free (rr_name);
++
++  /* clean up on error */
++  if (status != ARES_SUCCESS)
++    {
++      if (naptr_head)
++        ares_free_data (naptr_head);
++      return status;
++    }
++
++  /* everything looks fine, return the data */
++  *naptr_out = naptr_head;
++
++  return ARES_SUCCESS;
++}
++
+-- 
+1.7.2.5
+

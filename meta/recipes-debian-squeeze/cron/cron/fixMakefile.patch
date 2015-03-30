@@ -1,0 +1,12 @@
+diff -Naur cron-3.0pl1-116.org/Makefile cron-3.0pl1-116/Makefile
+--- cron-3.0pl1-116.org/Makefile	2012-08-06 16:00:00.000000000 +0000
++++ cron-3.0pl1-116/Makefile	2012-08-06 16:00:44.000000000 +0000
+@@ -79,7 +79,7 @@
+ #DEFS		=	-D_BSD_SIGNALS -Dconst=
+ #<<the name of the BSD-like install program>>
+ #INSTALL = installbsd
+-INSTALL = install -s
++INSTALL = install
+ #<<any special load flags>>
+ # LDFLAGS		=	-s
+ # Let install do the strip

@@ -1,0 +1,47 @@
+diff --git a/gcc/common.opt b/gcc/common.opt
+--- a/gcc/common.opt
++++ a/gcc/common.opt
+@@ -291,6 +291,9 @@
+ -no-standard-libraries
+ Driver Alias(nostdlib)
+ 
++-no-standard-libraries++
++Driver Alias(nostdlib++)
++
+ -no-warnings
+ Common Alias(w)
+ 
+--- a/gcc/common.opt
++++ b/gcc/common.opt
+@@ -2291,6 +2294,9 @@ Driver
+ nostdlib
+ Driver
+ 
++nostdlib++
++Driver
++
+ o
+ Common Driver Joined Separate Var(asm_file_name) MissingArgError(missing filename after %qs)
+ -o <file>	Place output into <file>
+diff --git a/gcc/cp/g++spec.c b/gcc/cp/g++spec.c
+--- a/gcc/cp/g++spec.c
++++ b/gcc/cp/g++spec.c
+@@ -127,6 +127,7 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
+       switch (decoded_options[i].opt_index)
+ 	{
+ 	case OPT_nostdlib:
++	case OPT_nostdlib__:
+ 	case OPT_nodefaultlibs:
+ 	  library = -1;
+ 	  break;
+diff --git a/gcc/gcc.c b/gcc/gcc.c
+--- a/gcc/gcc.c	2013-01-09 02:54:52.060558120 +0000
++++ a/gcc/gcc.c	2013-01-09 02:55:04.600766581 +0000
+@@ -3511,6 +3511,7 @@
+     case OPT_static_libgcc:
+     case OPT_shared_libgcc:
+     case OPT_static_libgfortran:
++    case OPT_nostdlib__:
+     case OPT_static_libstdc__:
+       /* These are always valid, since gcc.c itself understands the
+ 	 first two, gfortranspec.c understands -static-libgfortran and

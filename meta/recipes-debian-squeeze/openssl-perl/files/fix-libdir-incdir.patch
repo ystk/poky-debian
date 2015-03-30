@@ -1,0 +1,46 @@
+--- a/Makefile.PL	2014-06-30 10:01:54.001689033 +0900
++++ b/Makefile.PL	2014-06-30 10:06:24.729672928 +0900
+@@ -10,16 +10,14 @@
+     }
+     my $libbase = 'lib' . substr($lib, 2) . $Config{lib_ext};
+     my $libbase_so = 'lib' . substr($lib, 2) . "." . $Config{so};
+-    for my $path (split(' ', $Config{libpth})) {
+-        if (-f $path . '/' . $libbase) {
+-            print "$path/$libbase\n";
+-            print "Found '$path/$libbase'.\n";
+-            return $lib;
+-        } elsif (-f $path . '/' . $libbase_so) {
+-            print "$path/$libbase_so\n";
+-            print "Found `$_/$libbase_so'.\n";
+-            return $lib;
+-        }
++    if (-f 'STAGING_LIBDIR' . '/' . $libbase) {
++        print "STAGING_LIBDIR/$libbase\n";
++        print "Found 'STAGING_LIBDIR/$libbase'.\n";
++        return 'STAGING_LIBDIR';
++    } elsif (-f 'STAGING_LIBDIR' . '/' . $libbase_so) {
++        print "STAGING_LIBDIR/$libbase_so\n";
++        print "Found `STAGING_LIBDIR/$libbase_so'.\n";
++        return 'STAGING_LIBDIR';
+     }
+     return undef;
+ }
+@@ -38,16 +36,8 @@
+ 
+ requires_external_cc();
+ 
+-if (-d "/usr/include/openssl") {
+-	cc_inc_paths('/usr/include/openssl');
+-	cc_lib_paths('/usr/lib');
+-} elsif (-d "/usr/local/include/ssl") {
+-	cc_inc_paths('/usr/local/include/ssl');
+-	cc_lib_paths('/usr/local/lib/ssl');
+-} elsif (-d "/usr/local/ssl/include") {
+-	cc_inc_paths('/usr/local/ssl/include');
+-	cc_lib_paths('/usr/local/ssl/lib');
+-}
++cc_inc_paths('STAGING_INCDIR/openssl');
++cc_lib_paths('STAGING_LIBDIR');
+ 
+ cc_lib_links('crypto');
+ cc_optimize_flags('-g -Wall -Werror');

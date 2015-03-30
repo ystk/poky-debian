@@ -1,0 +1,26 @@
+diff -Naur a/plugin_blk.c trace-cmd-git//plugin_blk.c
+--- a/plugin_blk.c	2013-11-27 16:00:10.000000000 +0700
++++ trace-cmd-git//plugin_blk.c	2013-11-27 16:03:13.000000000 +0700
+@@ -54,6 +54,9 @@
+ 		goto out;
+ 	}
+ 
++	if (tc & BLK_TC_FLUSH)
++		rwbs[i++] = 'F';
++
+ 	if (tc & BLK_TC_DISCARD)
+ 		rwbs[i++] = 'D';
+ 	else if (tc & BLK_TC_WRITE)
+@@ -63,10 +66,10 @@
+ 	else
+ 		rwbs[i++] = 'N';
+ 
++	if (tc & BLK_TC_FUA)
++		rwbs[i++] = 'F';
+ 	if (tc & BLK_TC_AHEAD)
+ 		rwbs[i++] = 'A';
+-	if (tc & BLK_TC_BARRIER)
+-		rwbs[i++] = 'B';
+ 	if (tc & BLK_TC_SYNC)
+ 		rwbs[i++] = 'S';
+ 	if (tc & BLK_TC_META)

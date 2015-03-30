@@ -1,0 +1,27 @@
+diff -Naur gtk+2.0-git/configure.in gtk+2.0-git.org//configure.in
+--- gtk+2.0-git/configure.in	2013-01-28 18:13:34.000000000 +0000
++++ gtk+2.0-git.org//configure.in	2013-01-28 18:13:11.000000000 +0000
+@@ -1310,15 +1310,15 @@
+ 
+ dnl Look for a host system's gdk-pixbuf-csource if we are cross-compiling
+ 
+-#AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
++AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
+ 
+-#if test $cross_compiling = yes; then
+-#  AC_PATH_PROG(GDK_PIXBUF_CSOURCE, gdk-pixbuf-csource, no)
+-#  AC_PATH_PROG(GTK_UPDATE_ICON_CACHE, gtk-update-icon-cache, no)
+-#  if test x$GTK_UPDATE_ICON_CACHE = xno; then
+-#    REBUILD_PNGS=#
+-#  fi
+-#fi
++if test $cross_compiling = yes; then
++  AC_PATH_PROG(GDK_PIXBUF_CSOURCE, gdk-pixbuf-csource, no)
++  AC_PATH_PROG(GTK_UPDATE_ICON_CACHE, gtk-update-icon-cache, no)
++  if test x$GTK_UPDATE_ICON_CACHE = xno; then
++    REBUILD_PNGS=#
++  fi
++fi
+ 
+ if test ! -f $srcdir/gtk/gtkbuiltincache.h && 
+    test "x$REBUILD_PNGS" = "x#" ; then

@@ -1,0 +1,12 @@
+diff -Naur cluster-agents-1.0.3-3.1.org//Makefile.am cluster-agents-1.0.3-3.1//Makefile.am
+--- cluster-agents-1.0.3-3.1.org//Makefile.am	2012-08-24 16:01:20.000000000 +0000
++++ cluster-agents-1.0.3-3.1//Makefile.am	2012-08-24 16:01:46.000000000 +0000
+@@ -19,7 +19,7 @@
+ MAINTAINERCLEANFILES    = Makefile.in aclocal.m4 configure DRF/config-h.in \
+                         DRF/stamp-h.in libtool.m4 ltdl.m4 libltdl.tar
+ 
+-SUBDIRS	= heartbeat tools ldirectord doc
++SUBDIRS	= heartbeat tools ldirectord
+ 
+ dist-clean-local:
+ 	rm -f autoconf automake autoheader $(TARFILE)

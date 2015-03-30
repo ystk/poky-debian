@@ -1,0 +1,24 @@
+diff -Naur audit-1.7.13-1.org//auparse/Makefile.am audit-1.7.13-1//auparse/Makefile.am
+--- audit-1.7.13-1.org//auparse/Makefile.am	2012-08-29 15:05:44.000000000 +0000
++++ audit-1.7.13-1//auparse/Makefile.am	2012-08-29 15:08:49.000000000 +0000
+@@ -45,7 +45,7 @@
+ BUILT_SOURCES = captabs.h clone-flagtabs.h epoll_ctls.h famtabs.h \
+ 	fcntl-cmdtabs.h flagtabs.h ipctabs.h open-flagtabs.h \
+ 	seeks.h socktabs.h typetabs.h
+-noinst_PROGRAMS = gen_captabs_h gen_clone-flagtabs_h gen_epoll_ctls_h \
++bin_PROGRAMS = gen_captabs_h gen_clone-flagtabs_h gen_epoll_ctls_h \
+ 	gen_famtabs_h gen_fcntl-cmdtabs_h gen_flagtabs_h \
+ 	gen_ipctabs_h gen_open-flagtabs_h gen_seeks_h \
+ 	gen_socktabs_h gen_typetabs_h
+diff -Naur audit-1.7.13-1.org//lib/Makefile.am audit-1.7.13-1//lib/Makefile.am
+--- audit-1.7.13-1.org//lib/Makefile.am	2012-08-29 15:05:44.000000000 +0000
++++ audit-1.7.13-1//lib/Makefile.am	2012-08-29 15:09:14.000000000 +0000
+@@ -40,7 +40,7 @@
+ 	flagtabs.h ftypetabs.h i386_tables.h ia64_tables.h \
+ 	machinetabs.h msg_typetabs.h optabs.h ppc_tables.h \
+ 	s390_tables.h s390x_tables.h x86_64_tables.h
+-noinst_PROGRAMS = gen_actiontabs_h gen_alpha_tables_h gen_errtabs_h	 \
++bin_PROGRAMS = gen_actiontabs_h gen_alpha_tables_h gen_errtabs_h	 \
+ 	gen_fieldtabs_h gen_flagtabs_h gen_ftypetabs_h gen_i386_tables_h \
+ 	gen_ia64_tables_h gen_machinetabs_h gen_msg_typetabs_h           \
+ 	gen_optabs_h gen_ppc_tables_h gen_s390_tables_h                  \

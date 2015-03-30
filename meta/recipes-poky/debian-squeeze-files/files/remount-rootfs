@@ -1,0 +1,21 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          remount-rootfs 
+# Required-Start:    mountkernfs
+# Required-Stop:     
+# Should-Start:      
+# Should-Stop:       
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: Remount rootfs
+### END INIT INFO
+
+echo "Remounting rootfs..."
+FSTAB_ROOTFS=$(cat /etc/fstab | sed "/^#.*/d" | grep "\s/\s" | sed "s/\s\+/ /g")
+ROOTFS_DEV=$(echo $FSTAB_ROOTFS | cut -d " " -f 1)
+ROOTFS_OPTS=$(echo $FSTAB_ROOTFS | cut -d " " -f 4)
+mount -o remount,$ROOTFS_OPTS $ROOTFS_DEV /
+if [ $? != 0 ]; then
+	echo "FATAL: Failed to remount /"
+fi

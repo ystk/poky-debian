@@ -1,0 +1,22 @@
+Subject: [PATCH] sudo: build testsudoers error bugfix.
+
+---
+ Makefile.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 0114ca7..b5e9117 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -198,7 +198,7 @@ visudo: libsudo.a $(VISUDO_OBJS)
+ sudoreplay: libsudo.a $(REPLAY_OBJS)
+ 	$(CC) -o $@ $(REPLAY_OBJS) $(LDFLAGS) -lsudo $(LIBS) @ZLIB@
+ 
+-testsudoers: $(TEST_OBJS)
++testsudoers: libsudo.a $(TEST_OBJS)
+ 	$(CC) -o $@ $(TEST_OBJS) $(LDFLAGS) -lsudo $(LIBS) $(NET_LIBS)
+ 
+ sudo_noexec.lo: $(srcdir)/sudo_noexec.c
+-- 
+1.7.2.5
+

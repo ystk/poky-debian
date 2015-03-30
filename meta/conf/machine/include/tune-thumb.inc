@@ -20,13 +20,18 @@ OVERRIDE_THUMB = "${@['', ':thumb'][bb.data.getVar('ARM_INSTRUCTION_SET', d, 1) 
 OVERRIDE_INTERWORK = "${@['', ':thumb-interwork'][bb.data.getVar('THUMB_INTERWORK', d, 1) == 'yes']}"
 OVERRIDES .= "${OVERRIDE_THUMB}${OVERRIDE_INTERWORK}"
 
+#    Set thumb option parameter for gcc
+#    If gcc version is more than 4.7, set "-marm"
+#    and if gcc version is other, set "-mno-thumb"
+ARM_THUMB_M_OPT_TMP = "${@['-mno-thumb', '-marm'][bb.utils.vercmp(('', bb.data.getVar('GCCVERSION', d), ''), ('', '4.7', '')) >= 0]}"
+
 #    Compiler and linker options for application code and kernel code.  These
 #    options ensure that the compiler has the correct settings for the selected
 #    instruction set and interworking.
 ARM_INTERWORK_M_OPT = "${@['-mno-thumb-interwork', '-mthumb-interwork'][bb.data.getVar('THUMB_INTERWORK', d, 1) == 'yes']}"
-ARM_THUMB_M_OPT = "${@['-mno-thumb', '-mthumb'][bb.data.getVar('ARM_INSTRUCTION_SET', d, 1) == 'thumb']}"
+ARM_THUMB_M_OPT = "${@['${ARM_THUMB_M_OPT_TMP}', '-mthumb'][bb.data.getVar('ARM_INSTRUCTION_SET', d, 1) == 'thumb']}"
 
 #
 TUNE_CCARGS +=  "${ARM_INTERWORK_M_OPT} ${ARM_THUMB_M_OPT}"
-TARGET_CC_KERNEL_ARCH  += "-mno-thumb-interwork -mno-thumb"
+TARGET_CC_KERNEL_ARCH  += "-mno-thumb-interwork ${ARM_THUMB_M_OPT_TMP}"
 

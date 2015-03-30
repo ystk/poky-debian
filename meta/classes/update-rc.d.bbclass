@@ -1,9 +1,13 @@
+#
+# update-rc.d.bbclass
+#
+
 UPDATERCPN ?= "${PN}"
 
 DEPENDS_append = " update-rc.d-native"
 UPDATERCD = "update-rc.d"
 UPDATERCD_virtclass-native = ""
-RDEPENDS_${UPDATERCPN}_append = " ${UPDATERCD}"
+#RDEPENDS_${UPDATERCPN}_append = " ${UPDATERCD}"
 
 INITSCRIPT_PARAMS ?= "defaults"
 
@@ -80,3 +84,13 @@ python populate_packages_prepend () {
 	for pkg in pkgs.split():
 		update_rcd_package(pkg)
 }
+
+#
+# debian-squeeze
+#
+
+# update-rc.d package is installed automatically if another recipe
+# inherit this class. You can exclude it from rootfs
+# by removing "update-rc.d" from DEBIAN_SQUEEZE_FEATURES.
+RDEPENDS_${UPDATERCPN}_append = \
+" ${@base_contains('DEBIAN_SQUEEZE_FEATURES', 'update-rc.d', '${UPDATERCD}', '', d)}"

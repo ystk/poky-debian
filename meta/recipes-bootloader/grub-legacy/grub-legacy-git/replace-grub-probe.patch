@@ -1,0 +1,19 @@
+#
+# replace grub-probe included in GRUB2 by basic commands.
+# This command(s) just get a filesystem type of ${grubdir}.
+#
+# Skerlet <skerlet@swc.toshiba.co.jp>
+#
+--- a/util/grub-install.in	2014-04-14 15:29:02.462062810 +0900
++++ b/util/grub-install.in	2014-04-14 15:30:18.466061921 +0900
+@@ -487,7 +487,9 @@
+ sync
+ 
+ # On XFS, sync() is not enough.
+-if [ `grub-probe -t fs ${grubdir}` = "xfs" ] ; then
++grubdir_fs=$(mount | grep "^${grubdir_device} on" | tail -n 1 |
++             sed "s@^${grubdir_device} on [^ ]* type \([^ ]*\) .*@\1@")
++if [ "${grubdir_fs}" = "xfs" ]; then
+   xfs_freeze -f ${grubdir} && xfs_freeze -u ${grubdir}
+   # We don't have set -e.  If xfs_freeze failed, it's worth trying anyway,
+   # maybe we're lucky.

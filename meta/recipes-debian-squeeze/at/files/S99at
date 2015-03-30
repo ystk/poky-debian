@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# Starts at daemon
+#
+
+### BEGIN INIT INFO
+# Provides:          atd
+# Required-Start:    $syslog $time $remote_fs
+# Required-Stop:     $syslog $time $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Deferred execution scheduler
+# Description:       Debian init script for the atd deferred executions
+#                    scheduler
+### END INIT INFO
+
+umask 077
+
+start() {
+	echo -n "Starting atd: "
+	start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/atd.pid --background --exec /usr/sbin/atd -- -f
+	echo "OK"
+}
+stop() {
+	echo -n "Stopping atd: "
+	start-stop-daemon --stop --quiet --pidfile /var/run/atd.pid
+	echo "OK"
+}
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+

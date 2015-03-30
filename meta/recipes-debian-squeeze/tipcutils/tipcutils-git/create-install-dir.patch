@@ -1,0 +1,11 @@
+diff -Naur a/Makefile b/Makefile
+--- a/Makefile	2012-03-19 08:32:49.508494086 +0000
++++ b/Makefile	2012-03-19 08:34:01.200671205 +0000
+@@ -17,6 +17,7 @@
+ 	-rm tipc-config.o tipc-config
+ 
+ install:
++	mkdir -p ${DESTDIR}/sbin
+ 	cp tipc-config ${DESTDIR}/sbin/tipc-config
+ 
+ # End of file

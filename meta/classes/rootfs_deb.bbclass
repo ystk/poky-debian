@@ -1,9 +1,13 @@
 #
+# rootfs_deb.bbclass
+#
+
+#
 # Copyright 2006-2007 Openedhand Ltd.
 #
 
 ROOTFS_PKGMANAGE = "run-postinsts dpkg apt"
-ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
+#ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
 do_rootfs[depends] += "dpkg-native:do_populate_sysroot apt-native:do_populate_sysroot"
 do_rootfs[recrdeptask] += "do_package_write_deb"
@@ -77,7 +81,30 @@ fakeroot rootfs_deb_do_rootfs () {
 	log_check rootfs
 }
 
+#remove_packaging_data_files() {
+#	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
+#	rm -rf ${IMAGE_ROOTFS}/usr/dpkg/
+#}
+
+#
+# debian-squeeze
+#
+
+# don't install "run-postinst" pacakge if IMAGE_FEATURES doesn't contain
+# "package-management" (see core-image.bbclass) because we remove
+# all postinst data by "remove_packaging_data_files" if so
+ROOTFS_PKGMANAGE_BOOTSTRAP = ""
+
 remove_packaging_data_files() {
 	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
-	rm -rf ${IMAGE_ROOTFS}/usr/dpkg/
+	rm -rf ${IMAGE_ROOTFS}/var/lib/dpkg
+
+	rm -f ${IMAGE_ROOTFS}/${sysconfdir}/version
 }
+
+# generate summary information of installed packages
+inherit summary
+ROOTFS_POSTPROCESS_COMMAND =+ " \
+gen_summary ${WORKDIR}/rootfs-summary ${IMAGE_ROOTFS}/var/lib/dpkg/available ; \
+cp ${IMAGE_ROOTFS}/var/lib/dpkg/available ${WORKDIR}/available.bak ; \
+"

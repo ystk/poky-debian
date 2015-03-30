@@ -1,0 +1,16 @@
+inherit debian-squeeze-misc
+
+# should be set by global confs
+UBOOT_REPO_NAME ?= "u-boot-common"
+UBOOT_REPO_DIR ?= "${DEBIAN_SQUEEZE_GIT_BOOTLOADER}"
+UBOOT_REPO_COMMIT ?= "master"
+UBOOT_CHKSUM ?= " \
+file://COPYING;md5=1707d6db1d42237583f50183a5651ecb \
+file://README;beginline=1;endline=22;md5=78b195c11cb6ef63e6985140db7d7bab \
+"
+
+DEBIAN_SQUEEZE_MISC_NAME = "${UBOOT_REPO_NAME}"
+DEBIAN_SQUEEZE_MISC_GIT = "${UBOOT_REPO_DIR}"
+DEBIAN_SQUEEZE_MISC_COMMIT = "${UBOOT_REPO_COMMIT}"
+
+LIC_FILES_CHKSUM = "${UBOOT_CHKSUM}"

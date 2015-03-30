@@ -1,0 +1,18 @@
+--- a/debian/update-grub	2014-04-10 19:39:07.221328693 +0900
++++ b/debian/update-grub	2014-04-10 19:39:14.945578410 +0900
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ #
+ # Insert a list of installed kernels in a grub config file
+ #   Copyright 2001 Wichert Akkerman <wichert@linux.com>
+@@ -28,9 +28,6 @@
+ # Abort on errors
+ set -e
+ 
+-# load debconf first, since this re-execs the script
+-. /usr/share/debconf/confmodule
+-
+ host_os=`uname -s | tr '[A-Z]' '[a-z]'`
+ 
+ abort() {

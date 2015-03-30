@@ -5,7 +5,7 @@
 #
 
 valid_archs = "alpha cris ia64 \
-               i386 x86 \
+               i386 x86 x86_64 \
                m68knommu m68k ppc powerpc powerpc64 ppc64  \
 	       sparc sparc64 \
                arm  arm26 \
@@ -20,7 +20,8 @@ def map_kernel_arch(a, d):
 
 	valid_archs = bb.data.getVar('valid_archs', d, 1).split()
 
-	if   re.match('(i.86|athlon|x86.64)$', a):	return 'x86'
+	if   re.match('(i.86|athlon)$', a):	        return 'i386'
+	elif re.match('x86.64$', a):			return 'x86_64'
 	elif re.match('arm26$', a):		        return 'arm26'
 	elif re.match('armeb$', a):		        return 'arm'
 	elif re.match('mipsel$', a):		        return 'mips'

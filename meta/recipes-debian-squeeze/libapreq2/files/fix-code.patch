@@ -1,0 +1,70 @@
+diff -Naur libapreq2-2.12-2.orig/module/apache2/apreq_module_apache2.h libapreq2-2.12-2/module/apache2/apreq_module_apache2.h
+--- libapreq2-2.12-2.orig/module/apache2/apreq_module_apache2.h	2012-08-31 13:52:37.000000000 +0000
++++ libapreq2-2.12-2/module/apache2/apreq_module_apache2.h	2012-08-31 13:57:07.000000000 +0000
+@@ -20,7 +20,7 @@
+ 
+ #include "apreq_module.h"
+ #include "apr_optional.h"
+-#include <httpd.h>
++#include <apache2/httpd.h>
+ 
+ #ifdef  __cplusplus
+  extern "C" {
+diff -Naur libapreq2-2.12-2.orig/module/apache2/filter.c libapreq2-2.12-2/module/apache2/filter.c
+--- libapreq2-2.12-2.orig/module/apache2/filter.c	2012-08-31 13:52:37.000000000 +0000
++++ libapreq2-2.12-2/module/apache2/filter.c	2012-08-31 13:55:25.000000000 +0000
+@@ -15,16 +15,16 @@
+ **  limitations under the License.
+ */
+ 
+-#include "assert.h"
++#include <assert.h>
+ 
+-#include "httpd.h"
+-#include "http_config.h"
+-#include "http_log.h"
+-#include "util_filter.h"
+-#include "apr_tables.h"
+-#include "apr_buckets.h"
+-#include "http_request.h"
+-#include "apr_strings.h"
++#include <apache2/httpd.h>
++#include <apache2/http_config.h>
++#include <apache2/http_log.h>
++#include <apache2/util_filter.h>
++#include <apr_tables.h>
++#include <apr_buckets.h>
++#include <apache2/http_request.h>
++#include <apr_strings.h>
+ 
+ #include "apreq_module_apache2.h"
+ #include "apreq_private_apache2.h"
+diff -Naur libapreq2-2.12-2.orig/module/apache2/handle.c libapreq2-2.12-2/module/apache2/handle.c
+--- libapreq2-2.12-2.orig/module/apache2/handle.c	2012-08-31 13:52:37.000000000 +0000
++++ libapreq2-2.12-2/module/apache2/handle.c	2012-08-31 13:56:52.000000000 +0000
+@@ -15,16 +15,16 @@
+ **  limitations under the License.
+ */
+ 
+-#include "assert.h"
++#include <assert.h>
+ 
+-#include "httpd.h"
+-#include "http_config.h"
+-#include "http_log.h"
+-#include "util_filter.h"
+-#include "apr_tables.h"
+-#include "apr_buckets.h"
+-#include "http_request.h"
+-#include "apr_strings.h"
++#include <apache2/httpd.h>
++#include <apache2/http_config.h>
++#include <apache2/http_log.h>
++#include <apache2/util_filter.h>
++#include <apr_tables.h>
++#include <apr_buckets.h>
++#include <apache2/http_request.h>
++#include <apr_strings.h>
+ 
+ #include "apreq_module_apache2.h"
+ #include "apreq_private_apache2.h"

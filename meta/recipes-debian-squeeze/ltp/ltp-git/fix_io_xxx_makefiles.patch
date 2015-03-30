@@ -1,0 +1,60 @@
+Index: ltp-full-20100430/testcases/kernel/syscalls/io_cancel/Makefile
+===================================================================
+--- ltp-full-20100430.orig/testcases/kernel/syscalls/io_cancel/Makefile
++++ ltp-full-20100430/testcases/kernel/syscalls/io_cancel/Makefile
+@@ -20,6 +20,6 @@ top_srcdir		?= ../../../..
+ 
+ include $(top_srcdir)/include/mk/testcases.mk
+ 
+-LDFLAGS			+= $(AIO_LIBS)
++LDLIBS			+= $(AIO_LIBS)
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+Index: ltp-full-20100430/testcases/kernel/syscalls/io_destroy/Makefile
+===================================================================
+--- ltp-full-20100430.orig/testcases/kernel/syscalls/io_destroy/Makefile
++++ ltp-full-20100430/testcases/kernel/syscalls/io_destroy/Makefile
+@@ -20,6 +20,6 @@ top_srcdir		?= ../../../..
+ 
+ include $(top_srcdir)/include/mk/testcases.mk
+ 
+-LDFLAGS			+= $(AIO_LIBS)
++LDLIBS			+= $(AIO_LIBS)
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+Index: ltp-full-20100430/testcases/kernel/syscalls/io_getevents/Makefile
+===================================================================
+--- ltp-full-20100430.orig/testcases/kernel/syscalls/io_getevents/Makefile
++++ ltp-full-20100430/testcases/kernel/syscalls/io_getevents/Makefile
+@@ -20,6 +20,6 @@ top_srcdir		?= ../../../..
+ 
+ include $(top_srcdir)/include/mk/testcases.mk
+ 
+-LDFLAGS			+= $(AIO_LIBS)
++LDLIBS			+= $(AIO_LIBS)
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+Index: ltp-full-20100430/testcases/kernel/syscalls/io_setup/Makefile
+===================================================================
+--- ltp-full-20100430.orig/testcases/kernel/syscalls/io_setup/Makefile
++++ ltp-full-20100430/testcases/kernel/syscalls/io_setup/Makefile
+@@ -20,6 +20,6 @@ top_srcdir		?= ../../../..
+ 
+ include $(top_srcdir)/include/mk/testcases.mk
+ 
+-LDFLAGS			+= $(AIO_LIBS)
++LDLIBS			+= $(AIO_LIBS)
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+Index: ltp-full-20100430/testcases/kernel/syscalls/io_submit/Makefile
+===================================================================
+--- ltp-full-20100430.orig/testcases/kernel/syscalls/io_submit/Makefile
++++ ltp-full-20100430/testcases/kernel/syscalls/io_submit/Makefile
+@@ -20,6 +20,6 @@ top_srcdir		?= ../../../..
+ 
+ include $(top_srcdir)/include/mk/testcases.mk
+ 
+-LDFLAGS			+= $(AIO_LIBS)
++LDLIBS			+= $(AIO_LIBS)
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk

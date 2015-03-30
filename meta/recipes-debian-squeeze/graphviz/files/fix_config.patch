@@ -1,0 +1,13 @@
+diff -Naur graphviz-git.org//lib/gvc/Makefile.am graphviz-git/lib/gvc/Makefile.am
+--- graphviz-git.org//lib/gvc/Makefile.am	2013-01-31 14:44:46.000000000 +0000
++++ graphviz-git/lib/gvc/Makefile.am	2013-01-31 14:46:07.000000000 +0000
+@@ -18,8 +18,7 @@
+ 	-I$(top_srcdir)/lib/pathplan \
+ 	-I$(top_srcdir)/lib/$(GRAPH) \
+ 	-I$(top_srcdir)/lib/cdt \
+-	$(INCLTDL) -I$(top_srcdir)/libltdl \
+-	-DGVLIBDIR=\"$(pkglibdir)\"
++	$(INCLTDL) -DGVLIBDIR=\"$(pkglibdir)\"
+ 
+ if WITH_WIN32
+ AM_CFLAGS = -D_BLD_gvc=1

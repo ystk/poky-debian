@@ -1,0 +1,32 @@
+diff --git a/libgcc/gthr.h b/libgcc/gthr.h
+index 03a3ee1..33fa43b 100644
+--- a/libgcc/gthr.h
++++ b/libgcc/gthr.h
+
+@@ -134,6 +134,18 @@
+ 
+ */
+ 
++/* Check first for thread specific defines.  */
++#if defined (__tpf__)
++#include "gthr-tpf.h"
++#elif _PTHREADS
++#include "gthr-posix.h"
++#elif _PTHREADS95
++#include "gthr-posix95.h"
++#elif _DCE_THREADS
++#include "gthr-dce.h"
++#elif _SOLARIS_THREADS
++#include "gthr-solaris.h"
++#else
+ #if SUPPORTS_WEAK
+ /* The pe-coff weak support isn't fully compatible to ELF's weak.
+    For static libraries it might would work, but as we need to deal
+@@ -148,6 +160,7 @@
+ #endif
+ #endif
+ #include "gthr-default.h"
++#endif
+ 
+ #ifndef HIDE_EXPORTS
+ #pragma GCC visibility pop

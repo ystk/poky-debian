@@ -4,6 +4,7 @@ import errno
 import sys
 import warnings
 import sqlite3
+import time
 
 try:
     import sqlite3
@@ -32,13 +33,13 @@ class PRTable():
 
     def _execute(self, *query):
         """Execute a query, waiting to acquire a lock if necessary"""
-        count = 0
+        start = time.time()
+        end = start + 20
         while True:
             try:
                 return self.cursor.execute(*query)
             except sqlite3.OperationalError as exc:
-                if 'database is locked' in str(exc) and count < 500:
-                    count = count + 1
+                if 'database is locked' in str(exc) and end > time.time():
                     continue
                 raise
             except sqlite3.IntegrityError as exc:

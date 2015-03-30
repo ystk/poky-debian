@@ -205,6 +205,7 @@ deb_log_check() {
 python do_package_deb () {
     import re, copy
     import textwrap
+    import commands
 
     workdir = bb.data.getVar('WORKDIR', d, True)
     if not workdir:
@@ -288,8 +289,77 @@ python do_package_deb () {
         fields.append(["Priority: %s\n", ['PRIORITY']])
         fields.append(["Maintainer: %s\n", ['MAINTAINER']])
         fields.append(["Architecture: %s\n", ['DPKG_ARCH']])
-        fields.append(["OE: %s\n", ['PN']])
         fields.append(["Homepage: %s\n", ['HOMEPAGE']])
+        fields.append(["OE: %s\n", ['PN']])
+
+        #
+	# poky-debian: embed additional information
+        # SourceCategory, SourceName, SourceVersion, SourceURI, License
+        #
+
+        pkg_src_category = bb.data.getVar("PKG_SRC_CATEGORY", d, True)
+        pkg_src_name = bb.data.getVar("PKG_SRC_NAME", d, True)
+        pkg_src_version = bb.data.getVar("PKG_SRC_VERSION", d, True)
+        pkg_src_uri = bb.data.getVar("PKG_SRC_URI", d, True)
+        if not pkg_src_category:
+                bb.data.setVar("PKG_SRC_CATEGORY", "N/A", d)
+        if not pkg_src_name:
+                bb.data.setVar("PKG_SRC_NAME", "N/A", d)
+        if not pkg_src_version:
+                bb.data.setVar("PKG_SRC_VERSION", "N/A", d)
+        if not pkg_src_uri:
+                bb.data.setVar("PKG_SRC_URI", "N/A", d)
+        # debian-squeeze package
+        # Override PKG_SRC_VERSION and PKG_SRC_URI. Other fields are defined by debian-squeeze.bbclass.
+        if pkg_src_category == "debian-squeeze":
+                # PKG_SRC_VERSION
+                skverfile = workdir + "/.debian-version"
+                skver = commands.getoutput("cat %s 2>/dev/null | sed 's@.*:@@'" % skverfile)
+                if not skver:
+                        raise bb.build.FuncFailed("failed to read %s" % skverfile)
+                bb.data.setVar("PKG_SRC_VERSION", skver, d)
+                # PKG_SRC_URI
+                skurifile = workdir + "/.debian-squeeze-uri"
+                skuri = commands.getoutput("cat %s 2>/dev/null" % skurifile)
+                if not skuri:
+                        raise bb.build.FuncFailed("failed to read %s" % skurifile)
+                bb.data.setVar("PKG_SRC_URI", skuri, d)
+        # misc or yocto package
+        # Override only PKG_SRC_URI
+        if pkg_src_category == "misc" or pkg_src_category == "yocto":
+                # PKG_SRC_URI
+                skurifile = workdir + "/.debian-squeeze-uri"
+                skuri = commands.getoutput("cat %s 2>/dev/null" % skurifile)
+                if not skuri:
+                        raise bb.build.FuncFailed("failed to read %s" % skurifile)
+                bb.data.setVar("PKG_SRC_URI", skuri, d)
+        # kernel package
+        # Override PKG_SRC_URI. Other fields are defined by debian-squeeze-linux-checkout.bbclass.
+        if pkg_src_category == "kernel":
+                kernurifile = workdir + "/.kernel-uri"
+                kernuri = commands.getoutput("cat %s 2>/dev/null" % kernurifile)
+                if not kernuri:
+                        raise bb.build.FuncFailed("failed to read %s" % kernurifile)
+                bb.data.setVar("PKG_SRC_URI", kernuri, d)
+        # poky-debian package
+        # Override all fields except PKG_SRC_CATEGORY
+        if pkg_src_category == "poky-debian":
+                # PKG_SRC_NAME
+                bb.data.setVar("PKG_SRC_NAME", bb.data.getVar("BPN", d, True), d)
+                # PKG_SRC_VERSION
+                pv = bb.data.getVar("PV", d, True)
+                pr = bb.data.getVar("PR", d, True)
+                bb.data.setVar("PKG_SRC_VERSION", pv + "-" + pr, d)
+                # PKG_SRC_URI
+                mb = bb.data.getVar("METADATA_BRANCH", d, True)
+                mr = bb.data.getVar("METADATA_REVISION", d, True)
+                bb.data.setVar("PKG_SRC_URI", "poky-debian;" + mb + ";" + mr, d)
+        # define fields
+        fields.append(["SourceCategory: %s\n", ['PKG_SRC_CATEGORY']])
+        fields.append(["SourceName: %s\n", ['PKG_SRC_NAME']])
+        fields.append(["SourceVersion: %s\n", ['PKG_SRC_VERSION']])
+        fields.append(["SourceURI: %s\n", ['PKG_SRC_URI']])
+        fields.append(["License: %s\n", ['LICENSE']])
 
         # Package, Version, Maintainer, Description - mandatory
         # Section, Priority, Essential, Architecture, Source, Depends, Pre-Depends, Recommends, Suggests, Conflicts, Replaces, Provides - Optional

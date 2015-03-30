@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Load keymap
+echo "Loading keymap..."
+loadkeys /usr/share/keymaps/i386/qwerty/jp106.map.gz
+

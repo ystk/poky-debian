@@ -1,0 +1,67 @@
+#
+# HIDDEN/recipes-support/gnutls/gnutls.inc
+#
+
+DESCRIPTION = "GNU Transport Layer Security Library"
+HOMEPAGE = "http://www.gnu.org/software/gnutls/"
+BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
+DEPENDS = "zlib lzo libtasn1-3 libgcrypt11 (>= 1.4.2) libcap"
+
+INC_PR = "r2"
+
+LICENSE = "GPLv3+ & LGPLv2.1+"
+LICENSE_${PN} = "LGPLv2.1+"
+LICENSE_${PN}-xx = "GPLv2.1+"
+LICENSE_${PN}-bin = "GPLv3+"
+LICENSE_${PN}-extra = "GPLv3+"
+LICENSE_${PN}-openssl = "GPLv3+"
+
+#LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
+#                    file://lib/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
+#                    file://libextra/COPYING;md5=d32239bcb673463ab874e80d47fae504"
+
+#SRC_URI = "ftp://ftp.gnutls.org/pub/gnutls/gnutls-${PV}.tar.bz2"
+
+inherit autotools binconfig pkgconfig gettext
+
+EXTRA_OECONF="--with-included-opencdk --with-included-libcfg --disable-rpath \
+              --with-libtasn1-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-libgcrypt --with-libgcrypt-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-libdl-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
+              --with-lzo --disable-guile \
+              "
+do_configure_prepend() {
+	for dir in . lib libextra; do
+		rm ${dir}/aclocal.m4 ${dir}/m4/libtool.m4 ${dir}/m4/lt*.m4
+	done
+}
+PACKAGES =+ "${PN}-openssl ${PN}-extra ${PN}-bin ${PN}-xx"
+
+FILES_${PN} = "${libdir}/libgnutls.so.*"
+FILES_${PN}-bin = "${bindir}/gnutls-serv \
+                   ${bindir}/gnutls-cli \
+                   ${bindir}/srptool \
+                   ${bindir}/psktool \
+                   ${bindir}/p11tool \
+                   ${bindir}/certtool \
+                   ${bindir}/gnutls-srpcrypt"
+
+FILES_${PN}-dev += "${bindir}/*-config ${bindir}/gnutls-cli-debug"
+FILES_${PN}-extra = "${libdir}/libgnutls-extra.so.*"
+FILES_${PN}-openssl = "${libdir}/libgnutls-openssl.so.*"
+FILES_${PN}-xx = "${libdir}/libgnutlsxx.so.*"
+
+BBCLASSEXTEND = "native"
+
+#
+# debian-squeeze
+#
+
+inherit debian-squeeze
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
+                    file://lib/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
+                    file://libextra/COPYING;md5=d32239bcb673463ab874e80d47fae504"
+
+SRC_URI = "file://makefile.patch"

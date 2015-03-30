@@ -1,0 +1,117 @@
+diff -Naur git.orig/configure.in git/configure.in
+--- git.orig/configure.in	2012-09-06 16:49:19.000000000 +0000
++++ git/configure.in	2012-09-06 16:50:52.000000000 +0000
+@@ -913,7 +913,7 @@
+ 			MONO_DL_NEED_USCORE=0
+ 		fi
+ 		AC_SUBST(MONO_DL_NEED_USCORE)
+-		AC_CHECK_FUNC(dlerror)
++#		AC_CHECK_FUNC(dlerror)
+ 	fi
+ 
+ 	dnl ******************************************************************
+diff -Naur git.orig/configure git/configure
+--- git.orig/configure	2012-09-06 17:09:11.000000000 +0000
++++ git/configure	2012-09-06 17:11:21.000000000 +0000
+@@ -21920,15 +21920,15 @@
+   $as_echo_n "(cached) " >&6
+ else
+ 
+-			if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-{ { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }; }
+-else
++#			if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: in \`$ac_pwd':" >&5
++#$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++#{ { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -21979,7 +21979,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+ 
+@@ -26326,15 +26326,15 @@
+ 		{ $as_echo "$as_me:$LINENO: result: disabled" >&5
+ $as_echo "disabled" >&6; }
+ 	else
+-		if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-{ { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }; }
+-else
++#		if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: in \`$ac_pwd':" >&5
++#$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++#{ { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -26411,7 +26411,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+ 	fi
+@@ -26422,15 +26422,15 @@
+ 		{ $as_echo "$as_me:$LINENO: result: disabled" >&5
+ $as_echo "disabled" >&6; }
+ 	else
+-		if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-{ { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }; }
+-else
++#		if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: in \`$ac_pwd':" >&5
++#$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++#{ { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -26570,7 +26570,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+ 	fi

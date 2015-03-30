@@ -1,0 +1,24 @@
+diff -Naur ca-certificates-20090814+nmu2.org//Makefile ca-certificates-20090814+nmu2/Makefile
+--- ca-certificates-20090814+nmu2.org//Makefile	2012-08-02 11:11:50.000000000 +0000
++++ ca-certificates-20090814+nmu2/Makefile	2012-08-02 11:17:11.000000000 +0000
+@@ -2,7 +2,7 @@
+ # Makefile
+ #
+ 
+-CERTSDIR = /usr/share/ca-certificates
++CERTSDIR = usr/share/ca-certificates
+ SUBDIRS = spi-inc.org debconf.org mozilla cacert.org brasil.gov.br signet.pl telesec.de gouv.fr
+ 
+ all:
+@@ -17,9 +17,10 @@
+ 
+ install:
+ 	for dir in $(SUBDIRS); do \
+-	  mkdir $(DESTDIR)/$(CERTSDIR)/$$dir; \
++	  mkdir -p $(DESTDIR)/$(CERTSDIR)/$$dir; \
+ 	  $(MAKE) -C $$dir install CERTSDIR=$(DESTDIR)/$(CERTSDIR)/$$dir; \
+ 	done
++	mkdir -p $(DESTDIR)/usr/sbin
+ 	for dir in sbin; do \
+ 	  $(MAKE) -C $$dir install CERTSDIR=$(DESTDIR)/$(CERTSDIR)/$$dir; \
+ 	done

@@ -1,4 +1,8 @@
 #
+# rootfs_rpm.bbclass
+#
+
+#
 # Creates a root filesystem out of rpm packages
 #
 
@@ -169,10 +173,10 @@ EOF
 	fi
 }
 
-remove_packaging_data_files() {
-	rm -rf ${IMAGE_ROOTFS}${rpmlibdir}
-	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
-}
+#remove_packaging_data_files() {
+#	rm -rf ${IMAGE_ROOTFS}${rpmlibdir}
+#	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
+#}
 
 
 install_all_locales() {
@@ -227,4 +231,20 @@ python () {
             #bb.note("ML_PACKAGE_ARCHS %s %s %s" % (eext[1], localdata.getVar("PACKAGE_ARCHS", True) or "(none)", overrides))
     bb.data.setVar('MULTILIB_PACKAGE_ARCHS', ml_package_archs, d)
     bb.data.setVar('MULTILIB_PREFIX_LIST', ml_prefix_list, d)
+}
+
+#
+# debian-squeeze
+#
+
+# don't install "run-postinst" pacakge if IMAGE_FEATURES doesn't contain
+# "package-management" (see core-image.bbclass) because we remove
+# all postinst data by "remove_packaging_data_files" if so
+ROOTFS_PKGMANAGE_BOOTSTRAP = ""
+
+remove_packaging_data_files() {
+	rm -rf ${IMAGE_ROOTFS}${rpmlibdir}
+	rm -rf ${IMAGE_ROOTFS}${opkglibdir}
+
+	rm -f ${IMAGE_ROOTFS}/${sysconfdir}/version
 }

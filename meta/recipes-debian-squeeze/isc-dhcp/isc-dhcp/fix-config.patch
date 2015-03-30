@@ -1,0 +1,11 @@
+--- isc-dhcp-4.1.1-P1-15+squeeze1.orig/configure.ac	2012-08-23 10:52:46.000000000 +0000
++++ isc-dhcp-4.1.1-P1-15+squeeze1/configure.ac	2012-08-23 11:10:31.000000000 +0000
+@@ -432,7 +432,7 @@
+ 
+ 	AC_CHECK_HEADERS([ldap.h])
+ 	saved_LIBS="$LIBS"
+-	LIBS=""
++	LIBS=" -lssl -lcrypto"
+ 	AC_SEARCH_LIBS([ber_init], [ldap], [
+ 		LDAP_LIBS="-lldap"
+ 	],[

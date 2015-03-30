@@ -1,0 +1,26 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          load-modules 
+# Required-Start:    mountkernfs
+# Required-Stop:     
+# Should-Start:      udev
+# Should-Stop:       
+# Default-Start:     S 
+# Default-Stop:      0 6
+# Short-Description: Process /etc/modules
+# Description:       Load modules which were listed in /etc/modules
+### END INIT INFO
+
+MODULES=/etc/modules
+
+[ -f /proc/modules ] || exit 0
+[ -x /sbin/modprobe ] || exit 0
+[ -f $MODULES ] || exit 0
+
+grep '^[^#]' $MODULES | \
+while read module args; do
+	[ "$module" ] || continue
+	echo "Loading module $module..."
+	/sbin/modprobe $module $args
+done

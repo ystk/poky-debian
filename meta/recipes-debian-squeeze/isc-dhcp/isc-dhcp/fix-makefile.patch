@@ -1,0 +1,9 @@
+--- isc-dhcp-4.1.1-P1-15+squeeze1.orig/server/Makefile.am	2012-08-23 11:52:38.000000000 +0000
++++ isc-dhcp-4.1.1-P1-15+squeeze1/server/Makefile.am	2012-08-23 11:53:21.000000000 +0000
+@@ -14,4 +14,5 @@
+ 
+ man_MANS = dhcpd.8 dhcpd.conf.5 dhcpd.leases.5
+ EXTRA_DIST = $(man_MANS)
+-
++OPENSSL_LIBS ?= -lssl
++CRYPTO_LIBS ?= -lcrypto

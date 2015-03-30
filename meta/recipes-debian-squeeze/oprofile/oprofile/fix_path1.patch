@@ -1,0 +1,12 @@
+diff -Naur oprofile-0.9.6-1.1.org/m4/binutils.m4 oprofile-0.9.6-1.1/m4/binutils.m4
+--- oprofile-0.9.6-1.1.org/m4/binutils.m4	2012-08-27 11:59:54.000000000 +0000
++++ oprofile-0.9.6-1.1/m4/binutils.m4	2012-08-27 12:00:49.000000000 +0000
+@@ -13,7 +13,7 @@
+ 
+ dnl binutils-multiarch does not have /usr/lib/libbfd.a.
+ BFD_LIB=""
+-lib=/usr/lib/libbfd-single.a
++lib=$NLIB/libbfd.a
+ ORIG_SAVE_LIBS="$LIBS"
+ LIBS="$lib $LIBS"
+ AC_CHECK_FUNCS(bfd_openr, BFD_LIB="$lib",

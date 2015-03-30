@@ -1,0 +1,43 @@
+diff -Naur gyp-git.orig//pylib/gyp/generator/make.py gyp-git/pylib/gyp/generator/make.py
+--- gyp-git.orig//pylib/gyp/generator/make.py	2014-11-13 10:32:54.000000000 +0000
++++ gyp-git/pylib/gyp/generator/make.py	2014-11-13 10:47:35.000000000 +0000
+@@ -637,10 +637,14 @@
+         command = 'mkdir -p %s' % ' '.join(dirs) + '; ' + command
+       # Set LD_LIBRARY_PATH in case the action runs an executable from this
+       # build which links to shared libs from this build.
+-      if self.path:
+-        cd_action = 'cd %s; ' % Sourceify(self.path)
+-      else:
+-        cd_action = ''
++      cd_action = 'cd %s; ' % Sourceify(self.path or '.')
++
++      # command and cd_action get written to a toplevel variable called
++      # cmd_foo. Toplevel variables can't handle things that change per
++      # makefile like $(TARGET), so hardcode the target.
++      command = command.replace('$(TARGET)', self.target)
++      cd_action = cd_action.replace('$(TARGET)', self.target)
++
+       # actions run on the host, so they should in theory only use host
+       # libraries, but until everything is made cross-compile safe, also use
+       # target libraries.
+@@ -728,11 +732,15 @@
+         mkdirs = ''
+         if len(dirs) > 0:
+           mkdirs = 'mkdir -p %s; ' % ' '.join(dirs)
+-        if self.path:
+-          cd_action = 'cd %s; ' % Sourceify(self.path)
+-        else:
+-          cd_action = ''
+-        # Set LD_LIBRARY_PATH in case the rule runs an executable from this
++        cd_action = 'cd %s; ' % Sourceify(self.path or '.')
++
++        # action, cd_action, and mkdirs get written to a toplevel variable
++        # called cmd_foo. Toplevel variables can't handle things that change
++        # per makefile like $(TARGET), so hardcode the target.
++        cd_action = cd_action.replace('$(TARGET)', self.target)
++        mkdirs = mkdirs.replace('$(TARGET)', self.target)
++
++	# Set LD_LIBRARY_PATH in case the rule runs an executable from this
+         # build which links to shared libs from this build.
+         # rules run on the host, so they should in theory only use host
+         # libraries, but until everything is made cross-compile safe, also use

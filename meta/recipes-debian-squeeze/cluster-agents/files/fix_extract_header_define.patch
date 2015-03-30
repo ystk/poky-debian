@@ -1,0 +1,13 @@
+diff --git a/configure.in b/configure.in
+index 2e464f5..2f63e36 100644
+--- a/configure.in
++++ b/configure.in
+@@ -92,7 +92,7 @@ extract_header_define() {
+ 	  printf "#include <stdio.h>\n" > ${Cfile}.c
+ 	  printf "#include <%s>\n" $1 >> ${Cfile}.c
+ 	  printf "int main(int argc, char **argv) { printf(\"%%s\", %s); return 0; }\n" $2 >> ${Cfile}.c
+-	  $CC $CFLAGS ${Cfile}.c -o ${Cfile}
++	  gcc $CFLAGS ${Cfile}.c -o ${Cfile}
+ 	  value=`${Cfile}`
+ 	  AC_MSG_RESULT($value)
+ 	  printf $value

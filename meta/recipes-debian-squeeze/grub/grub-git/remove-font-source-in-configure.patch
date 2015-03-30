@@ -1,0 +1,18 @@
+--- a/configure.ac	2013-03-04 13:40:41.956575957 +0900
++++ b/configure.ac	2013-03-04 13:41:01.932560347 +0900
+@@ -181,15 +181,6 @@
+ 
+ FONT_SOURCE=
+ 
+-for ext in pcf pcf.gz bdf bdf.gz ttf ttf.gz; do
+-  for dir in . /usr/src /usr/share/fonts/X11/misc /usr/share/fonts/unifont; do
+-    if test -f "$dir/unifont.$ext"; then
+-      FONT_SOURCE="$dir/unifont.$ext"
+-      break 2
+-    fi
+-  done
+-done
+-
+ if test "x$FONT_SOURCE" = x && ( test "x$platform" = xqemu || test "x$platform" = xyeeloong ); then
+    AC_MSG_ERROR([qemu and yeeloong ports need unifont])
+ fi

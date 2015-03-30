@@ -1,0 +1,25 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          mountkernfs
+# Required-Start:
+# Required-Stop:
+# Should-Start:      glibc
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Mount kernel virtual file systems.
+# Description:       Mount initial set of virtual filesystems the kernel
+#                    provides and that are required by everything.
+### END INIT INFO
+
+# proc
+if ! mount 2> /dev/null | grep -q "on /proc "; then
+	mount -t proc proc /proc -onodev,noexec,nosuid || \
+		echo "WARNING: proc mount failed"
+fi
+
+# sysfs
+if ! mount | grep -q "on /sys "; then
+	mount -t sysfs sysfs /sys -onodev,noexec,nosuid || \
+		echo "WARNING: sysfs mount failed"
+fi

@@ -1,0 +1,12 @@
+--- libnet-1.1.4-2.org/acinclude.m4	2012-08-24 13:16:27.000000000 +0000
++++ libnet-1.1.4-2/acinclude.m4	2012-08-24 13:21:02.000000000 +0000
+@@ -342,7 +342,8 @@
+                 [We are running on a big-endian machine.])
+             ENDIANESS="LIBNET_BIG_ENDIAN"
+             LIBNET_CONFIG_DEFINES="$LIBNET_CONFIG_DEFINES -DLIBNET_BIG_ENDIAN"
+-        elif test $ac_cv_libnet_endianess = lil ; then
++dnl        elif test $ac_cv_libnet_endianess = lil ; then
++	else
+             AC_DEFINE(LIBNET_LIL_ENDIAN, 1, 
+                 [We are running on a little-endian machine.])
+             ENDIANESS="LIBNET_LIL_ENDIAN"

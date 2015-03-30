@@ -1,0 +1,13 @@
+diff -Naur heimdal-1.4.0~git20100726.dfsg.1-1.orig//Makefile.am heimdal-1.4.0~git20100726.dfsg.1-1/Makefile.am
+--- heimdal-1.4.0~git20100726.dfsg.1-1.orig//Makefile.am	2012-10-17 09:13:34.000000000 +0000
++++ heimdal-1.4.0~git20100726.dfsg.1-1/Makefile.am	2012-10-17 09:18:42.000000000 +0000
+@@ -7,7 +7,8 @@
+ endif
+ 
+ SUBDIRS=  include lib kuser kdc admin kadmin kpasswd 
+-SUBDIRS+= $(kcm_dir) appl doc tools tests packages etc po
++#SUBDIRS+= $(kcm_dir) appl doc tools tests packages etc po
++SUBDIRS+= $(kcm_dir) appl tools tests packages etc po
+ 
+ ## ACLOCAL = @ACLOCAL@ -I cf
+ ACLOCAL_AMFLAGS = -I cf

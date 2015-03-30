@@ -1,0 +1,38 @@
+diff -ur a/debian/src/initscripts/etc/init.d/halt b/debian/src/initscripts/etc/init.d/halt
+--- a/debian/src/initscripts/etc/init.d/halt	2013-05-21 14:49:29.414541965 +0900
++++ b/debian/src/initscripts/etc/init.d/halt	2013-05-21 14:50:30.994550871 +0900
+@@ -14,8 +14,6 @@
+ PATH=/sbin:/usr/sbin:/bin:/usr/bin
+ [ -f /etc/default/halt ] && . /etc/default/halt
+ 
+-. /lib/lsb/init-functions
+-
+ do_stop () {
+ 	if [ "$INIT_HALT" = "" ]
+ 	then
+@@ -59,7 +57,7 @@
+ 		netdown=""
+ 	fi
+ 
+-	log_action_msg "Will now halt"
++	echo "Will now halt"
+ 	halt -d -f $netdown $poweroff $hddown
+ }
+ 
+diff -ur a/debian/src/initscripts/etc/init.d/reboot b/debian/src/initscripts/etc/init.d/reboot
+--- a/debian/src/initscripts/etc/init.d/reboot	2013-05-21 14:49:29.414541965 +0900
++++ b/debian/src/initscripts/etc/init.d/reboot	2013-05-21 14:50:05.474537300 +0900
+@@ -11,12 +11,10 @@
+ 
+ PATH=/sbin:/usr/sbin:/bin:/usr/bin
+ 
+-. /lib/lsb/init-functions
+-
+ do_stop () {
+ 	# Message should end with a newline since kFreeBSD may
+ 	# print more stuff (see #323749)
+-	log_action_msg "Will now restart"
++	echo "Will now restart"
+ 	reboot -d -f -i
+ }
+ 

@@ -1,0 +1,15 @@
+--- a/lib/cloner.c	2012-06-21 20:37:43.096841569 +0900
++++ b/lib/cloner.c	2012-06-21 20:39:37.502094755 +0900
+@@ -60,7 +60,11 @@
+ #elif defined(__ia64__)
+ 	ret = clone2(fn, stack, stack_size, clone_flags, arg, NULL, NULL, NULL);
+ #else
+-	ret = clone(fn, (stack ? stack + stack_size - 1 : NULL),
++	/*
++	 * For archs where stack grows downwards, stack points to the topmost
++	 * address of the memory space set up for the child stack.
++	 */
++	ret = clone(fn, (stack ? stack + stack_size : NULL),
+ 			clone_flags, arg);
+ #endif
+ 

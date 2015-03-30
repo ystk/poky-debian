@@ -1,0 +1,256 @@
+--- ossp-uuid-1.6.2-1.org/configure	2012-08-16 11:20:10.000000000 +0000
++++ ossp-uuid-1.6.2-1/configure	2012-08-16 11:28:04.000000000 +0000
+@@ -13351,13 +13351,13 @@
+ 
+ 
+     if test ".$ac_cv_va_copy" = .; then
+-        if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
++#        if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -13426,7 +13426,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+     fi
+@@ -13435,13 +13435,13 @@
+ 
+ 
+     if test ".$ac_cv_va_copy" = .; then
+-        if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
++#        if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -13510,7 +13510,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+     fi
+@@ -13519,13 +13519,13 @@
+ 
+ 
+     if test ".$ac_cv_va_copy" = .; then
+-        if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
++#        if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -13594,7 +13594,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+     fi
+@@ -13603,13 +13603,13 @@
+ 
+ 
+     if test ".$ac_cv_va_copy" = .; then
+-        if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
++#        if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -13678,7 +13678,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+     fi
+@@ -13687,13 +13687,13 @@
+ 
+ 
+     if test ".$ac_cv_va_copy" = .; then
+-        if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
++#        if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -13762,7 +13762,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+     fi
+@@ -13771,13 +13771,13 @@
+ 
+ 
+     if test ".$ac_cv_va_copy" = .; then
+-        if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
++#        if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -13846,7 +13846,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+     fi
+@@ -13855,13 +13855,13 @@
+ 
+ 
+     if test ".$ac_cv_va_copy" = .; then
+-        if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
++#        if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -13930,7 +13930,7 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+     fi
+@@ -13939,13 +13939,13 @@
+ 
+ 
+     if test ".$ac_cv_va_copy" = .; then
+-        if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
++#        if test "$cross_compiling" = yes; then
++#  { { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&5
++#$as_echo "$as_me: error: cannot run test program while cross compiling
++#See \`config.log' for more details." >&2;}
++#   { (exit 1); exit 1; }; }
++#else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -14014,16 +14014,16 @@
+ fi
+ rm -rf conftest.dSYM
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
++#fi
+ 
+ 
+     fi
+ 
+-    if test ".$ac_cv_va_copy" = .; then
+-        { { $as_echo "$as_me:$LINENO: error: no working implementation found" >&5
+-$as_echo "$as_me: error: no working implementation found" >&2;}
+-   { (exit 1); exit 1; }; }
+-    fi
++#    if test ".$ac_cv_va_copy" = .; then
++#        { { $as_echo "$as_me:$LINENO: error: no working implementation found" >&5
++#$as_echo "$as_me: error: no working implementation found" >&2;}
++#   { (exit 1); exit 1; }; }
++#    fi
+ 
+ fi
+ 

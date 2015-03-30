@@ -1,0 +1,18 @@
+--- pam-1.1.1-6.1.org/doc/specs/Makefile.am	2012-08-10 12:06:06.000000000 +0000
++++ pam-1.1.1-6.1/doc/specs/Makefile.am	2012-08-10 12:06:44.000000000 +0000
+@@ -7,7 +7,7 @@
+ EXTRA_DIST = draft-morgan-pam.raw std-agent-id.raw rfc86.0.txt
+ 
+ draft-morgan-pam-current.txt: padout draft-morgan-pam.raw
+-	./padout < $(srcdir)/draft-morgan-pam.raw > draft-morgan-pam-current.txt
++#	./padout < $(srcdir)/draft-morgan-pam.raw > draft-morgan-pam-current.txt
+ 
+ AM_YFLAGS = -d
+ 
+@@ -19,4 +19,5 @@
+ 
+ padout_LDADD = @LEXLIB@
+ 
+-doc_DATA = draft-morgan-pam-current.txt rfc86.0.txt
++#doc_DATA = draft-morgan-pam-current.txt rfc86.0.txt
++doc_DATA = rfc86.0.txt

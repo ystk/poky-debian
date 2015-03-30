@@ -1,0 +1,13 @@
+Index: chkconfig/chkconfig
+===================================================================
+--- chkconfig.orig/chkconfig	2008-04-10 11:35:02.000000000 +0200
++++ chkconfig/chkconfig	2008-04-10 11:35:22.000000000 +0200
+@@ -706,7 +706,7 @@
+ 	print $links{$l}->{$s} ? "  $l:on " : "  $l:off";
+       }
+     }
+-    print getdeps_rc($s) if $printdeps;
++    print "\t", getdeps_rc($s) if $printdeps;
+     print "\n";
+   }
+   my @inetd_services = grep {$known_inetd{$_}} @services;

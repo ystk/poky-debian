@@ -1,0 +1,24 @@
+#
+# "quiet" command are disabled by removing a patch "quiet.diff",
+# so supports_quiet is always "false".
+#
+# Skerlet <skerlet@swc.toshiba.co.jp>
+#
+--- a/debian/update-grub	2014-04-10 19:54:39.133311777 +0900
++++ b/debian/update-grub	2014-04-10 19:55:49.617326915 +0900
+@@ -467,12 +467,9 @@
+ # stores the command line arguments
+ 	command_line_arguments=$1
+ 
+-# does this version of grub support the quiet option?
+-if [ -f ${grub_dir}/installed-version ] && dpkg --compare-versions `cat ${grub_dir}/installed-version` ge 0.97-11ubuntu4; then
+-    supports_quiet=true
+-else
+-    supports_quiet=false
+-fi
++# the quiet option is added by debian/patches/quiet.diff,
++# but this patch should be no longer applied to get verbose output
++supports_quiet=false
+ 
+ # read user configuration
+ if test -f "/etc/default/grub" ; then

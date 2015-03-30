@@ -1,0 +1,135 @@
+diff -Naur a/runtest/math b/runtest/math
+--- a/runtest/math	2012-03-02 07:12:32.576195587 +0000
++++ b/runtest/math	2012-03-02 08:23:59.355712091 +0000
+@@ -3,11 +3,11 @@
+ 
+ atof01 atof01
+ 
+-float_bessel cd $LTPROOT/testcases/bin; float_bessel -v
+-float_exp_log cd $LTPROOT/testcases/bin; float_exp_log -v
+-float_iperb cd $LTPROOT/testcases/bin; float_iperb -v
+-float_power cd $LTPROOT/testcases/bin; float_power -v
+-float_trigo cd $LTPROOT/testcases/bin; float_trigo -v
++float_bessel cd $LTPROOT/testcases/bin; if [ ! -e j0_inp.ref ]; then ./genbessel .; fi; float_bessel -v
++float_exp_log cd $LTPROOT/testcases/bin; if [ ! -e exp_inp.ref ]; then ./genexp_log .; fi; float_exp_log -v
++float_iperb cd $LTPROOT/testcases/bin; if [ ! -e dcosh ]; then ./geniperb .; fi; float_iperb -v
++float_power cd $LTPROOT/testcases/bin; if [ ! -e ceil_inp.ref ]; then ./genpower .; fi; float_power -v
++float_trigo cd $LTPROOT/testcases/bin; if [ ! -e dcos ]; then ./gentrigo .; fi; float_trigo -v
+ 
+ fptest01 fptest01
+ fptest02 fptest02
+diff -Naur a/testcases/misc/math/float/bessel/Makefile b/testcases/misc/math/float/bessel/Makefile
+--- a/testcases/misc/math/float/bessel/Makefile	2012-03-02 07:21:24.496711910 +0000
++++ b/testcases/misc/math/float/bessel/Makefile	2012-03-05 01:18:49.403711727 +0000
+@@ -28,19 +28,4 @@
+ 
+ LDLIBS			+= -lm
+ 
+-INSTALL_TARGETS := *.ref*
+-
+-MAKE_TARGETS := 
+-
+-INSTALL_MODE := 0644
+-
+-.INTERMEDIATE: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-
+-float_reference: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-	./genbessel .
+-
+-.PHONY: float_reference
+-
+-all: float_reference
+-
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+diff -Naur a/testcases/misc/math/float/exp_log/Makefile b/testcases/misc/math/float/exp_log/Makefile
+--- a/testcases/misc/math/float/exp_log/Makefile	2012-03-02 07:22:57.456711631 +0000
++++ b/testcases/misc/math/float/exp_log/Makefile	2012-03-05 01:19:02.940152625 +0000
+@@ -28,19 +28,4 @@
+ 
+ LDLIBS			+= -lm
+ 
+-INSTALL_TARGETS := *.ref*
+-
+-MAKE_TARGETS := 
+-
+-INSTALL_MODE := 0644
+-
+-.INTERMEDIATE: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-
+-float_reference: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-	./genexp_log .
+-
+-.PHONY: float_reference
+-
+-all: float_reference
+-
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+diff -Naur a/testcases/misc/math/float/iperb/Makefile b/testcases/misc/math/float/iperb/Makefile
+--- a/testcases/misc/math/float/iperb/Makefile	2012-03-02 07:25:06.484211926 +0000
++++ b/testcases/misc/math/float/iperb/Makefile	2012-03-05 01:19:18.144594106 +0000
+@@ -29,19 +29,4 @@
+ 
+ LDLIBS			+= -lm
+ 
+-INSTALL_TARGETS := [rd]*sinh [rd]*cosh [rd]*tanh
+-
+-MAKE_TARGETS := 
+-
+-INSTALL_MODE := 0644
+-
+-.INTERMEDIATE: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-
+-float_reference: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-	./geniperb .
+-
+-.PHONY: float_reference
+-
+-all: float_reference
+-
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+diff -Naur a/testcases/misc/math/float/power/Makefile b/testcases/misc/math/float/power/Makefile
+--- a/testcases/misc/math/float/power/Makefile	2012-03-02 07:25:50.700708909 +0000
++++ b/testcases/misc/math/float/power/Makefile	2012-03-05 01:19:33.860094386 +0000
+@@ -28,19 +28,4 @@
+ 
+ LDLIBS			+= -lm
+ 
+-INSTALL_TARGETS := *.ref*
+-
+-MAKE_TARGETS := 
+-
+-INSTALL_MODE := 0644
+-
+-.INTERMEDIATE: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-
+-float_reference: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-	./genpower .
+-
+-.PHONY: float_reference
+-
+-all: float_reference
+-
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+diff -Naur a/testcases/misc/math/float/trigo/Makefile b/testcases/misc/math/float/trigo/Makefile
+--- a/testcases/misc/math/float/trigo/Makefile	2012-03-02 07:26:28.481209021 +0000
++++ b/testcases/misc/math/float/trigo/Makefile	2012-03-05 01:19:54.651709040 +0000
+@@ -29,19 +29,4 @@
+ 
+ LDLIBS			+= -lm
+ 
+-INSTALL_TARGETS := [rd]*sin [rd]*cos [rd]*tan [rd]*tan2
+-
+-MAKE_TARGETS := 
+-
+-INSTALL_MODE := 0644
+-
+-.INTERMEDIATE: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-
+-float_reference: $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/gen*))
+-	./gentrigo .
+-
+-.PHONY: float_reference
+-
+-all: float_reference
+-
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk

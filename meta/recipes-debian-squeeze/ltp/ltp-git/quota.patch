@@ -1,0 +1,360 @@
+diff -urN ltp.debian-squeeze//runtest/syscalls ltp.patched//runtest/syscalls
+--- ltp.debian-squeeze//runtest/syscalls	2012-02-15 17:40:44.000000000 +0900
++++ ltp.patched//runtest/syscalls	2012-02-15 17:45:32.630494793 +0900
+@@ -736,7 +736,7 @@
+ pwrite03 pwrite03
+ pwrite04 pwrite04
+ 
+-quotactl01 quotactl01
++quotactl01 quotactl01.sh
+ 
+ read01 read01
+ read02 read02
+diff -urN ltp.debian-squeeze//testcases/kernel/syscalls/quotactl/Makefile ltp.patched//testcases/kernel/syscalls/quotactl/Makefile
+--- ltp.debian-squeeze//testcases/kernel/syscalls/quotactl/Makefile	2011-10-14 21:33:44.000000000 +0900
++++ ltp.patched//testcases/kernel/syscalls/quotactl/Makefile	2012-02-15 17:43:07.193994581 +0900
+@@ -20,4 +20,6 @@
+ 
+ include $(top_srcdir)/include/mk/testcases.mk
+ 
++INSTALL_TARGETS := quotactl01.sh quota.img
++
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+バイナリー・ファイルltp.debian-squeeze//testcases/kernel/syscalls/quotactl/quota.imgとltp.patched//testcases/kernel/syscalls/quotactl/quota.imgは違います
+diff -urN ltp.debian-squeeze//testcases/kernel/syscalls/quotactl/quotactl01.c ltp.patched//testcases/kernel/syscalls/quotactl/quotactl01.c
+--- ltp.debian-squeeze//testcases/kernel/syscalls/quotactl/quotactl01.c	2012-02-15 17:40:44.000000000 +0900
++++ ltp.patched//testcases/kernel/syscalls/quotactl/quotactl01.c	2012-02-15 17:43:07.177994582 +0900
+@@ -37,6 +37,9 @@
+ /* History:	 Porting from Crackerjack to LTP is done by		      */
+ /*			  Manas Kumar Nayak maknayak@in.ibm.com>	      */
+ /******************************************************************************/
++#ifndef _GNU_SOURCE
++#define _GNU_SOURCE
++#endif
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <sys/syscall.h>
+@@ -45,31 +48,17 @@
+ #include <linux/fs.h>
+ #include <sys/types.h>
+ #include "config.h"
+-#if defined(HAS_QUOTAV2)
++#if defined(HAVE_QUOTAV2) || defined(HAVE_QUOTAV1)
++#if defined(HAVE_QUOTAV2)
+ #define _LINUX_QUOTA_VERSION 2
++#else	/* HAVE_QUOTAV1 */
++#define _LINUX_QUOTA_VERSION 1
++#endif
+ #include <sys/quota.h>
+-/*
+- * See m4/ltp-quota.m4 about the quota v1 vs quota v2 item.
+-#elif defined(HAS_RHEL_QUOTAV1)
+-#include <linux/quota.h>
+- */
+-#else
+-/* Not HAS_QUOTAV2 */
++#else	/* ! (HAVE_QUOTAV2 || HAVE_QUOTAV1) */
++/* Not HAVE_QUOTAV2 */
+ #define BROKEN_QUOTACTL 1
+ #endif
+-/*
+- * The broken manpage on my corporation's version of RHEL 4.6 says that these
+- * headers are required (for quota v1), but I can't verify this requirement
+- * because RHEL 4.6 doesn't RUN 2.4.x.
+- *
+- * Stale documentation ftl.
+- * 
+-#if defined(HAS_RHEL_QUOTAV1)
+-#include <xfs/xqm.h>
+-#include <linux/dqblk_v1.h>
+-#include <linux/dqblk_v2.h>
+-#endif
+- */
+ 
+ /* Harness Specific Include Files. */
+ #include "test.h"
+@@ -77,14 +66,27 @@
+ #include "linux_syscall_numbers.h"
+ 
+ /* Extern Global Variables */
+-extern int Tst_count;		   	/* counter for tst_xxx routines.	*/
+-extern char *TESTDIR;		  	/* temporary dir created by tst_tmpdir()*/
+ 
+ /* Global Variables */
+ char *TCID = "quotactl01";		/* Test program identifier.		*/
+ int  testno;
+ int  TST_TOTAL = 1;			/* total number of tests in this file.	*/
+ 
++#define QUOTACTL(cmd, addr) \
++	syscall(__NR_quotactl, QCMD(cmd, USRQUOTA), block_dev, id, \
++					(caddr_t) addr)
++#ifndef BROKEN_QUOTACTL
++
++#ifndef QUOTAFILE
++/* Default name of the quota file in Fedora 12. */
++#define QUOTAFILE "aquota.user"
++#endif
++
++char quota_started = 0;
++static char *block_dev, *mountpoint, *quota_file, *quota_loc = NULL;
++int id;
++struct dqblk dq;
++
+ /* Extern Global Functions */
+ /******************************************************************************/
+ /*									      */
+@@ -103,13 +105,19 @@
+ /*		On success - Exits calling tst_exit(). With '0' return code.  */
+ /*									      */
+ /******************************************************************************/
+-extern void cleanup() {
+-	/* Remove tmp dir and all files in it */
++extern void cleanup()
++{
++
+ 	TEST_CLEANUP;
+-	tst_rmdir();
++	//tst_rmdir();
++
++	if (block_dev) {
++		if (quota_started == 1 && QUOTACTL(Q_QUOTAOFF, &dq)) {
++			tst_brkm(TBROK | TERRNO, NULL,
++				"failed to disable the quota on %s", block_dev);
++		}
++	}
+ 
+-	/* Exit with appropriate return code. */
+-	tst_exit();
+ }
+ 
+ /* Local  Functions */
+@@ -130,16 +138,60 @@
+ /*		On success - returns 0.					      */
+ /*									      */
+ /******************************************************************************/
++
++/* Quota format identifiers.
++ * These macros should be included from linux/quota.h but
++ * it causes a conflict of "quotactl" */
++#define QFMT_VFS_OLD 1
++#define QFMT_VFS_V0  2
++#define QFMT_OCFS2   3
++#define QFMT_VFS_V1  4
++
+ void setup() {
++
+ 	/* Capture signals if any */
+ 	/* Create temporary directories */
++
+ 	if (geteuid() != 0) {
+-		tst_brkm(TCONF, tst_exit,
++		tst_brkm(TCONF, NULL,
+ 			"You must be root in order to execute this test");
+ 	}
++	if ((quota_loc = malloc(FILENAME_MAX)) == NULL) {
++		tst_brkm(TCONF | TERRNO, NULL,
++			"couldn't allocate memory for the quota loc buffer");
++	}
++
+ 	TEST_PAUSE;
+-	tst_tmpdir();
++	//tst_tmpdir();
++
++	snprintf(quota_loc, FILENAME_MAX, "%s/%s", mountpoint, quota_file);
++
++#if defined(HAVE_QUOTAV2)
++	id = QFMT_VFS_V0;
++#else
++	id = QFMT_VFS_OLD;
++#endif
++	if (QUOTACTL(Q_QUOTAON, quota_loc) != 0) {
++
++		if (errno == ENOENT) {
++			tst_brkm(TCONF, cleanup,
++				"quota file - %s - doesn't exist (is the name "
++				"correct?)", quota_loc);
++		} else {
++			/* Provide a terse explanation for why the command
++			 * failed.. */
++			tst_brkm(TCONF | TERRNO, cleanup,
++				"failed to enable quotas on block device: %s; "
++				"1. Ensure that the device is mounted with the "
++				"quota option. 2. Check the filesystem status "
++				"with `quotacheck %s'", block_dev, block_dev);
++		}
++	} else {
++		quota_started = 1;
++	}
++
+ }
++#endif
+ 
+ /*
+ *  WARNING!! This test may cause the potential harm to the system, we DO NOT
+@@ -158,12 +210,10 @@
+ }
+ #else
+ int cmd[] = {
+-	Q_QUOTAON,
+-	Q_QUOTAOFF,
+ 	Q_GETQUOTA,
+ 	Q_SETQUOTA,
+ /* Only available in quota v2 */
+-#if defined(HAS_QUOTAV2)
++#if defined(HAVE_QUOTAV2)
+ 	Q_GETINFO,
+ 	Q_SETINFO,
+ 	Q_GETFMT,
+@@ -174,36 +224,42 @@
+ int
+ main(int ac, char **av)
+ {
+-	int id = getuid();
++
++	static int block_dev_FLAG = 0, mountpoint_FLAG = 0, quota_file_FLAG = 0;
++	option_t opts[] = {
++		{ .option = "b:", .flag = &block_dev_FLAG, .arg = &block_dev },
++		{ .option = "m:", .flag = &mountpoint_FLAG, .arg = &mountpoint },
++		{ .option = "q:", .flag = &quota_file_FLAG, .arg = &quota_file },
++		{ .option = '\0' }
++	};
++
+ 	int newtid = -1;
+ 	int result;
+ 	int ret;
+ 	int i;
+-	int lc;				 /* loop counter */
+-	char *msg;			  /* message returned from parse_opts */
+-	
++	int lc;			/* loop counter */
++	char *msg;		/* message returned from parse_opts */
++
+ 	/* parse standard options */
+-	if ((msg = parse_opts(ac, av, (option_t *)NULL, NULL)) != (char *)NULL){
+-		 tst_brkm(TBROK, cleanup, "OPTION PARSING ERROR - %s", msg);
+-		 tst_exit();
++	if ((msg = parse_opts(ac, av, (option_t*) opts, NULL)) != (char*)NULL) {
++		tst_brkm(TBROK, NULL, "OPTION PARSING ERROR - %s", msg);
+ 	}
+ 
+ 	setup();
+ 
+-	/* Check looping state if -i option given */
+ 	for (lc = 0; TEST_LOOPING(lc); ++lc) {
+ 
+ 		Tst_count = 0;
+ 
+ 		for (testno = 0; testno < TST_TOTAL; ++testno) {
+ 
+-			for (i = 0; i <= 7; i++){
++			//for (i = 0; i <= sizeof(cmd)/sizeof(cmd[0]); i++) {
++			for (i = 0; i < sizeof(cmd)/sizeof(cmd[0]); i++) {
+ 
+-				ret = syscall(__NR_quotactl, cmd[i],
+-						(const char *)NULL, id,
+-						(caddr_t)NULL);
++				ret = QUOTACTL(cmd[i], &dq);
+ 				if (ret != 0) {
+-					tst_resm(TFAIL|TERRNO, "cmd=0x%x", cmd[i]);
++					tst_resm(TFAIL | TERRNO,
++						"cmd=0x%x failed", cmd[i]);
+ 				} else {
+ 					tst_resm(TPASS, "quotactl call succeeded");
+ 				}
+@@ -221,7 +277,7 @@
+ 
+ 		}
+ 
+-	}	
++	}
+ 
+ 	cleanup();
+ 
+diff -urN ltp.debian-squeeze//testcases/kernel/syscalls/quotactl/quotactl01.sh ltp.patched//testcases/kernel/syscalls/quotactl/quotactl01.sh
+--- ltp.debian-squeeze//testcases/kernel/syscalls/quotactl/quotactl01.sh	1970-01-01 09:00:00.000000000 +0900
++++ ltp.patched//testcases/kernel/syscalls/quotactl/quotactl01.sh	2012-02-15 21:17:18.678495267 +0900
+@@ -0,0 +1,84 @@
++#!/bin/sh
++
++export TCID=quotactl01
++export TST_TOTAL=1
++export TST_COUNT=1
++
++# Essential variables
++#   BIN: Main test code
++#   FSIMG: Quota enabled file system image
++#   MNTPNT: Temporal directory where FSIMG is mounted to
++#   BLKDEV: Loopback device name used to mount FSIMG
++#   QUOTAFILE: Quota filename which is already put in FSIMG
++
++if [ -z "$LTPBIN" ]; then
++	if [ -z "$LTPROOT" ]; then
++		LTPBIN=./
++	else
++		LTPBIN=$LTPROOT/testcases/bin
++	fi
++fi
++if [ -z "$LTPSHARE" ]; then
++	if [ -z "$LTPROOT" ]; then
++		LTPSHARE=./
++	else
++		LTPSHARE=$LTPROOT/testcases/bin
++	fi
++fi
++if [ -z "$LTPTMP" ]; then
++	LTPTMP=/tmp
++fi
++
++BIN=$LTPBIN/quotactl01
++FSIMG=$LTPSHARE/quota.img
++MNTPNT=$LTPTMP/quotactl01
++
++if [ -z "$BLKDEV" ]; then
++	BLKDEV=/dev/loop0
++fi
++if [ -z "$QUOTAFILE" ]; then
++	QUOTAFILE=aquota.user
++fi
++
++setup() {
++	$LTPBIN/tst_resm TINFO "setup..."
++
++	$LTPBIN/tst_resm TINFO "mkdir -p $MNTPNT"
++	mkdir -p $MNTPNT 2>&1
++	if [ $? != 0 ]; then
++		$LTPBIN/tst_brkm TBROK NULL "Cannot mkdir $MNTPNT"
++		return $?
++	fi
++
++	$LTPBIN/tst_resm TINFO "umount $MNTPNT; mount -o loop,quota $FSIMG $MNTPNT"
++	umount $MNTPNT 2> /dev/null || true
++	mount -o loop,quota $FSIMG $MNTPNT 2>&1
++	if [ $? != 0 ]; then
++		$LTPBIN/tst_brkm TBROK NULL "Mount failed ($FSIMG to $MNTPNT)"
++		return $?
++	fi
++}
++
++test01() {
++	$LTPBIN/tst_resm TINFO "running test..."
++	$BIN -b $BLKDEV -m $MNTPNT -q $QUOTAFILE 2>&1
++	if [ $? != 0 ]; then
++		return $?
++	fi
++}
++
++cleanup() {
++	$LTPBIN/tst_resm TINFO "cleanup..."
++	umount $MNTPNT 2>&1 || $LTPBIN/tst_resm TWARN "Unmount failed ($MNTPNT)"
++	rm -r $MNTPNT 2>&1 || $LTPBIN/tst_resm TWARN "Cannot remove $MNTPNT"
++}
++
++setup
++RET=$?
++if [ $RET = 0 ]; then
++	test01
++	RET=$?
++fi
++cleanup
++
++exit $RET

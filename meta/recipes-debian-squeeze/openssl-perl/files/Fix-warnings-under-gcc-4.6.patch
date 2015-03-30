@@ -1,0 +1,51 @@
+diff -Naur libcrypt-openssl-x509-perl-git.orig//X509.xs libcrypt-openssl-x509-perl-git/X509.xs
+--- libcrypt-openssl-x509-perl-git.orig//X509.xs	2013-05-29 16:40:11.000000000 +0000
++++ libcrypt-openssl-x509-perl-git/X509.xs	2013-05-29 16:42:02.000000000 +0000
+@@ -821,13 +821,11 @@
+ 
+   PREINIT:
+   BASIC_CONSTRAINTS *bs;
+-  const X509V3_EXT_METHOD *method;
+   int ret;
+ 
+   CODE:
+ 
+   /* retrieve the value of CA or pathlen in basicConstraints */
+-  method = X509V3_EXT_get(ext);
+   bs = X509V3_EXT_d2i(ext);
+ 
+   if (strcmp(value, "ca") == 0) {
+@@ -985,7 +983,6 @@
+ 
+   PREINIT:
+   char buf[128];
+-  int r;
+ 
+   CODE:
+ 
+@@ -993,7 +990,7 @@
+     croak("No ObjectID supplied\n");
+   }
+ 
+-  r = OBJ_obj2txt(buf, 128, obj, 0);
++  (void) OBJ_obj2txt(buf, 128, obj, 0);
+ 
+   RETVAL = buf;
+ 
+@@ -1006,7 +1003,6 @@
+ 
+   PREINIT:
+   char buf[128];
+-  int r;
+ 
+   CODE:
+ 
+@@ -1014,7 +1010,7 @@
+     croak("No ObjectID supplied\n");
+   }
+ 
+-  r = OBJ_obj2txt(buf, 128, obj, 1);
++  (void) OBJ_obj2txt(buf, 128, obj, 1);
+ 
+   RETVAL = buf;
+ 

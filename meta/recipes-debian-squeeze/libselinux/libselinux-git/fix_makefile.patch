@@ -1,0 +1,12 @@
+diff -Naur libselinux-2.0.96-1.org/src/Makefile libselinux-2.0.96-1/src/Makefile
+--- libselinux-2.0.96-1.org/src/Makefile	2012-05-25 15:47:46.000000000 +0000
++++ libselinux-2.0.96-1/src/Makefile	2012-05-25 15:45:05.000000000 +0000
+@@ -52,7 +52,7 @@
+ 
+ ARCH := $(patsubst i%86,i386,$(shell uname -m))
+ ifneq (,$(filter i386,$(ARCH)))
+-TLSFLAGS += -mno-tls-direct-seg-refs
++
+ endif
+ 
+ ifeq (,$(strip $(LIBSEPOLDIR)))

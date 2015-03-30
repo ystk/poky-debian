@@ -1,13 +1,12 @@
 #
+# tcmode-default.inc
+#
+
+#
 # Default toolchain configuration
 #
 
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils = "binutils-cross"
-PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-initial = "gcc-cross-initial"
-PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-intermediate = "gcc-cross-intermediate"
-PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc = "gcc-cross"
-PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "gcc-cross"
-PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs = "gcc-runtime"
 
 # Default libc config
 PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}libc-for-gcc = "${TCLIBC}"
@@ -65,3 +64,27 @@ PREFERRED_VERSION_gzip-native ?= "1.4"
 require conf/distro/include/as-needed.inc
 TARGET_LINK_HASH_STYLE ?= "${@['-Wl,--hash-style=gnu',''][bb.data.getVar('TARGET_ARCH', d, True) in ['mips', 'mipsel', 'mips64', 'mips64el']]}"
 
+#
+# debian-squeeze
+#
+# Define default PREFERRED_PROVIDERs to use default gcc.
+# Include conf/distro/include/gcc-linaro.inc to use gcc-linaro instead of them.
+#
+
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-initial ?= "gcc-cross-initial"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-intermediate ?= "gcc-cross-intermediate"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc ?= "gcc-cross"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ ?= "gcc-cross"
+PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs ?= "gcc-runtime"
+PREFERRED_PROVIDER_libgcc ?= "libgcc-default"
+
+PREFERRED_PROVIDER_virtual/${SDK_PREFIX}gcc-initial-crosssdk ?= "gcc-crosssdk-initial"
+PREFERRED_PROVIDER_virtual/${SDK_PREFIX}gcc-intermediate-crosssdk ?= "gcc-crosssdk-intermediate"
+PREFERRED_PROVIDER_virtual/${SDK_PREFIX}gcc-crosssdk ?= "gcc-crosssdk"
+PREFERRED_PROVIDER_virtual/${SDK_PREFIX}g++-crosssdk ?= "gcc-crosssdk"
+PREFERRED_PROVIDER_virtual/${SDK_PREFIX}compilerlibs-nativesdk ?= "gcc-runtime-nativesdk"
+PREFERRED_PROVIDER_libgcc-nativesdk ?= "libgcc-default-nativesdk"
+
+PREFERRED_PROVIDER_virtual/gcc-cross-canadian ?= "gcc-default-cross-canadian"
+
+NATIVE_GCCVERSION ?= "4.4"

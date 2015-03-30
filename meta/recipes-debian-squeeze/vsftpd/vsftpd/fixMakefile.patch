@@ -1,0 +1,46 @@
+--- vsftpd-2.3.2-3.org/Makefile	2012-08-22 09:49:32.000000000 +0000
++++ vsftpd-2.3.2-3/Makefile	2012-08-22 09:49:44.000000000 +0000
+@@ -1,5 +1,5 @@
+ # Makefile for systems with GNU tools
+-CC 	=	gcc
++#CC 	=	gcc
+ INSTALL	=	install
+ IFLAGS  = -idirafter dummyinc
+ #CFLAGS = -g
+--- vsftpd-2.3.2-3.org/Makefile	2012-08-22 10:23:28.000000000 +0000
++++ vsftpd-2.3.2-3/Makefile	2012-08-22 10:26:30.000000000 +0000
+@@ -24,21 +24,21 @@
+ 	$(CC) -o vsftpd $(OBJS) $(LINK) $(LIBS) $(LDFLAGS)
+ 
+ install:
+-	if [ -x /usr/local/sbin ]; then \
+-		$(INSTALL) -m 755 vsftpd /usr/local/sbin/vsftpd; \
++	if [ -x ../image/usr/local/sbin ]; then \
++		$(INSTALL) -D -m 755 vsftpd ../image/usr/local/sbin/vsftpd; \
+ 	else \
+-		$(INSTALL) -m 755 vsftpd /usr/sbin/vsftpd; fi
+-	if [ -x /usr/local/man ]; then \
+-		$(INSTALL) -m 644 vsftpd.8 /usr/local/man/man8/vsftpd.8; \
+-		$(INSTALL) -m 644 vsftpd.conf.5 /usr/local/man/man5/vsftpd.conf.5; \
+-	elif [ -x /usr/share/man ]; then \
+-		$(INSTALL) -m 644 vsftpd.8 /usr/share/man/man8/vsftpd.8; \
+-		$(INSTALL) -m 644 vsftpd.conf.5 /usr/share/man/man5/vsftpd.conf.5; \
++		$(INSTALL) -D -m 755 vsftpd ../image/usr/sbin/vsftpd; fi
++	if [ -x ../image/usr/local/man ]; then \
++		$(INSTALL) -D -m 644 vsftpd.8 ../image/usr/local/man/man8/vsftpd.8; \
++		$(INSTALL) -D -m 644 vsftpd.conf.5 ../image/usr/local/man/man5/vsftpd.conf.5; \
++	elif [ -x ../image/usr/share/man ]; then \
++		$(INSTALL) -D -m 644 vsftpd.8 ../image/usr/share/man/man8/vsftpd.8; \
++		$(INSTALL) -D -m 644 vsftpd.conf.5 ../image/usr/share/man/man5/vsftpd.conf.5; \
+ 	else \
+-		$(INSTALL) -m 644 vsftpd.8 /usr/man/man8/vsftpd.8; \
+-		$(INSTALL) -m 644 vsftpd.conf.5 /usr/man/man5/vsftpd.conf.5; fi
+-	if [ -x /etc/xinetd.d ]; then \
+-		$(INSTALL) -m 644 xinetd.d/vsftpd /etc/xinetd.d/vsftpd; fi
++		$(INSTALL) -D -m 644 vsftpd.8 ../image/usr/man/man8/vsftpd.8; \
++		$(INSTALL) -D -m 644 vsftpd.conf.5 ../image/usr/man/man5/vsftpd.conf.5; fi
++	if [ -x ../image/etc/xinetd.d ]; then \
++		$(INSTALL) -D -m 644 xinetd.d/vsftpd ../image/etc/xinetd.d/vsftpd; fi
+ 
+ clean:
+ 	rm -f *.o *.swp vsftpd

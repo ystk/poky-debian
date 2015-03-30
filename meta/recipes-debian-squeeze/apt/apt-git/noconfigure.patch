@@ -1,0 +1,39 @@
+Upstream-Status: Inappropriate [configuration]
+
+---
+ apt-pkg/packagemanager.cc |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- apt-0.6.45exp2.orig/apt-pkg/packagemanager.cc
++++ apt-0.6.45exp2/apt-pkg/packagemanager.cc
+@@ -534,11 +534,13 @@ bool pkgPackageManager::SmartUnPack(PkgI
+    
+    List->Flag(Pkg,pkgOrderList::UnPacked,pkgOrderList::States);
+    
++#if 0
+    // Perform immedate configuration of the package.
+    if (List->IsFlag(Pkg,pkgOrderList::Immediate) == true)
+       if (SmartConfigure(Pkg) == false)
+ 	 return _error->Error(_("Could not perform immediate configuration on '%s'. "
+ 			"Please see man 5 apt.conf under APT::Immediate-Configure for details. (%d)"),Pkg.Name(),2);
++#endif
+    
+    return true;
+ }
+@@ -609,7 +611,8 @@ pkgPackageManager::OrderResult pkgPackag
+       DoneSomething = true;
+    }
+ 
++#if 0
+    // Final run through the configure phase
+    if (ConfigureAll() == false)
+       return Failed;
+ 
+@@ -623,6 +626,7 @@ pkgPackageManager::OrderResult pkgPackag
+ 	 return Failed;
+       }
+    }   
++#endif
+ 	 
+    return Completed;
+ }

@@ -1,0 +1,14 @@
+diff -Naur a/testcases/kernel/syscalls/readlink/readlink03.c b/testcases/kernel/syscalls/readlink/readlink03.c
+--- a/testcases/kernel/syscalls/readlink/readlink03.c	2012-11-19 08:17:41.743359045 +0000
++++ b/testcases/kernel/syscalls/readlink/readlink03.c	2012-11-19 08:20:28.668431477 +0000
+@@ -205,6 +205,10 @@
+ 					 "errno=%d, expected errno=%d",
+ 					 test_desc, TEST_ERRNO,
+ 					 Test_cases[i].exp_errno);
++				if ((strncmp(test_desc, "Symlink Pathname is empty", 25) == 0) &&
++				     TEST_ERRNO == EINVAL)
++					tst_resm(TWARN, "It may be a Kernel Bug, see the patch:"
++						 "http://git.kernel.org/linux/1fa1e7f6");
+ 			}
+ 		}		/* End of TEST CASE LOOPING. */
+ 	}			/* End for TEST_LOOPING */

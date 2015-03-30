@@ -1,0 +1,104 @@
+diff -Naur netcat-1.10-38.org//netcat.c netcat-1.10-38//netcat.c
+--- netcat-1.10-38.org//netcat.c	2012-08-09 14:40:05.000000000 +0000
++++ netcat-1.10-38//netcat.c	2012-08-09 14:42:24.000000000 +0000
+@@ -1438,7 +1438,7 @@
+ 
+ #ifdef HAVE_BIND
+ /* can *you* say "cc -yaddayadda netcat.c -lresolv -l44bsd" on SunLOSs? */
+-  res_init();
++//  res_init();
+ #endif
+ /* I was in this barbershop quartet in Skokie IL ... */
+ /* round up the usual suspects, i.e. malloc up all the stuff we need */
+@@ -1793,49 +1793,49 @@
+    the obvious */
+ helpme()
+ {
+-  o_verbose = 1;
+-  holler ("[v" DEBIAN_VERSION "]\n\
+-connect to somewhere:	nc [-options] hostname port[s] [ports] ... \n\
+-listen for inbound:	nc -l -p port [-options] [hostname] [port]\n\
+-options:");
++//  o_verbose = 1;
++//  holler ("[v" DEBIAN_VERSION "]\n\
++//connect to somewhere:	nc [-options] hostname port[s] [ports] ... \n\
++//listen for inbound:	nc -l -p port [-options] [hostname] [port]\n\
++//options:");
+ /* sigh, this necessarily gets messy.  And the trailing \ characters may be
+-   interpreted oddly by some compilers, generating or not generating extra
+-   newlines as they bloody please.  u-fix... */
+-#ifdef GAPING_SECURITY_HOLE	/* needs to be separate holler() */
+-  holler ("\
+-	-c shell commands	as `-e'; use /bin/sh to exec [dangerous!!]");
+-  holler ("\
+-	-e filename		program to exec after connect [dangerous!!]");
+-#endif
+-  holler ("\
+-	-b			allow broadcasts\n\
+-	-g gateway		source-routing hop point[s], up to 8\n\
+-	-G num			source-routing pointer: 4, 8, 12, ...\n\
+-	-h			this cruft\n\
+-	-i secs			delay interval for lines sent, ports scanned\n\
+-        -k                      set keepalive option on socket\n\
+-	-l			listen mode, for inbound connects\n\
+-	-n			numeric-only IP addresses, no DNS\n\
+-	-o file			hex dump of traffic\n\
+-	-p port			local port number\n\
+-	-r			randomize local and remote ports\n\
+-	-q secs			quit after EOF on stdin and delay of secs\n\
+-	-s addr			local source address");
+-#ifdef IP_TOS
+-  holler("\
+-	-T tos			set Type Of Service");
+-#endif
+-#ifdef TELNET
+-  holler ("\
+-	-t			answer TELNET negotiation");
+-#endif
+-  holler ("\
+-	-u			UDP mode\n\
+-	-v			verbose [use twice to be more verbose]\n\
+-	-w secs			timeout for connects and final net reads\n\
+-	-z			zero-I/O mode [used for scanning]");
+-  holler ("port numbers can be individual or ranges: lo-hi [inclusive];\n\
+-hyphens in port names must be backslash escaped (e.g. 'ftp\\-data').");
++//   interpreted oddly by some compilers, generating or not generating extra
++//   newlines as they bloody please.  u-fix... */
++//#ifdef GAPING_SECURITY_HOLE	/* needs to be separate holler() */
++//  holler ("\
++//	-c shell commands	as `-e'; use /bin/sh to exec [dangerous!!]");
++//  holler ("\
++//	-e filename		program to exec after connect [dangerous!!]");
++//#endif
++//  holler ("\
++//	-b			allow broadcasts\n\
++//	-g gateway		source-routing hop point[s], up to 8\n\
++//	-G num			source-routing pointer: 4, 8, 12, ...\n\
++//	-h			this cruft\n\
++//	-i secs			delay interval for lines sent, ports scanned\n\
++//      -k                      set keepalive option on socket\n\
++//	-l			listen mode, for inbound connects\n\
++//	-n			numeric-only IP addresses, no DNS\n\
++//	-o file			hex dump of traffic\n\
++//	-p port			local port number\n\
++//	-r			randomize local and remote ports\n\
++//	-q secs			quit after EOF on stdin and delay of secs\n\
++//	-s addr			local source address");
++//#ifdef IP_TOS
++//  holler("\
++//	-T tos			set Type Of Service");
++//#endif
++//#ifdef TELNET
++//  holler ("\
++//	-t			answer TELNET negotiation");
++//#endif
++//  holler ("\
++//	-u			UDP mode\n\
++//	-v			verbose [use twice to be more verbose]\n\
++//	-w secs			timeout for connects and final net reads\n\
++//	-z			zero-I/O mode [used for scanning]");
++//  holler ("port numbers can be individual or ranges: lo-hi [inclusive];\n\
++//hyphens in port names must be backslash escaped (e.g. 'ftp\\-data').");
+   quit();
+ } /* helpme */
+ #endif /* HAVE_HELP */

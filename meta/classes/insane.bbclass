@@ -576,7 +576,7 @@ Rerun configure task after fixing this. The path was '%s'""" % root)
             configs.append(os.path.join(root, "configure.in"))
 
     cnf = bb.data.getVar('EXTRA_OECONF', d, True) or ""
-    if "gettext" not in bb.data.getVar('P', d, True) and "gcc-runtime" not in bb.data.getVar('P', d, True) and "--disable-nls" not in cnf:
+    if "gettext" not in bb.data.getVar('P', d, True) and ("gcc-runtime" not in bb.data.getVar('P', d, True) and "gcc-linaro-runtime" not in bb.data.getVar('P', d, True)) and "--disable-nls" not in cnf:
        ml = d.getVar("MLPREFIX", True) or ""
        if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
           gt = "gettext-native"

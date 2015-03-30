@@ -1,0 +1,151 @@
+Unixbench
+2015 (c) Daniel Sangorrin <daniel.sangorrin@toshiba.co.jp>
+-------------------------------------------------------------------------------
+
+Overview of tests
+=================
+
+License: GNU GPL v2
+
+Standard index tests: generate an index (The BYTE Index) that calculates the 
+                      performance relative to that of a SPARCstation 20-61 with 128 MB RAM
+                      
+  system:
+    dhry2reg         Dhrystone 2 using register variables
+    whetstone-double Double-Precision Whetstone
+    syscall          System Call Overhead
+    pipe             Pipe Throughput
+    context1         Pipe-based Context Switching
+    spawn            Process Creation
+    execl            Execl Throughput
+    fstime-w         File Write 1024 bufsize 2000 maxblocks
+    fstime-r         File Read 1024 bufsize 2000 maxblocks
+    fstime           File Copy 1024 bufsize 2000 maxblocks
+    fsbuffer-w       File Write 256 bufsize 500 maxblocks
+    fsbuffer-r       File Read 256 bufsize 500 maxblocks
+    fsbuffer         File Copy 256 bufsize 500 maxblocks
+    fsdisk-w         File Write 4096 bufsize 8000 maxblocks
+    fsdisk-r         File Read 4096 bufsize 8000 maxblocks
+    fsdisk           File Copy 4096 bufsize 8000 maxblocks
+    shell1           Shell Scripts (1 concurrent) (runs "looper 60 multi.sh 1")
+    shell8           Shell Scripts (8 concurrent) (runs "looper 60 multi.sh 8")
+    shell16          Shell Scripts (8 concurrent) (runs "looper 60 multi.sh 16")
+
+  2d:
+    2d-rects         2D graphics: rectangles
+    2d-lines         2D graphics: lines
+    2d-circle        2D graphics: circles
+    2d-ellipse       2D graphics: ellipses
+    2d-shapes        2D graphics: polygons
+    2d-aashapes      2D graphics: aa polygons
+    2d-polys         2D graphics: complex polygons
+    2d-text          2D graphics: text
+    2d-blit          2D graphics: images and blits
+    2d-window        2D graphics: windows
+
+  3d:
+    ubgears          3D graphics: gears
+
+  misc:
+    C                C Compiler Throughput ("looper 60 $cCompiler cctest.c")
+    arithoh          Arithoh (huh?)
+    short            Arithmetic Test (short) (this is arith.c configured for
+                     "short" variables; ditto for the ones below)
+    int              Arithmetic Test (int)
+    long             Arithmetic Test (long)
+    float            Arithmetic Test (float)
+    double           Arithmetic Test (double)
+    dc               Dc: sqrt(2) to 99 decimal places (runs
+                     "looper 30 dc < dc.dat", using your system's copy of "dc")
+    hanoi            Recursion Test -- Tower of Hanoi
+    grep             Grep for a string in a large file, using your system's
+                     copy of "grep"
+    sysexec          Exercise fork() and exec().
+
+  pseudo-tests:
+    arithmetic       Runs arithoh, short, int, long, float, double,
+                     and whetstone-double
+    dhry             Alias for dhry2reg
+    dhrystone        Alias for dhry2reg
+    whets            Alias for whetstone-double
+    whetstone        Alias for whetstone-double
+    load             Runs shell1, shell8, and shell16
+    misc             Runs C, dc, and hanoi
+    speed            Runs the arithmetic and system groups
+    oldsystem        Runs execl, fstime, fsbuffer, fsdisk, pipe, context1,
+                     spawn, and syscall
+    system           Runs oldsystem plus shell1, shell8, and shell16
+    fs               Runs fstime-w, fstime-r, fstime, fsbuffer-w,
+                     fsbuffer-r, fsbuffer, fsdisk-w, fsdisk-r, and fsdisk
+    shell            Runs shell1, shell8, and shell16
+
+    index            Runs the tests which constitute the official index:
+                     the oldsystem group, plus dhry2reg, whetstone-double,
+                     shell1, and shell8
+                     See "The BYTE Index" below for more information.
+    graphics         Runs the tests which constitute the graphics index:
+                     2d-rects, 2d-ellipse, 2d-aashapes, 2d-text, 2d-blit,
+                     2d-window, and ubgears
+    gindex           Runs the index and graphics groups, to generate both
+                     sets of index results
+
+    all              Runs all tests
+
+Quickstart
+==========
+
+$ svn checkout http://byte-unixbench.googlecode.com/svn/trunk/ byte-unixbench-read-only
+
+Usage:
+    ./Run [ -q | -v ] [-i <n> ] [-c <n> [-c <n> ...]] [test ...]
+      -q            Run in quiet mode.
+      -v            Run in verbose mode.
+      -i <count>    Run <count> iterations for each test -- slower tests use <count> / 3, 
+                    but at least 1.  Defaults to 10 (3 for slow tests).
+      -c <n>        Run <n> copies of each test in parallel.
+
+Standard index tests:
+    $ ./Run
+    [Note] After about 29 minutes the results are in ./results
+
+Graphic tests (requires x11perf):
+    $ vi Makefile
+        GRAPHIC_TESTS = defined
+    $ ./Run graphics
+    [Note] After about 18 minutes the results are in ./results
+
+Both:
+    ./Run gindex (run graphic and index tests)
+
+Run a single test:
+    ./Run syscall
+
+Cross-compile
+=============
+
+$ make CC=powerpc-debian-squeeze-linux-gcc
+    --> binaries: ls pgms/*
+
+$ vi Run
+    -my $cCompiler = 'gcc';
+    -"C" => {
+    -    "logmsg" => "C Compiler Throughput ($cCompiler)",
+    -    "cat"    => 'misc',
+    -    "prog" => "${BINDIR}/looper",
+    -    "options" => "60 $cCompiler cctest.c",
+    -},
+[Note] had to fix one build error with times
+    Ref: http://stackoverflow.com/questions/9948508/errors-while-compiling-dhrystone-in-unix
+[Alt] $ vi Run --> my $cCompiler = 'powerpc-debian-squeeze-linux-gcc';
+
+     
+
+
+
+
+
+
+
+
+
+

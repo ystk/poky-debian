@@ -1,0 +1,42 @@
+--- electric-fence.orig/Makefile
++++ electric-fence/Makefile
+@@ -1,12 +1,9 @@
+-ASFLAGS= -mips2
+-CC= cc
+-AR= ar
+-INSTALL= install
+-MV= mv
+-CHMOD= chmod
+-CFLAGS= -g
+-LIB_INSTALL_DIR= /usr/lib
+-MAN_INSTALL_DIR= /usr/man/man3
++ASFLAGS += -mips2
++INSTALL = install
++MV = mv
++CHMOD = chmod
++CFLAGS += -g
++LIB_INSTALL_DIR= $(DESTDIR)/usr/lib
+ 
+ PACKAGE_SOURCE= README libefence.3 Makefile efence.h \
+ 	efence.c page.c print.c eftest.c tstheap.c CHANGES COPYING
+@@ -29,20 +26,10 @@
+ OBJECTS= efence.o page.o print.o
+ 
+ all:	libefence.a tstheap eftest
+-	@ echo
+-	@ echo "Testing Electric Fence."
+-	@ echo "After the last test, it should print that the test has PASSED."
+-	./eftest
+-	./tstheap 3072
+-	@ echo
+-	@ echo "Electric Fence confidence test PASSED." 
+-	@ echo
+ 
+ install: libefence.a libefence.3
+ 	$(MV) libefence.a $(LIB_INSTALL_DIR)
+ 	$(CHMOD) 644 $(LIB_INSTALL_DIR)/libefence.a
+-	$(INSTALL) libefence.3 $(MAN_INSTALL_DIR)/libefence.3
+-	$(CHMOD) 644 $(MAN_INSTALL_DIR)/libefence.3
+ 
+ clean:
+ 	- rm -f $(OBJECTS) tstheap.o eftest.o tstheap eftest libefence.a \

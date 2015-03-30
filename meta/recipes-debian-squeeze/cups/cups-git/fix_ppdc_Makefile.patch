@@ -1,0 +1,54 @@
+diff -Naur cups-1.4.4-7.org//ppdc/Makefile cups-1.4.4-7/ppdc/Makefile
+--- cups-1.4.4-7.org//ppdc/Makefile	2012-08-23 12:07:57.000000000 +0000
++++ cups-1.4.4-7/ppdc/Makefile	2012-08-23 12:06:09.000000000 +0000
+@@ -243,8 +243,8 @@
+ 	$(CXX) $(ARCHFLAGS) $(LDFLAGS) -o genstrings genstrings.o \
+ 		-lcupsppdc ../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) \
+ 		$(DNSSDLIBS) $(COMMONLIBS) $(LIBZ)
+-	echo Generating localization strings...
+-	LD_LIBRARY_PATH=.:../cups/ ./genstrings >sample.c
++#	echo Generating localization strings...
++#	LD_LIBRARY_PATH=.:../cups/ ./genstrings >sample.c
+ 
+ 
+ #
+@@ -261,9 +261,9 @@
+ 	$(CXX) $(ARCHFLAGS) $(LDFLAGS) -o ppdc-static ppdc.o -lcupsppdc \
+ 		../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) $(DNSSDLIBS) \
+ 		$(COMMONLIBS) $(LIBZ)
+-	echo Testing PPD compiler...
+-	LD_LIBRARY_PATH=.:../cups/ ./ppdc-static -l en,fr -I ../data foo.drv
+-	LD_LIBRARY_PATH=.:../cups/ ./ppdc-static -l en,fr -z -I ../data foo.drv
++#	echo Testing PPD compiler...
++#	LD_LIBRARY_PATH=.:../cups/ ./ppdc-static -l en,fr -I ../data foo.drv
++#	LD_LIBRARY_PATH=.:../cups/ ./ppdc-static -l en,fr -z -I ../data foo.drv
+ 
+ 
+ #
+@@ -290,16 +290,16 @@
+ 		../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) $(DNSSDLIBS) \
+ 		$(COMMONLIBS) $(LIBZ)
+ 	echo Testing PPD importer...
+-	$(RM) -r ppd ppd2 sample-import.drv
+-	LD_LIBRARY_PATH=.:../cups/ ./ppdc-static -I ../data sample.drv
+-	LD_LIBRARY_PATH=.:../cups/ ./ppdi-static -I ../data -o sample-import.drv ppd/*
+-	LD_LIBRARY_PATH=.:../cups/ ./ppdc-static -I ../data -d ppd2 sample-import.drv
+-	if diff -qr ppd ppd2; then \
+-		echo PPD import OK; \
+-	else \
+-		echo PPD import FAILED; \
+-		exit 1; \
+-	fi
++#	$(RM) -r ppd ppd2 sample-import.drv
++#	LD_LIBRARY_PATH=.:../cups/ ./ppdc-static -I ../data sample.drv
++#	LD_LIBRARY_PATH=.:../cups/ ./ppdi-static -I ../data -o sample-import.drv ppd/*
++#	LD_LIBRARY_PATH=.:../cups/ ./ppdc-static -I ../data -d ppd2 sample-import.drv
++#	if diff -qr ppd ppd2; then \
++#		echo PPD import OK; \
++#	else \
++#		echo PPD import FAILED; \
++#		exit 1; \
++#	fi
+ 
+ 
+ #

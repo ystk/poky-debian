@@ -1,0 +1,12 @@
+diff -Naur a/Makefile b/Makefile
+--- a/Makefile	2012-04-13 02:17:32.000902083 +0000
++++ b/Makefile	2012-04-13 02:19:24.365825255 +0000
+@@ -7,8 +7,6 @@
+   CPPFLAGS += -DWITHOUT_XATTR
+ endif
+ 
+-SUBDIRS = ubi-utils mkfs.ubifs
+-
+ TARGETS = ftl_format flash_erase flash_eraseall nanddump doc_loadbios \
+ 	ftl_check mkfs.jffs2 flash_lock flash_unlock flash_info \
+ 	flash_otp_info flash_otp_dump mtd_debug flashcp nandwrite nandtest \

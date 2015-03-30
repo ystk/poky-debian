@@ -1,0 +1,21 @@
+#
+# native compile test for large file support
+# always failed on cross-compiling, assume yes
+#
+--- a/configure.ac	2014-05-12 19:24:01.753684841 +0900
++++ b/configure.ac	2014-05-12 19:29:47.025684653 +0900
+@@ -413,13 +413,7 @@
+         LFS_CPPFLAGS="$LFS_CPPFLAGS -D_FILE_OFFSET_BITS=$ac_cv_sys_file_offset_bits"
+     else
+         AC_MSG_CHECKING([for native large file support])
+-        AC_RUN_IFELSE([#include <unistd.h>
+-          main () {
+-          exit(!(sizeof(off_t) == 8));
+-        }],
+-        [ac_cv_sys_file_offset_bits=64; AC_DEFINE(_FILE_OFFSET_BITS,64)
+-         AC_MSG_RESULT([yes])],
+-        [AC_MSG_RESULT([no])])
++        AC_MSG_RESULT([skipped (cross compiling)])
+     fi
+     if test "$ac_cv_sys_large_files" != 'no'; then
+         LFS_CPPFLAGS="$LFS_CPPFLAGS -D_LARGE_FILES=1"

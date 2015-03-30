@@ -1,0 +1,3 @@
+Multiple libtool exist in recipes-debian-squeeze (target) and recipes-yocto (others)
+
+Some patches modified for Debian source

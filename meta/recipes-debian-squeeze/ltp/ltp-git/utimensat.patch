@@ -1,0 +1,27 @@
+From adf53e68cf2b513b67a19dc0ff8869b53f9f22a3 Mon Sep 17 00:00:00 2001
+From: Rishikesh K Rajak <risrajak@linux.vnet.ibm.com>
+Date: Fri, 16 Apr 2010 08:44:17 +0530
+Subject: [PATCH] Script utimensat_tests.sh deletes the test it is executing instead of deleting
+ temporary directory. Patch attached.
+
+Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+---
+ .../kernel/syscalls/utimensat/utimensat_tests.sh   |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/testcases/kernel/syscalls/utimensat/utimensat_tests.sh b/testcases/kernel/syscalls/utimensat/utimensat_tests.sh
+index cc136f9..87514d8 100644
+--- a/testcases/kernel/syscalls/utimensat/utimensat_tests.sh
++++ b/testcases/kernel/syscalls/utimensat/utimensat_tests.sh
+@@ -437,7 +437,7 @@ echo "============================================================"
+ 
+ echo
+ 
+-rm -rf $TEST_PROG
++rm -rf "$TEST_DIR"
+ uname -a
+ date
+ echo "Total tests: $test_num; passed: $passed_cnt; failed: $failed_cnt"
+-- 
+1.7.4.1
+

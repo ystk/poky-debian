@@ -1,0 +1,36 @@
+diff -Naur diffutils-3.0-1.org/configure.ac diffutils-3.0-1/configure.ac
+--- diffutils-3.0-1.org/configure.ac	2012-05-24 11:06:38.000000000 +0000
++++ diffutils-3.0-1/configure.ac	2012-05-24 11:07:32.000000000 +0000
+@@ -145,7 +145,7 @@
+ AC_FUNC_FORK
+ 
+ AM_GNU_GETTEXT([external], [need-ngettext])
+-AM_GNU_GETTEXT_VERSION([0.17])
++AM_GNU_GETTEXT_VERSION([0.18])
+ XGETTEXT="AWK='$AWK' \$(SHELL) \$(top_srcdir)/exgettext $XGETTEXT"
+ 
+ AC_CONFIG_FILES([
+diff -Naur diffutils-3.0-1.org/Makefile.am diffutils-3.0-1/Makefile.am
+--- diffutils-3.0-1.org/Makefile.am	2012-05-24 11:06:38.000000000 +0000
++++ diffutils-3.0-1/Makefile.am	2012-05-24 11:06:52.000000000 +0000
+@@ -18,7 +18,7 @@
+ ALL_RECURSIVE_TARGETS =
+ 
+ EXTRA_DIST = bootstrap exgettext ChangeLog-2008 cfg.mk dist-check.mk
+-SUBDIRS = lib src tests doc man po ms gnulib-tests
++SUBDIRS = lib src tests man po ms gnulib-tests
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+diff -Naur diffutils-3.0-1.org/po/Makefile.in.in diffutils-3.0-1/po/Makefile.in.in
+--- diffutils-3.0-1.org/po/Makefile.in.in	2012-05-24 11:06:38.000000000 +0000
++++ diffutils-3.0-1/po/Makefile.in.in	2012-05-24 11:07:51.000000000 +0000
+@@ -11,7 +11,7 @@
+ # General Public License and is *not* in the public domain.
+ #
+ # Origin: gettext-0.17
+-GETTEXT_MACRO_VERSION = 0.17
++GETTEXT_MACRO_VERSION = 0.18
+ 
+ PACKAGE = @PACKAGE@
+ VERSION = @VERSION@

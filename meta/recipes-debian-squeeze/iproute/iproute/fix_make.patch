@@ -1,0 +1,12 @@
+diff -Naur iproute-20100519-3.org//misc/Makefile iproute-20100519-3/misc/Makefile
+--- iproute-20100519-3.org//misc/Makefile	2012-08-31 13:47:59.000000000 +0000
++++ iproute-20100519-3/misc/Makefile	2012-08-31 13:48:34.000000000 +0000
+@@ -19,7 +19,7 @@
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o rtacct rtacct.c $(LIBNETLINK) -lm
+ 
+ arpd: arpd.c
+-	$(CC) $(CFLAGS) -I$(DBM_INCLUDE) $(LDFLAGS) -o arpd arpd.c $(LIBNETLINK) -ldb -lpthread
++	$(CC) $(CFLAGS) -I$(DBM_INCLUDE) $(LDFLAGS) -o arpd arpd.c $(LIBNETLINK) -L$(setlib) -ldb -lpthread
+ 
+ ssfilter.c: ssfilter.y
+ 	bison ssfilter.y -o ssfilter.c

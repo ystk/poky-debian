@@ -1,0 +1,12 @@
+diff -Naur libbsd-git.org//Makefile libbsd-git/Makefile
+--- libbsd-git.org//Makefile	2013-02-04 13:57:47.000000000 +0000
++++ libbsd-git/Makefile	2013-02-04 13:58:55.000000000 +0000
+@@ -149,7 +149,7 @@
+ 	ln -fs $^ $@
+ 
+ $(LIB_SHARED): $(LIB_SHARED_OBJS)
+-	gcc -shared \
++	$(CC) -shared \
+ 	  -Wl,-soname -Wl,$(LIB_SONAME) \
+ 	  -Wl,--version-script=Versions \
+ 	  -o $@ $^

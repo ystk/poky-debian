@@ -1,0 +1,12 @@
+diff -Naru lzo-2.03-2.orig/configure.ac lzo-2.03-2/configure.ac
+--- lzo-2.03-2.orig/configure.ac	2011-07-19 06:14:15.755897949 +0000
++++ lzo-2.03-2/configure.ac	2011-07-19 06:15:03.039869271 +0000
+@@ -48,7 +48,7 @@
+ AM_MAINTAINER_MODE
+ 
+ if test -z "$ac_abs_top_srcdir"; then
+-    _AC_SRCPATHS(.)
++    _AC_SRCDIRS(.)
+ fi
+ if test -r .Conf.settings1; then
+     . ./.Conf.settings1

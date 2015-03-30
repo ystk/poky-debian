@@ -1,0 +1,11 @@
+--- a/sahara2/Makefile	2013-04-11 22:15:12.536559930 +0900
++++ b/sahara2/Makefile	2013-04-11 22:15:18.984825743 +0900
+@@ -42,7 +42,7 @@
+ 
+ install: install_headers
+ 	@mkdir -p $(DESTDIR)/usr/lib
+-	cp $(LIBNAME).* $(DESTDIR)/usr/lib
++	cp -a $(LIBNAME).* $(DESTDIR)/usr/lib
+ 
+ install_headers:
+ 	@mkdir -p $(DESTDIR)/usr/include

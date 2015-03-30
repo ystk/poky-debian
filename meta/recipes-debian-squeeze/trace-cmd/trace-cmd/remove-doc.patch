@@ -1,0 +1,19 @@
+--- a/Makefile	2013-01-30 16:44:05.466770678 +0900
++++ b/Makefile	2013-01-30 16:44:37.777770314 +0900
+@@ -327,6 +327,6 @@
+ #    If you want kernelshark, then do:  make gui
+ ###
+ 
+-all: all_cmd doc show_gui_make
++all: all_cmd show_gui_make
+ 
+ all_cmd: $(CMD_TARGETS)
+@@ -503,7 +503,7 @@
+ install_cmd: all_cmd install_plugins install_python
+ 	$(Q)$(call do_install,trace-cmd,$(bindir_SQ))
+ 
+-install: install_cmd install_doc
++install: install_cmd
+ 	@echo "Note: to install the gui, type \"make install_gui\""
+ 
+ install_gui: install_cmd gui

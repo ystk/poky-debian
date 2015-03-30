@@ -1,5 +1,6 @@
 METADATA_BRANCH ?= "${@base_detect_branch(d)}"
 METADATA_REVISION ?= "${@base_detect_revision(d)}"
+METADATA_TAG ?= "${@base_detect_tag(d)}"
 
 def base_detect_revision(d):
 	path = base_get_scmbasepath(d)
@@ -25,6 +26,18 @@ def base_detect_branch(d):
 			return rev.strip()
 
 	return "<unknown>"	
+
+def base_detect_tag(d):
+	path = base_get_scmbasepath(d)
+
+	scms = [base_get_metadata_git_tag]
+
+	for scm in scms:
+		rev = scm(path, d)
+		if rev <> "<unknown>":
+			return rev.strip()
+
+	return "<unknown>"
 
 def base_get_scmbasepath(d):
 	return bb.data.getVar( 'COREBASE', d, 1 )
@@ -75,3 +88,8 @@ def base_get_metadata_git_revision(path, d):
 			return rev
 	return "<unknown>"
 
+def base_get_metadata_git_tag(path, d):
+	tag = os.popen('cd %s; git describe --tags 2> /dev/null' % path).read()
+	if len(tag) != 0:
+		return tag
+	return "<unknown>"

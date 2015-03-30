@@ -1,0 +1,20 @@
+--- a/debian/update-grub	2014-04-14 13:57:24.574064270 +0900
++++ b/debian/update-grub	2014-04-14 13:58:15.894069207 +0900
+@@ -451,7 +451,7 @@
+ 
+ # additional options to use with the default boot option, but not with the
+ # alternatives
+-	defoptions="quiet splash"
++	defoptions=""
+ 
+ # should grub lock the old kernels
+ 	lockold="false"
+@@ -517,7 +517,7 @@
+ 
+ ## hiddenmenu
+ # Hides the menu by default (press ESC to see the menu)
+-hiddenmenu
++#hiddenmenu
+ 
+ # Pretty colours
+ #color cyan/blue white/blue

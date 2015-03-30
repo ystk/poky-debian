@@ -68,13 +68,6 @@ different MACHINE (target hardware) or enable parallel build options to take
 advantage of multiple cores for example. See the file for more information as 
 common configuration options are commented.
 
-The Yocto Project has extensive documentation about OE including a reference manual
-which can be found at:
-    http://yoctoproject.org/documentation
-
-For more information about OpenEmbedded see their website:
-    http://www.openembedded.org/
-
 EOM
     cp -f $OECORELOCALCONF $BUILDDIR/conf/local.conf
 fi
@@ -87,14 +80,6 @@ cat <<EOM
 You had no conf/bblayers.conf file. The configuration file has been created for
 you with some default values. To add additional metadata layers into your
 configuration please add entries to this file.
-
-The Yocto Project has extensive documentation about OE including a reference manual
-which can be found at:
-    http://yoctoproject.org/documentation
-
-For more information about OpenEmbedded see their website:
-    http://www.openembedded.org/
-
 
 EOM
 
@@ -114,13 +99,7 @@ cat <<EOM
 You can now run 'bitbake <target>'
 
 Common targets are:
-    core-image-minimal
-    core-image-sato
+    core-image-base
     meta-toolchain
-    meta-toolchain-sdk
-    adt-installer
-    meta-ide-support
-
-You can also run generated qemu images with a command like 'runqemu qemux86'
 
 EOM
