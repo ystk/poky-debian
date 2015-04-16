@@ -100,14 +100,14 @@ editline.c: ${OSRCS}
 	    mv $@.tmp $@
 
 tc1.o:	${LIBEDITDIR}/TEST/tc1.c
-	
+
 tc1:	libedit.a tc1.o 
 	${_MKTARGET_LINK}
 	${CC} ${LDFLAGS} ${.ALLSRC} -o ${.TARGET} libedit.a ${LDADD} -ltermcap
 
 .depend: vi.h emacs.h common.h fcns.h help.h help.c
 	-mkdir .a .so
-.c.o:
+.c.o: help.h
 	${CC} ${CFLAGS} -c $< -o .a/$*
 	${CC} ${CFLAGS} -fPIC -c $< -o .so/$*
 libedit.a: ${OOBJS}

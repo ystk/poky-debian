@@ -58,42 +58,28 @@ do_unpack_srcpkg_append() {
 	mv bash-* ${S}
 }
 
-# apply shell formatted dpatches according to debian/rules
-DPATCHES = " \
-bash41-001 \
-bash41-002 \
-bash41-003 \
-bash41-004 \
-bash41-005 \
-bashbug-editor \
-deb-bash-config \
-deb-examples \
-man-arithmetic \
-man-fignore \
-man-bashrc \
-man-bashlogout \
-man-substring-exp \
-man-nocaseglob \
-man-test \
-man-test2 \
-privmode \
-rbash-manpage \
-bash-default-editor \
-bash-subst-param-length \
-pgrp-pipe \
-input-err \
-exec-redirections-man \
-bash-aliases-repeat \
-builtins-declare-fix \
-CVE-2014-6271 \
-CVE-2014-7169 \
-parser-oob \
-variables-affix \
-"
+PRINT_RULES_VARS = \
+"${MAKE} -p -n -f ${DEBIAN_SQUEEZE_UNPACKDIR}/debian/rules patch-bash bash_src=bash"
 
+# Apply shell formatted dpatches according to debian/rules.
+# debian/rules applies only dpatches defined in "debian_patches" variable,
+# and other dpatches in debian/patches are not applied.
 do_patch_srcpkg() {
-	cd ${DEBIAN_SQUEEZE_UNPACKDIR}
-	for dp in ${DPATCHES}; do
-		sh -e ./debian/patches/$dp.dpatch -patch -d ${S}
+	# confirm PRINT_RULES_VARS command works correctly
+	if ! ${PRINT_RULES_VARS} > /dev/null; then
+		echo "failed to print database in debian/rules"
+		exit 1
+	fi
+	DPATCHES=$(${PRINT_RULES_VARS} | \
+		grep "^debian_patches = " | sed "s@^debian_patches = @@")
+	if [ -z "${DPATCHES}" ]; then
+		echo "failed to parse patch files from debian/rules"
+		exit 1
+	fi
+
+	for dpatch in ${DPATCHES}; do
+		echo "applying ${dpatch}.dpatch..."
+		sh -e ${DEBIAN_SQUEEZE_UNPACKDIR}/debian/patches/${dpatch}.dpatch \
+			-patch -d ${S}
 	done
 }
