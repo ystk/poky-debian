@@ -9,7 +9,7 @@
 #
 # NOTE: This patch must be applied BEFORE do_patch_srcpkg
 #
-# Skerlet <skerlet@swc.toshiba.co.jp>
+# Skerlet <debian-squeeze@swc.toshiba.co.jp>
 #
 --- a/debian/rules.patch	2014-04-22 14:36:40.621072810 +0900
 +++ b/debian/rules.patch	2014-04-22 14:37:34.965059927 +0900

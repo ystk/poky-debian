@@ -16,3 +16,11 @@ require libxml2.inc
 inherit debian-squeeze
 
 PR = "r0"
+
+# NOTE: This is a temporal fix to ignore invalid patches in debian/patches.
+# The same modification as these patches is already included in .diff.gz,
+# and there is no function which applies debian/patches/* in debian/rules.
+# We need to remove this override after the upstream source package are fixed.
+do_patch_srcpkg() {
+	:
+}

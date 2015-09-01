@@ -28,14 +28,9 @@ do_install_append() {
         install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/snmpd
         install -m 644 ${WORKDIR}/snmpd.conf ${D}${sysconfdir}/snmp/
         install -m 644 ${WORKDIR}/snmptrapd.conf ${D}${sysconfdir}/snmp/
-	install -d ${STAGING_BINDIR}
-	install -m 0755 ${D}${bindir}/net-snmp-config ${STAGING_BINDIR}/
-	sed -e "s@-I/usr/include@@g" \
-		-e "s@^prefix=.*@prefix=${STAGING_DIR_HOST}@g" \
-		-e "s@^exec_prefix=.*@exec_prefix=${STAGING_DIR_HOST}@g" \
-		-e "s@^includedir=.*@includedir=${STAGING_INCDIR}@g" \
-		-e "s@^libdir=.*@libdir=${STAGING_LIBDIR}@g" \
-		-i ${STAGING_BINDIR}/net-snmp-config
+
+	# drop net-snmp-config, which provides build information
+	rm -f ${D}${bindir}/net-snmp-config
 }
 
 #PACKAGES = "net-snmp-dbg net-snmp-doc net-snmp-dev net-snmp-static net-snmp-libs \
@@ -108,10 +103,7 @@ ${bindir}/mib2c-update \
 ${sysconfdir}/snmp/mib2c*.conf \
 "
 FILES_${PN}-staticdev = "${libdir}/*.a"
-FILES_${PN}-libs = " \
-${libdir}/* \
-${bindir}/net-snmp-config \
-"
+FILES_${PN}-libs = "${libdir}/*"
 FILES_${PN}-mibs = " \
 ${datadir}/mibs/netsnmp/* \
 ${datadir}/snmp/mib2c-data/* \

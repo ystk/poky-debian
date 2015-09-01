@@ -26,6 +26,8 @@ LIC_FILES_CHKSUM = "file://term.h;md5=f9ab402b1895fce477bb109457d01cb4"
 DEPENDS += "libbsd"
 RDEPENDS += "libbsd"
 
+PARALLEL_MAKE = ""
+
 S = ${WORKDIR}/${PN}-${PV}/libedit
 do_configure() {
 	cp ${WORKDIR}/Makefile ${S}

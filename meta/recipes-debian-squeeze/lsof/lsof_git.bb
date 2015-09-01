@@ -31,7 +31,7 @@ export LSOF_INCLUDE = "${STAGING_INCDIR}"
 do_configure () {
 	sed -i "s@^LSOF_RANLIB=\"ranlib \(.*\)\"@LSOF_RANLIB=\"${RANLIB} \1\"@" ${S}/Configure
 	export LSOF_AR="${AR} cr"
-	yes | ./Configure ${LSOF_OS}
+	yes | ./Configure -n ${LSOF_OS}
 }
 
 export I = "${STAGING_INCDIR}"

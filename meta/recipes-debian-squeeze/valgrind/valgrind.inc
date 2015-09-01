@@ -10,7 +10,7 @@ LICENSE = "GPLv2 & GPLv2+ & BSD"
 #                    file://include/pub_tool_basics.h;beginline=1;endline=29;md5=b4765f122b7672cdf9b2e8fd75a33172 \
 #                    file://include/valgrind.h;beginline=1;endline=56;md5=13a71cedba99112334d8596162aec37e \
 #                    file://COPYING.DOCS;md5=8fdeb5abdb235a08e76835f8f3260215"
-DEPENDS = "virtual/libx11"
+#DEPENDS = "virtual/libx11"
 #PR = "r1"
 
 #SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \

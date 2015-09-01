@@ -2,7 +2,7 @@
 # "quiet" command are disabled by removing a patch "quiet.diff",
 # so supports_quiet is always "false".
 #
-# Skerlet <skerlet@swc.toshiba.co.jp>
+# Skerlet <debian-squeeze@swc.toshiba.co.jp>
 #
 --- a/debian/update-grub	2014-04-10 19:54:39.133311777 +0900
 +++ b/debian/update-grub	2014-04-10 19:55:49.617326915 +0900

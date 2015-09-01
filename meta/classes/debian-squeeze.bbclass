@@ -140,6 +140,15 @@ do_unpack_srcpkg() {
 # Patch functions
 #
 
+# Filter list for "patchfiles". Sometimes unused patches lie in debian directory.
+# You can exclude them easily by setting filter values into this variable.
+# This variable is used as arguments of grep -v, i.e.
+#   grep -v ${DEBIAN_SQUEEZE_PATCH_FILTER}
+# so multiple values can be set with -e options, e.g.
+#   DEBIAN_SQUEEZE_PATCH_FILETER = "-e filter1 -e filter2"
+# This variable must not be empty.
+DEBIAN_SQUEEZE_PATCH_FILTER ?= "debian-squeeze_patch_filter"
+
 # Apply all patches in debian/patches/*
 # NOTE: "quilt" and "dpatch" must be installed in native system
 addtask patch_srcpkg before do_patch after do_unpack
@@ -162,7 +171,7 @@ do_patch_srcpkg() {
 				-name "*patch" -o \
 				-name "*.diff" -o \
 				-name "series" -o \
-				-name "00list" \))
+				-name "00list" \) | grep -v ${DEBIAN_SQUEEZE_PATCH_FILTER} || true)
 			if [ -z "$patchfiles" ]; then
 				# nothing to do
 				echo "$srcpkg: no patch-related file found, skipping"

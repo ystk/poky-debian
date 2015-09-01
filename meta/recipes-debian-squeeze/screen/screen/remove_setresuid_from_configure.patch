@@ -1,0 +1,22 @@
+diff --git a/configure.in b/configure.in
+index a8f6f67..04eb163 100644
+--- a/configure.in
++++ b/configure.in
+@@ -589,16 +589,8 @@ int y = TIOCNOTTY;
+ ], AC_NOTE(- you have jobcontrol) AC_DEFINE(BSDJOBS), AC_NOTE(- you don't have jobcontrol))
+ 
+ dnl
+-dnl    ****  setresuid(), setreuid(), seteuid()  ****
++dnl    ****  setreuid(), seteuid()  ****
+ dnl
+-AC_CHECKING(setresuid)
+-AH_TEMPLATE([HAVE_SETRESUID],
+-[If your system has the calls setresuid() and setregid(),
+- define HAVE_SETRESUID. Otherwise screen will use a forked process to
+- safely create output files without retaining any special privileges.])
+-AC_TRY_LINK(,[
+-setresuid(0, 0, 0);
+-], AC_DEFINE(HAVE_SETRESUID))
+ AC_CHECKING(setreuid)
+ AC_TRY_LINK(,[
+ setreuid(0, 0);

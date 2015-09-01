@@ -13,6 +13,8 @@ PR = "r0"
 inherit debian-squeeze
 inherit autotools
 
+DEPENDS += "e2fsprogs e2fsprogs-native"
+
 S = "${DEBIAN_SQUEEZE_UNPACKDIR}/src"
 
 # debian/patches is no longer needed
@@ -33,6 +35,8 @@ replace_nm() {
 EXTRA_OECONF += " \
 krb5_cv_attr_constructor_destructor=yes,yes \
 ac_cv_printf_positional=yes \
+--with-system-et \
+--with-system-ss \
 "
 
 # debian/rules says "we touch each configure and Autoconf-related file

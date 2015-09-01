@@ -1,0 +1,34 @@
+# build_env.mk is generated in ${libdir} by default.
+# This file is for building grub modules in target system,
+# but such function is unnecessary for embedded system.
+# Additionally, it includes paths of build environment
+# e.g.  --sysroot=/home/user/tmp/sysroots/xxx
+# Therefore, this file should be removed from target system.
+
+diff --git a/Makefile.in b/Makefile.in
+index 39061be..f75d1ce 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -291,22 +291,6 @@ TARGET_CFLAGS += -DUSE_ASCII_FAILBACK=1 -DHAVE_UNIFONT_WIDTHSPEC=1
+ endif
+ endif
+ 
+-# Used for building modules externally
+-pkglib_BUILDDIR += build_env.mk
+-build_env.mk: Makefile
+-	(\
+-	echo "TARGET_CC=$(TARGET_CC)" ; \
+-	echo "TARGET_CFLAGS=$(TARGET_CFLAGS)" ; \
+-	echo "TARGET_ASFLAGS=$(TARGET_ASFLAGS)" ; \
+-	echo "TARGET_CPPFLAGS=$(TARGET_CPPFLAGS) -I$(pkglibdir) -I$(includedir)" ; \
+-	echo "STRIP=$(STRIP)" ; \
+-	echo "OBJCONV=$(OBJCONV)" ; \
+-	echo "TARGET_MODULE_FORMAT=$(TARGET_MODULE_FORMAT)" ; \
+-	echo "TARGET_APPLE_CC=$(TARGET_APPLE_CC)" ; \
+-	echo "COMMON_ASFLAGS=$(COMMON_ASFLAGS)" ; \
+-	echo "COMMON_CFLAGS=$(COMMON_CFLAGS)" ; \
+-	echo "COMMON_LDFLAGS=$(COMMON_LDFLAGS)"\
+-	) > $@
+ pkglib_BUILDDIR += config.h grub_script.tab.h
+ 
+ all-local: $(PROGRAMS) $(GRUB_EMU) $(PKGLIB) $(PKGDATA) $(SCRIPTS) $(INFOS) $(MKFILES) $(foreach lang, $(LINGUAS), po/$(lang).mo)

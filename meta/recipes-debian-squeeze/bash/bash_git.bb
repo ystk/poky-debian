@@ -83,3 +83,10 @@ do_patch_srcpkg() {
 			-patch -d ${S}
 	done
 }
+
+# Drop bashbug, which is for reporting bugs via email from target system.
+# This scripts should not be used in embedded system, and it includes
+# some build environment paths (e.g. sysroot), so should be removed.
+do_install_append() {
+	rm -f ${D}${base_bindir}/bashbug
+}

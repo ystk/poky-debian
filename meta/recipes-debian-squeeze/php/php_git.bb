@@ -47,70 +47,11 @@ CFLAGS += " -I${STAGING_INCDIR}/apache2"
 EXTRA_OECONF += " \
 --without-imap \
 --enable-shared \
---disable-static \
---disable-rpath \
---disable-debug \
---enable-bcmath=shared \
---enable-calendar=shared \
---enable-ctype=shared \
---enable-dba=shared \
---enable-inifile=shared \
---enable-flatfile=shared \
---enable-dom=shared \
---enable-exif=shared \
---enable-fileinfo=shared \
---enable-filter=shared \
---enable-ftp=shared \
---enable-gd-native-ttf=shared \
---enable-gd-jis-conv=shared \
---enable-hash=shared \
---disable-intl \
---enable-json=shared \
---enable-mbstring=shared \
---enable-mbregex=shared \
---enable-mbregex-backtrack=shared \
---enable-embedded-mysqli=shared \
---enable-pcntl=shared \
---enable-pdo \
---enable-phar=shared \
---enable-posix=shared \
---enable-session=shared \
---enable-shmop=shared \
---enable-simplexml=shared \
---enable-ucd-snmp-hack=shared \
---enable-soap=shared \
---enable-sockets=shared \
---enable-sqlite-utf8=shared \
---enable-sysvmsg=shared \
---enable-sysvsem=shared \
---enable-sysvshm=shared \
---enable-tokenizer=shared \
---enable-wddx=shared \
---enable-xml=shared \
---enable-xmlreader=shared \
---enable-xmlwriter=shared \
---enable-zip=shared \
---enable-mysqlnd-compression-support=shared \
---without-qdbm \
---without-ndbm \
---with-gdbm=${STAGING_EXECPREFIXDIR} \
---with-regex=php \
---with-pic \
---with-bz2=${STAGING_EXECPREFIXDIR} \
---with-db4=${STAGING_EXECPREFIXDIR} \
---with-gettext \
---with-onig=shared,${STAGING_EXECPREFIXDIR} \
---with-pcre-regex=${STAGING_EXECPREFIXDIR} \
---with-kerberos=shared,${STAGING_EXECPREFIXDIR} \
---with-openssl=shared,${STAGING_EXECPREFIXDIR} \
---with-sqlite3=shared,${STAGING_EXECPREFIXDIR} \
---with-pgsql=shared,${STAGING_EXECPREFIXDIR} \
---with-mhash=shared,${STAGING_EXECPREFIXDIR} \
---with-ldap=shared,${STAGING_EXECPREFIXDIR} \
---with-snmp=shared,${STAGING_EXECPREFIXDIR} \
---with-system-tzdata=${STAGING_EXECPREFIXDIR} \
 --with-apxs2=${STAGING_BINDIR_NATIVE}/apxs \
 "
+
+export PHP_PEAR_DOWNLOAD_DIR = "${S}/pear-build-download"
+
 do_configure_prepend() {
 	sed -i -e "s#install-sapi##" configure
 	sed -i -e "s#install-sapi##" configure.in
@@ -124,14 +65,31 @@ do_compile_prepend() {
 		${S}/main/php_config.h
 }
 
+# Fix me. This is not good way.
+INSTALL_MODULES1="install -d ${D}${libdir}/apache2/modules"
+INSTALL_MODULES2="install -m 0755 ${S}/libs/libphp5.so ${D}${libdir}/apache2/modules"
+INSTALL_MODULES3="for i in mods-available mods-enabled; do"
+INSTALL_MODULES4="    install -d ${D}${sysconfdir}/apache2/$i"
+INSTALL_MODULES5="	  install -m 0644 ${S}/debian/libapache2-mod-php5.load ${D}${sysconfdir}/apache2/$i/php5.load"
+INSTALL_MODULES6="	  install -m 0644 ${S}/debian/libapache2-mod-php5.conf ${D}${sysconfdir}/apache2/$i/php5.conf"
+INSTALL_MODULES7="done"
+
+INSTALL_MODULES1_virtclass-native=""
+INSTALL_MODULES2_virtclass-native=""
+INSTALL_MODULES3_virtclass-native=""
+INSTALL_MODULES4_virtclass-native=""
+INSTALL_MODULES5_virtclass-native=""
+INSTALL_MODULES6_virtclass-native=""
+INSTALL_MODULES7_virtclass-native=""
+
 do_install_append() {
-	install -d ${D}${libdir}/apache2/modules
-	install -m 0755 ${S}/libs/libphp5.so ${D}${libdir}/apache2/modules
-	for i in mods-available mods-enabled; do
-		install -d ${D}${sysconfdir}/apache2/$i
-		install -m 0644 ${S}/debian/libapache2-mod-php5.load ${D}${sysconfdir}/apache2/$i/php5.load
-		install -m 0644 ${S}/debian/libapache2-mod-php5.conf ${D}${sysconfdir}/apache2/$i/php5.conf
-	done
+	${INSTALL_MODULES1}
+	${INSTALL_MODULES2}
+	${INSTALL_MODULES3}
+	${INSTALL_MODULES4}
+	${INSTALL_MODULES5}
+	${INSTALL_MODULES6}
+	${INSTALL_MODULES7}
 }
 
 FILES_${PN} += "${libdir} ${includedir} ${sysconfdir}"

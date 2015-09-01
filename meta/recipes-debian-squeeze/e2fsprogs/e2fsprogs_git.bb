@@ -68,3 +68,21 @@ SRC_URI = " \
 file://mkdir.patch;apply=yes \
 file://acinclude.m4 \
 "
+
+do_install_append () {
+	# statically-linked fsck
+	ln -s ${D}${includedir}/et/com_err.h ${D}${includedir}/com_err.h
+
+	# Replace actual build directory by dummy to remove build information.
+	# ET_DIR is used only when --build-tree option is specified, and
+	# SS_DIR is used only when _SS_DIR_OVERRIDE is specified.
+	# They are only for build-time and not used in target environment.
+	sed "s@^\(ET_DIR\)=.*@\1=/build-directory@" -i ${D}${bindir}/compile_et
+	sed "s@^\(SS_DIR\)=.*@\1=/build-directory@" -i ${D}${bindir}/mk_cmds
+}
+
+PACKAGES =+ "comerr-dev ss-dev"
+FILES_comerr-dev = "${datadir}/et/* ${includedir}"
+FILES_ss-dev = "${datadir}/ss/*"
+
+

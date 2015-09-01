@@ -11,6 +11,23 @@
 
 export TZ=/etc/localtime
 
+# stop & restart
+if [ "$1" = "stop" -o "$1" = "restart" ]; then
+	echo "Stopping udev"
+	if [ -n "$(ps aux | grep udevd | grep -v grep)" ]; then
+		killall udevd 2> /dev/null
+		if [ "$?" != 0 ]; then
+			echo "failed to stop udevd"
+			exit 1
+		fi
+	else
+		echo "udevd not running"
+	fi
+	if [ "$1" = "stop" ]; then
+		exit 0
+	fi
+fi
+
 [ -d /sys/class ] || exit 1
 [ -r /proc/mounts ] || exit 1
 [ -x /sbin/udevd ] || exit 1

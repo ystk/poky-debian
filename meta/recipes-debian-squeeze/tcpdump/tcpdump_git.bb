@@ -4,7 +4,7 @@
 
 DESCRIPTION = "A powerful tool for network monitoring and data acquisition" 
 SECTION = "net"
-LICENSE = "GPLv2"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1d4b0366557951c84a94fabe3529f867"
 PR = "r0"
 

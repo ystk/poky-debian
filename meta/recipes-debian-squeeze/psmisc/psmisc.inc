@@ -21,10 +21,10 @@ inherit autotools gettext
 
 ALLOW_EMPTY = "1"
 
-PACKAGES =+ "fuser fuser-doc killall killall-doc pstree pstree-doc "
+PACKAGES =+ "fuser fuser-doc killall killall-doc pstree pstree-doc peekfd peekfd-doc prtstat prtstat-doc"
 
 FILES_${PN} = ""
-RDEPENDS_${PN} = "fuser killall pstree"
+RDEPENDS_${PN} = "fuser killall pstree peekfd prtstat"
 
 FILES_fuser = "${bindir}/fuser.${PN}"
 FILES_fuser-doc = "${mandir}/man1/fuser*"
@@ -34,6 +34,12 @@ FILES_killall-doc = "${mandir}/man1/killall*"
 
 FILES_pstree = "${bindir}/pstree"
 FILES_pstree-doc = "${mandir}/man1/pstree*"
+
+FILES_peekfd = "${bindir}/peekfd"
+FILES_peekfd-doc = "${mandir}/man1/peekfd*"
+
+FILES_prtstat = "${bindir}/prtstat"
+FILES_prtstat-doc = "${mandir}/man1/prtstat*"
 
 do_install_append() {
 	mv ${D}${bindir}/killall ${D}${bindir}/killall.${PN}

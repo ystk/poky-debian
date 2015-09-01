@@ -59,6 +59,11 @@ do_compile() {
 	oe_runmake
 }
 
+do_install_append() {
+	# remove sysroot path from python command
+	sed -i "s@${STAGING_BINDIR_NATIVE}@${bindir}@" \
+		${D}/${bindir}/system-config-audit
+}
 
 PACKAGES += "${PN}-python-audit"
 

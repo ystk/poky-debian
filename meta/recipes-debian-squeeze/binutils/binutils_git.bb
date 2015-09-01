@@ -78,3 +78,10 @@ do_configure_prepend() {
 
 CFLAGS += "-fPIC ${@['', '-Wno-error=unused-but-set-variable '][bb.utils.vercmp(('', bb.data.getVar('GCCVERSION', d), ''), ('', '4.7', '')) >= 0]}"
 
+# workaround: remove invalid paths to the build directories
+# from dependency_libs in .la. dependency_libs of .la in Debian package
+# is also empty, so it might work fine.
+do_install_append() {
+	sed "s@^\(dependency_libs\)=.*@\1=''@" \
+		-i ${D}${libdir}/libbfd.la ${D}${libdir}/libopcodes.la
+}

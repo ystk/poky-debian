@@ -34,6 +34,15 @@ do_configure_prepend() {
 	./bootstrap
 }
 
+# remove ${STAGING_DIR_NATIVE} from python paths extracted from @PYTHON@,,
+# which is a native python path in sysroot
+do_configure_append() {
+	sed -i "s|^\#\!${STAGING_DIR_NATIVE}\(/.*/python\)|\#\!\1|" \
+		${S}/cts/*.py ${S}/heartbeat/lib/ha_propagate
+	sed -i "s@\(CRMTEST\)=\"${STAGING_DIR_NATIVE}\(/.*/python\)@\1=\"\2@" \
+		${S}/heartbeat/lib/BasicSanityCheck
+}
+
 do_compile_prepend() {
 	sed -i 's:\-Werror::g' $(find -name "Makefile")
 	sed -i 's:#include <ipc.h>:#include <sys/ipc.h>:' membership/ccm/ccm.h

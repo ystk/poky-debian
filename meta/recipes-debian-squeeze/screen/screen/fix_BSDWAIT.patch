@@ -1,0 +1,76 @@
+From: William Pursell <address@hidden>
+Date: Sun, 21 Dec 2008 19:19:43 +0000
+Subject: [PATCH] Fix union wait vs. int issue
+
+On OS X, screen fails to compile because WindowDied is
+unconditionally declared to take an int, but is called
+with an argument of type union wait.  This wraps the
+declaration and two associated calls.
+
+Signed-off-by: William Pursell <address@hidden>
+---
+ extern.h |    4 ++++
+ screen.c |    6 +++++-
+ window.c |    8 ++++++++
+ 3 files changed, 17 insertions(+), 1 deletions(-)
+
+diff --git a/extern.h b/extern.h
+index af5cc09..6ca155b 100644
+--- a/extern.h
++++ b/extern.h
+@@ -51,7 +51,11 @@ extern void  MakeNewEnv __P((void));
+ extern char *MakeWinMsg __P((char *, struct win *, int));
+ extern char *MakeWinMsgEv __P((char *, struct win *, int, int, struct event *, int));
+ extern void  PutWinMsg __P((char *, int, int));
++#ifdef BSDWAIT
++extern void  WindowDied __P((struct win *, union wait, int));
++#else
+ extern void  WindowDied __P((struct win *, int, int));
++#endif
+ extern void  setbacktick __P((int, int, int, char **));
+
+ /* ansi.c */
+diff --git a/screen.c b/screen.c
+index cf3e39d..c914c59 100644
+--- a/screen.c
++++ b/screen.c
+@@ -1455,7 +1455,11 @@ char **av;
+ void
+ WindowDied(p, wstat, wstat_valid)
+ struct win *p;
+-int wstat;
++#ifdef BSDWAIT
++  union wait wstat;
++#else
++  int wstat;
++#endif
+ int wstat_valid;
+ {
+   int killit = 0;
+diff --git a/window.c b/window.c
+index 86a5f68..5b15878 100644
+--- a/window.c
++++ b/window.c
+@@ -1855,13 +1855,21 @@ char *data;
+        return;
+ #endif
+       debug2("Window %d: read error (errno %d) - killing window\n", p->w_number, errno);
++#ifdef BSDWAIT
++      WindowDied(p, (union wait)0, 0);
++#else
+       WindowDied(p, 0, 0);
++#endif
+       return;
+     }
+   if (len == 0)
+     {
+       debug1("Window %d: EOF - killing window\n", p->w_number);
++#ifdef BSDWAIT
++      WindowDied(p, (union wait)0, 0);
++#else
+       WindowDied(p, 0, 0);
++#endif
+       return;
+     }
+   debug1(" -> %d bytes\n", len);
+-- 

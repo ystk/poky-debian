@@ -36,9 +36,12 @@ inherit debian-squeeze
 
 PR = "r0"
 
-SRC_URI = " \
+BASE_SRC_URI = " \
 file://ignore_extra_fields.patch;patch=1 \
 file://noman.patch;patch=1 \
 file://check_snprintf.patch \
 file://check_version.patch \
 "
+
+SRC_URI = "${BASE_SRC_URI} file://dont-convert-perl-shebang.patch"
+SRC_URI_virtclass-native = "${BASE_SRC_URI}"

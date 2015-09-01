@@ -27,6 +27,7 @@ do_install_append() {
 	install -m 0644 ${S}/debian/dsh.updatelist ${D}${libdir}/update-cluster
 
 	sed -i 's: remoteshell =rsh: remoteshell =ssh:' ${D}${sysconfdir}/dsh/dsh.conf
+	sed -i 's: showmachinenames = 0: showmachinenames = 1:' ${D}${sysconfdir}/dsh/dsh.conf
 }
 
 FILES_${PN} += "${libdir}"

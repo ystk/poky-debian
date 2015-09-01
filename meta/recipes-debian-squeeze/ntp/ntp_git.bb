@@ -72,6 +72,12 @@ EXTRA_OECONF = " \
 ac_cv_header_readline_history_h=no \
 "
 
+# /tmp is required when ntpd boot up
+FILES_${PN} += "/tmp"
+do_install_append() {
+	install -d ${D}/tmp
+}
+
 # ntpsweep: This script should not be included in other package
 # because it depends on perl at the runtime
 PACKAGES =+ "ntpsweep"

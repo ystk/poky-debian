@@ -35,7 +35,7 @@ PARALLEL_MAKE = ""
 
 PACKAGES_prepend = "${PN}-utils "
 FILES_${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/nslookup"
-FILES_${PN}-dev += "${bindir}/isc-config.h"
+#FILES_${PN}-dev += "${bindir}/isc-config.s"
 
 do_install_append() {
 	rm "${D}${bindir}/nslookup"
@@ -70,3 +70,14 @@ SRC_URI += " \
 file://conf.patch \
 file://cross-build-fix.patch \
 "
+
+DEBIAN_SQUEEZE_PATCH_FILTER = "debian/patches-applied"
+
+# install isc-config.sh into ${PN}-dev
+FILES_${PN} = " \
+${bindir}/nsupdate \
+${sbindir} \
+${sysconfdir} \
+${localstatedir} \
+"
+FILES_${PN}-dev += "${bindir}/isc-config.sh"

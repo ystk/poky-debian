@@ -33,8 +33,9 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/freeipmi-ipmidetectd.init \
 			${D}${sysconfdir}/init.d/freeipmi-ipmidetectd
 	install -d ${D}${sysconfdir}/default
-	echo "RUN=yes" > ${D}${sysconfdir}/default/bmc-watchdog
-	echo 'OPTIONS="${BMC_WATCHDOG_STARTUP}"' >> ${D}${sysconfdir}/default/bmc-watchdog
+#	echo "RUN=yes" > ${D}${sysconfdir}/default/bmc-watchdog
+#	echo 'OPTIONS="${BMC_WATCHDOG_STARTUP}"' >> ${D}${sysconfdir}/default/bmc-watchdog
+	install -m 0644 ${S}/bmc-watchdog/freeipmi-bmc-watchdog.sysconfig ${D}${sysconfdir}/default/bmc-watchdog
 	echo "RUN=yes" > ${D}${sysconfdir}/default/ipmidetectd
 	sed -i -e "s|condrestart|reload > /dev/null|" -e "/}/i \ \ copytruncate" ${D}${sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
 }

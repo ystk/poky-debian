@@ -10,5 +10,11 @@ PR = "r0"
 
 DEPENDS = "perl debianutils"
 
-inherit autotools 
-inherit debian-squeeze
+inherit debian-squeeze autotools 
+
+# autoheader (autoreconf) should not be called for this source because
+# some temprates like DAEMON are missing and they cannot be enabled.
+# In order to keep old config.h.in that enables DAEMON, we use oe_runconf.
+do_configure() {
+	oe_runconf
+}

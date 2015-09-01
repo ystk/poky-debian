@@ -2,7 +2,7 @@
 # replace grub-probe included in GRUB2 by basic commands.
 # This command(s) just get a filesystem type of ${grubdir}.
 #
-# Skerlet <skerlet@swc.toshiba.co.jp>
+# Skerlet <debian-squeeze@swc.toshiba.co.jp>
 #
 --- a/util/grub-install.in	2014-04-14 15:29:02.462062810 +0900
 +++ b/util/grub-install.in	2014-04-14 15:30:18.466061921 +0900

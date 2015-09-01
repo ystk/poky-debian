@@ -1,7 +1,7 @@
 #
 # Usually alternative options are not used in embedded system
 #
-# Skerlet <skerlet@swc.toshiba.co.jp>
+# Skerlet <debian-squeeze@swc.toshiba.co.jp>
 #
 --- a/debian/update-grub	2014-04-16 16:37:34.805088901 +0900
 +++ b/debian/update-grub	2014-04-16 16:37:45.197060761 +0900

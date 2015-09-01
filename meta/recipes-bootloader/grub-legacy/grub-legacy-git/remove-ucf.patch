@@ -1,7 +1,7 @@
 #
 # remove ucf related file setup
 #
-# Skerlet <skerlet@swc.toshiba.co.jp>
+# Skerlet <debian-squeeze@swc.toshiba.co.jp>
 #
 --- a/debian/update-grub	2014-04-10 20:05:54.265328944 +0900
 +++ b/debian/update-grub	2014-04-10 20:12:38.358313065 +0900

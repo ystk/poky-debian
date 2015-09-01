@@ -170,9 +170,9 @@ do_configure() {
 			;;
 	esac
         # These are strewn all over the source tree
-        for foo in `grep -I -m1 \/usr\/include\/.*\\.h ${WORKDIR}/* -r | cut -f 1 -d ":"` ; do
+        for foo in `grep -I --exclude="*.patch" --exclude="*.diff" --exclude="*.pod" --exclude="README*" -m1 "/usr/include/.*\.h" ${WORKDIR}/* -r -l` ${S}/utils/h2xs.PL ; do
             echo Fixing: $foo
-            sed -e "s%/usr/include/%${STAGING_INCDIR}/%g" -i $foo
+            sed -e 's|\([ "^'\''I]\+\)/usr/include/|\1${STAGING_INCDIR}/|g' -i $foo
         done
 
         rm -f config
@@ -374,12 +374,14 @@ do_install() {
 perl_package_preprocess () {
 	# Fix up installed configuration
 	sed -i -e "s,${D},,g" \
+		-e "s,--sysroot=${STAGING_DIR_HOST},,g" \
 		-e "s,-isystem${STAGING_INCDIR} ,,g" \
 		-e "s,${STAGING_LIBDIR},${libdir},g" \
 		-e "s,${STAGING_BINDIR},${bindir},g" \
 		-e "s,${STAGING_INCDIR},${includedir},g" \
 		-e "s,${STAGING_BINDIR_NATIVE}/perl-native/,${bindir}/,g" \
 		-e "s,${STAGING_BINDIR_NATIVE}/,,g" \
+		-e "s,${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX},${bindir},g" \
 		${PKGD}${bindir}/h2xs \
 		${PKGD}${bindir}/h2ph \
 		${PKGD}${bindir}/pod2html \
@@ -389,14 +391,17 @@ perl_package_preprocess () {
 		${PKGD}${bindir}/pod2usage \
 		${PKGD}${bindir}/podchecker \
 		${PKGD}${bindir}/podselect \
-		${PKGD}${libdir}/perl/${PERL_PV}/pod/*.pod \
-		${PKGD}${libdir}/perl/${PERL_PV}/cacheout.pl \
-		${PKGD}${libdir}/perl/${PERL_PV}/FileCache.pm \
-		${PKGD}${libdir}/perl/config.sh \
-		${PKGD}${libdir}/perl/${PERL_PV}/Config.pm \
-		${PKGD}${libdir}/perl/${PERL_PV}/Config_heavy.pl \
+		${PKGD}${libdir}/perl/${PERL_PV}/CORE/config.h \
 		${PKGD}${libdir}/perl/${PERL_PV}/CORE/perl.h \
-		${PKGD}${libdir}/perl/${PERL_PV}/CORE/pp.h
+		${PKGD}${libdir}/perl/${PERL_PV}/CORE/pp.h \
+		${PKGD}${libdir}/perl/${PERL_PV}/Config.pm \
+		${PKGD}${libdir}/perl/${PERL_PV}/Config.pod \
+		${PKGD}${libdir}/perl/${PERL_PV}/Config_heavy.pl \
+		${PKGD}${libdir}/perl/${PERL_PV}/ExtUtils/Liblist/Kid.pm \
+		${PKGD}${libdir}/perl/${PERL_PV}/FileCache.pm \
+		${PKGD}${libdir}/perl/${PERL_PV}/cacheout.pl \
+		${PKGD}${libdir}/perl/${PERL_PV}/pod/*.pod \
+		${PKGD}${libdir}/perl/config.sh
 }
 FILES_${PN} = "${bindir}/perl ${bindir}/perl${PERL_PV}"
 FILES_${PN}-dev = "${libdir}/perl/${PERL_PV}/CORE"
@@ -551,6 +556,14 @@ perl-module-text-parsewords \
 perl-module-text-tabs \
 perl-module-text-wrap \
 perl-module-tie-hash \
+perl-module-time \
+perl-module-time-gmtime \
+perl-module-time-hires \
+perl-module-time-local \
+perl-module-time-localtime \
+perl-module-time-piece \
+perl-module-time-seconds \
+perl-module-time-tm \
 perl-module-utf8 \
 perl-module-utf8-heavy \
 perl-module-vars \

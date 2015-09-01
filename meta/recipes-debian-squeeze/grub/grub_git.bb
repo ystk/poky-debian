@@ -69,12 +69,16 @@ DEBIAN_SQUEEZE_SRCPKG_NAME = "grub2"
 #   host environment must be replaced by $(BUILD_CC)
 # fix-cc-for-build-helpers.patch
 #   same as gentrigtables-compile-fix.patch
+# remove-build-env-mk.patch
+#   build_env.mk is not needed for embedded system.
+#   See comments in this patch for more details.
 SRC_URI = " \
 file://enable_zfs.patch;apply=no \
 file://remove-font-source-in-configure.patch \
 file://grub-1.99-fpmath-sse-387-fix.patch \
 file://gentrigtables-compile-fix.patch \
 file://fix-cc-for-build-helpers.patch \
+file://remove-build-env-mk.patch \
 "
 
 # enabled sources under debian/grub-extras require GRUB_CONTRIB

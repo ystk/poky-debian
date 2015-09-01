@@ -34,3 +34,8 @@ inherit debian-squeeze
 inherit binconfig
 
 PR = "r0"
+
+# rules for shared libraries, which are added by 10_shared_lib.diff,
+# have parallel make problem; do_install fails only when
+# $(OBJ) are built after $(SHAREDLIB).
+PARALLEL_MAKE = ""

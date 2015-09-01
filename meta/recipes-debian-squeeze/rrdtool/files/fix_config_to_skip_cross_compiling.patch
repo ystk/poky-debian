@@ -1,0 +1,30 @@
+diff --git a/configure b/configure
+index 0ccfa4d..106adcf 100755
+--- a/configure
++++ b/configure
+@@ -25911,7 +25911,9 @@ if test "${rd_cv_ieee_works+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+   if test "$cross_compiling" = yes; then
+-  :
++  $as_echo_n "(skipped ... cross-compiling) " >&6
++  #Bypass further checks
++  rd_cv_ieee_works=yes
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+@@ -28654,13 +28656,7 @@ _ACEOF
+ { $as_echo "$as_me:$LINENO: checking the type of time_t" >&5
+ $as_echo_n "checking the type of time_t... " >&6; }
+ if test "$cross_compiling" = yes; then
+-  { { $as_echo "$as_me:$LINENO: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-{ { $as_echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-$as_echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }; }
++  $ac_echo_n "(skipped ... cross-compiling) " >&6
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
